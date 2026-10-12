@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Входной тест — физика УЗ и анатомия органов брюшной полости</title>
+<style>
+  :root {
+    --bg: #f4f6fb;
+    --card-bg: #ffffff;
+    --text: #1c2333;
+    --text-muted: #5b6478;
+    --accent: #2f5fd6;
+    --accent-soft: #e7edfd;
+    --border: #e1e5ef;
+    --correct: #1c8a4b;
+    --correct-bg: #e5f6ec;
+    --wrong: #c53838;
+    --wrong-bg: #fdeaea;
+    --header-grad-1: #2f5fd6;
+    --header-grad-2: #1c3f9c;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12151f;
+      --card-bg: #1b2030;
+      --text: #eef1fa;
+      --text-muted: #a4acc2;
+      --accent: #6c8fef;
+      --accent-soft: #23294a;
+      --border: #2a2f45;
+      --correct: #4fd884;
+      --correct-bg: #163826;
+      --wrong: #ff7a7a;
+      --wrong-bg: #3a1c1c;
+      --header-grad-1: #2f5fd6;
+      --header-grad-2: #16255e;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12151f;
+    --card-bg: #1b2030;
+    --text: #eef1fa;
+    --text-muted: #a4acc2;
+    --accent: #6c8fef;
+    --accent-soft: #23294a;
+    --border: #2a2f45;
+    --correct: #4fd884;
+    --correct-bg: #163826;
+    --wrong: #ff7a7a;
+    --wrong-bg: #3a1c1c;
+    --header-grad-1: #2f5fd6;
+    --header-grad-2: #16255e;
+  }
+  html, body {
+    height: 100%;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", "PT Sans", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px 16px 48px;
+  }
+  header.top {
+    background: linear-gradient(135deg, var(--header-grad-1), var(--header-grad-2));
+    color: #fff;
+    border-radius: 16px;
+    padding: 22px 20px;
+    margin-bottom: 18px;
+  }
+  header.top h1 {
+    margin: 0 0 4px;
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  header.top p {
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+  .progress-track {
+    height: 8px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 999px;
+    margin-top: 14px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #fff;
+    border-radius: 999px;
+    width: 0%;
+    transition: width .25s ease;
+  }
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-top: 8px;
+    opacity: 0.9;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: .03em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .q-text {
+    font-size: 1.08rem;
+    line-height: 1.5;
+    margin: 0 0 16px;
+    font-weight: 600;
+  }
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    text-align: left;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-size: 0.98rem;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    font-family: inherit;
+  }
+  .option:hover:not(:disabled) {
+    border-color: var(--accent);
+  }
+  .option .letter {
+    flex: 0 0 auto;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+  .option.correct {
+    border-color: var(--correct);
+    background: var(--correct-bg);
+  }
+  .option.correct .letter { background: var(--correct); color: #fff; }
+  .option.wrong {
+    border-color: var(--wrong);
+    background: var(--wrong-bg);
+  }
+  .option.wrong .letter { background: var(--wrong); color: #fff; }
+  .option:disabled { cursor: default; }
+  .explain {
+    margin-top: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--accent-soft);
+    font-size: 0.92rem;
+    line-height: 1.5;
+    display: none;
+  }
+  .explain.show { display: block; }
+  .explain b { color: var(--accent); }
+  .nav-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+  button.primary {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 11px 22px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s;
+  }
+  button.primary.show { opacity: 1; pointer-events: auto; }
+  button.primary:active { transform: scale(0.98); }
+
+  .result-card { text-align: center; }
+  .result-score {
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin: 6px 0 2px;
+  }
+  .result-sub { color: var(--text-muted); margin-bottom: 6px; }
+  .result-verdict {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 14px 0 0;
+  }
+  .breakdown {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+    flex-wrap: wrap;
+  }
+  .breakdown div {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+  }
+  .breakdown b { display: block; font-size: 1.1rem; }
+
+  .review-item {
+    border-bottom: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .review-item:last-child { border-bottom: none; }
+  .review-q { font-weight: 600; margin-bottom: 6px; font-size: 0.96rem; }
+  .review-ans { font-size: 0.88rem; margin: 3px 0; }
+  .review-ans.correct { color: var(--correct); }
+  .review-ans.wrong { color: var(--wrong); }
+  .review-explain { font-size: 0.86rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+
+  .restart-btn {
+    margin-top: 18px;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .hidden { display: none !important; }
+</style>
+<style>[hidden]{display:none!important}</style></head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>Входной диагностический тест</h1>
+    <p>Физика ультразвука и УЗИ-анатомия органов брюшной полости · 20 вопросов</p>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="meta-row">
+      <span id="qCounter">Вопрос 1 из 20</span>
+      <span id="scoreLive">Верно: 0</span>
+    </div>
+  </header>
+
+  <div id="quizArea"></div>
+
+  <div id="resultArea" class="hidden">
+    <div class="card result-card">
+      <div class="tag">Результат</div>
+      <div class="result-score" id="finalScore">0 / 20</div>
+      <div class="result-sub" id="finalPercent">0%</div>
+      <div class="breakdown">
+        <div><b id="physCorrect">0/10</b>Физика УЗ</div>
+        <div><b id="anatCorrect">0/10</b>Анатомия</div>
+      </div>
+      <div class="result-verdict" id="verdict"></div>
+      <button class="restart-btn" onclick="restartQuiz()">Пройти заново</button>
+    </div>
+    <div class="card">
+      <div class="tag">Разбор ответов</div>
+      <div id="reviewList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  {
+    topic: "Физика УЗ",
+    q: "Какой физический эффект лежит в основе генерации ультразвуковых волн датчиком?",
+    options: ["Эффект Допплера", "Пьезоэлектрический эффект", "Эффект Комптона", "Фотоэлектрический эффект"],
+    correct: 1,
+    explain: "Пьезоэлементы датчика деформируются под действием переменного электрического поля, генерируя механические (ультразвуковые) колебания, и наоборот — преобразуют отражённые волны обратно в электрический сигнал."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Как изменяется глубина проникновения ультразвука при увеличении частоты датчика?",
+    options: ["Увеличивается", "Уменьшается", "Не изменяется", "Зависит только от мощности аппарата"],
+    correct: 1,
+    explain: "Чем выше частота, тем сильнее затухание (аттенюация) в тканях — глубина проникновения уменьшается, но при этом растёт разрешающая способность изображения."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Какой датчик оптимален для исследования органов брюшной полости у взрослого пациента среднего телосложения?",
+    options: ["Линейный 7–12 МГц", "Конвексный 2–5 МГц", "Секторный 1–2 МГц", "Внутриполостной 8 МГц"],
+    correct: 1,
+    explain: "Конвексный датчик 2–5 МГц даёт оптимальное сочетание глубины проникновения и разрешения для глубоко расположенных органов брюшной полости."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Как называется артефакт в виде повышенной яркости тканей позади заполненного жидкостью образования (например, кисты)?",
+    options: ["Акустическая тень", "Дистальное усиление эхосигнала", "Реверберация", "Зеркальный артефакт"],
+    correct: 1,
+    explain: "Жидкость почти не поглощает ультразвук, поэтому ткани позади жидкостного образования получают избыточную энергию сигнала и выглядят гиперэхогенными — это дистальное усиление."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Какой артефакт характерен для плотных структур с высоким акустическим сопротивлением (камни, кости, газ)?",
+    options: ["Дистальное усиление", "Акустическая тень", "Артефакт «хвост кометы»", "Эффект многолучевого преломления"],
+    correct: 1,
+    explain: "За плотной структурой ультразвук почти полностью отражается или поглощается, формируя гипо-/анэхогенную акустическую тень."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Какой режим применяется для оценки направления и скорости кровотока в реальном времени с цветовым картированием?",
+    options: ["B-режим", "M-режим", "Цветовое допплеровское картирование (ЦДК)", "Гармоническое изображение"],
+    correct: 2,
+    explain: "ЦДК накладывает на серошкальное изображение цветовую карту, кодирующую направление и относительную скорость кровотока в реальном времени."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Что в первую очередь определяет осевое (аксиальное) разрешение ультразвукового изображения?",
+    options: ["Ширина луча", "Длина пространственного импульса", "Частота кадров", "Глубина сканирования"],
+    correct: 1,
+    explain: "Осевое разрешение — способность различать две структуры вдоль хода луча; оно зависит от длины импульса (числа периодов волны): чем короче импульс и выше частота, тем лучше разрешение."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Что означает принцип ALARA в ультразвуковой диагностике?",
+    options: [
+      "Максимально возможная мощность для лучшей визуализации",
+      "Минимально необходимая мощность и время экспозиции для получения диагностической информации",
+      "Обязательное использование только B-режима",
+      "Исследование должно проводиться только врачом высшей категории"
+    ],
+    correct: 1,
+    explain: "ALARA (As Low As Reasonably Achievable) — принцип использования минимально достаточной энергии и времени воздействия ультразвука для получения нужной диагностической информации."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Как называется постепенное ослабление ультразвуковой волны при прохождении через ткани из-за поглощения и рассеяния?",
+    options: ["Рефракция", "Аттенюация (затухание)", "Дифракция", "Интерференция"],
+    correct: 1,
+    explain: "Аттенюация — совокупное ослабление интенсивности сигнала с глубиной за счёт поглощения, рассеяния и отражения энергии в тканях."
+  },
+  {
+    topic: "Физика УЗ",
+    q: "Какой режим используется для регистрации движения структуры (например, стенки сосуда или клапана) во времени по одной линии сканирования?",
+    options: ["B-режим", "M-режим (motion mode)", "3D-режим", "Импульсно-волновой допплер (PW)"],
+    correct: 1,
+    explain: "M-режим строит график положения структур вдоль одной линии сканирования во времени — используется, например, для оценки движения клапанов и стенок сосудов."
+  },
+  {
+    topic: "Анатомия",
+    q: "В норме эхогенность паренхимы печени по сравнению с корковым веществом почки:",
+    options: ["Ниже (печень гипоэхогенна)", "Равна", "Выше или равна (гиперэхогенна/изоэхогенна)", "Печень с почкой не сравнивается"],
+    correct: 2,
+    explain: "В норме печень слегка гиперэхогенна или изоэхогенна относительно коркового слоя почки. Если печень выглядит гипоэхогенной относительно почки — это признак патологии (например, жировой гепатоз даёт обратную картину)."
+  },
+  {
+    topic: "Анатомия",
+    q: "Нормальная толщина стенки желчного пузыря натощак не должна превышать:",
+    options: ["1 мм", "3 мм", "6 мм", "10 мм"],
+    correct: 1,
+    explain: "В норме толщина стенки желчного пузыря натощак не превышает 3 мм; утолщение стенки — один из УЗ-признаков холецистита или иной патологии."
+  },
+  {
+    topic: "Анатомия",
+    q: "Верхняя граница нормы диаметра общего жёлчного протока (холедоха) у взрослого без холецистэктомии:",
+    options: ["2 мм", "4–6 мм", "10 мм", "15 мм"],
+    correct: 1,
+    explain: "Диаметр холедоха в норме обычно не превышает 6 мм (с поправкой на возраст и состояние после холецистэктомии, когда норма может быть несколько больше)."
+  },
+  {
+    topic: "Анатомия",
+    q: "Головка поджелудочной железы анатомически прилежит и частично охватывается:",
+    options: ["Селезёнкой", "Подковой двенадцатиперстной кишки", "Желудком", "Левой почкой"],
+    correct: 1,
+    explain: "Головка поджелудочной железы располагается в подкове (петле) двенадцатиперстной кишки — важный анатомический ориентир при её поиске."
+  },
+  {
+    topic: "Анатомия",
+    q: "Какой сосуд чаще всего служит анатомическим ориентиром вдоль задней поверхности тела и хвоста поджелудочной железы?",
+    options: ["Аорта", "Нижняя полая вена", "Селезёночная вена", "Общая печёночная артерия"],
+    correct: 2,
+    explain: "Селезёночная вена проходит вдоль задней поверхности тела и хвоста поджелудочной железы и служит удобным ориентиром при её визуализации."
+  },
+  {
+    topic: "Анатомия",
+    q: "Нормальные продольные размеры селезёнки у взрослого обычно не превышают:",
+    options: ["6 см", "8 см", "12–13 см", "20 см"],
+    correct: 2,
+    explain: "В норме длинник селезёнки у взрослого обычно не превышает 12–13 см; превышение этого показателя расценивается как спленомегалия."
+  },
+  {
+    topic: "Анатомия",
+    q: "Центрально расположенная структура почки, включающая чашечно-лоханочную систему и синусный жир, называется:",
+    options: ["Корковое вещество", "Мозговое вещество (пирамиды)", "Почечный синус", "Капсула почки"],
+    correct: 2,
+    explain: "Почечный синус — центральная гиперэхогенная зона почки, содержащая чашечно-лоханочную систему, сосуды и жировую клетчатку."
+  },
+  {
+    topic: "Анатомия",
+    q: "Портальная триада, определяемая в воротах печени, включает:",
+    options: [
+      "Воротную вену, собственную печёночную артерию, общий жёлчный проток",
+      "Три печёночные вены",
+      "Воротную вену и две печёночные артерии",
+      "Нижнюю полую вену, аорту и холедох"
+    ],
+    correct: 0,
+    explain: "Портальная триада (глиссонова триада) в воротах печени — это воротная вена, собственная печёночная артерия и общий жёлчный проток, идущие в составе печёночно-двенадцатиперстной связки."
+  },
+  {
+    topic: "Анатомия",
+    q: "Печёночные вены впадают непосредственно в:",
+    options: ["Воротную вену", "Аорту", "Нижнюю полую вену", "Селезёночную вену"],
+    correct: 2,
+    explain: "Три главные печёночные вены (правая, средняя, левая) впадают в нижнюю полую вену непосредственно под диафрагмой — классическая точка их визуализации."
+  },
+  {
+    topic: "Анатомия",
+    q: "Какой ориентир чаще всего используют, чтобы отличить правую почку от печени и левую почку от селезёнки на продольном скане?",
+    options: [
+      "Цветовую окраску на экране",
+      "Соседний паренхиматозный орган как акустическое окно (печень справа, селезёнка слева)",
+      "Форму датчика",
+      "Установленную глубину сканирования"
+    ],
+    correct: 1,
+    explain: "Печень справа и селезёнка слева служат естественными акустическими окнами для визуализации соответствующих почек и одновременно ориентирами при сравнительной оценке эхогенности."
+  }
+];
+
+let current = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let score = 0;
+
+const quizArea = document.getElementById('quizArea');
+const resultArea = document.getElementById('resultArea');
+const progressFill = document.getElementById('progressFill');
+const qCounter = document.getElementById('qCounter');
+const scoreLive = document.getElementById('scoreLive');
+
+function renderQuestion(idx) {
+  const item = QUESTIONS[idx];
+  const answered = answers[idx] !== null;
+  const letters = ['А', 'Б', 'В', 'Г'];
+
+  let optsHtml = item.options.map((opt, i) => {
+    let cls = 'option';
+    if (answered) {
+      if (i === item.correct) cls += ' correct';
+      else if (i === answers[idx]) cls += ' wrong';
+    }
+    return `<button class="${cls}" ${answered ? 'disabled' : ''} onclick="selectAnswer(${i})">
+      <span class="letter">${letters[i]}</span><span>${opt}</span>
+    </button>`;
+  }).join('');
+
+  quizArea.innerHTML = `
+    <div class="card">
+      <div class="tag">${item.topic}</div>
+      <p class="q-text">${idx + 1}. ${item.q}</p>
+      <div class="options">${optsHtml}</div>
+      <div class="explain ${answered ? 'show' : ''}" id="explainBox">
+        ${answered ? '<b>Пояснение.</b> ' + item.explain : ''}
+      </div>
+      <div class="nav-row">
+        <button class="primary ${answered ? 'show' : ''}" id="nextBtn" onclick="nextQuestion()">
+          ${idx === QUESTIONS.length - 1 ? 'Показать результат' : 'Следующий вопрос'}
+        </button>
+      </div>
+    </div>
+  `;
+
+  qCounter.textContent = `Вопрос ${idx + 1} из ${QUESTIONS.length}`;
+  scoreLive.textContent = `Верно: ${score}`;
+  progressFill.style.width = ((idx) / QUESTIONS.length * 100) + '%';
+}
+
+function selectAnswer(i) {
+  if (answers[current] !== null) return;
+  answers[current] = i;
+  if (i === QUESTIONS[current].correct) score++;
+  renderQuestion(current);
+}
+
+function nextQuestion() {
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQuestion(current);
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  progressFill.style.width = '100%';
+  quizArea.classList.add('hidden');
+  resultArea.classList.remove('hidden');
+
+  const total = QUESTIONS.length;
+  const percent = Math.round(score / total * 100);
+  document.getElementById('finalScore').textContent = `${score} / ${total}`;
+  document.getElementById('finalPercent').textContent = `${percent}%`;
+
+  let physTotal = 0, physCorrect = 0, anatTotal = 0, anatCorrect = 0;
+  QUESTIONS.forEach((q, i) => {
+    const isCorrect = answers[i] === q.correct;
+    if (q.topic === 'Физика УЗ') { physTotal++; if (isCorrect) physCorrect++; }
+    else { anatTotal++; if (isCorrect) anatCorrect++; }
+  });
+  document.getElementById('physCorrect').textContent = `${physCorrect}/${physTotal}`;
+  document.getElementById('anatCorrect').textContent = `${anatCorrect}/${anatTotal}`;
+
+  let verdict;
+  if (percent >= 85) verdict = 'Отличный стартовый уровень группы.';
+  else if (percent >= 60) verdict = 'Хороший базовый уровень — есть над чем поработать по слабым темам.';
+  else if (percent >= 35) verdict = 'Средний уровень — рекомендуется усиленное повторение базы перед блоком 1–2.';
+  else verdict = 'Низкий стартовый уровень — стоит скорректировать темп начальных блоков.';
+  document.getElementById('verdict').textContent = verdict;
+
+  const letters = ['А', 'Б', 'В', 'Г'];
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = QUESTIONS.map((q, i) => {
+    const userAns = answers[i];
+    const isCorrect = userAns === q.correct;
+    return `
+      <div class="review-item">
+        <div class="review-q">${i + 1}. ${q.q}</div>
+        <div class="review-ans ${isCorrect ? 'correct' : 'wrong'}">
+          Ваш ответ: ${letters[userAns]}) ${q.options[userAns]} ${isCorrect ? '✓' : '✗'}
+        </div>
+        ${!isCorrect ? `<div class="review-ans correct">Правильный ответ: ${letters[q.correct]}) ${q.options[q.correct]}</div>` : ''}
+        <div class="review-explain">${q.explain}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function restartQuiz() {
+  current = 0;
+  answers = new Array(QUESTIONS.length).fill(null);
+  score = 0;
+  resultArea.classList.add('hidden');
+  quizArea.classList.remove('hidden');
+  renderQuestion(0);
+}
+
+renderQuestion(0);
+</script>
+<script>window.TG_CFG={title:'Входной тест — физика УЗ и анатомия ОБП',needFio:true,getReport:function(){function v(e){return e&&e.getClientRects().length>0} var ra=document.getElementById('resultArea');if(!v(ra))return null;var g=function(i){var e=document.getElementById(i);return e?e.textContent:'';};return 'Результат: '+g('finalScore')+' ('+g('finalPercent')+')\nФизика УЗ: '+g('physCorrect')+'\nАнатомия: '+g('anatCorrect')+'\n'+g('verdict');}};</script><script src="tg.js"></script>
+</body>
+</html>

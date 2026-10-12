@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Физика ультразвука — интерактивный тест (20 вопросов)</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@500..700&display=swap">
+<style>
+:root{
+  --bg:#F4F6F8; --card:#FBFCFD; --ink:#14284B; --body:#3F5068; --muted:#5B6B7F; --line:#CFDAE3;
+  --teal:#0E7C86; --teal-t:#0A6770; --teal-soft:#DDEEF0; --paper:#E6EDF2;
+  --ok-bg:#E1F1F2; --ok-line:#0E7C86; --ok-t:#0A6770;
+  --bad-bg:#FBEBD3; --bad-line:#B87A14; --bad-t:#7A4707;
+  --btn:#14284B; --btn-t:#F4F6F8;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1B2E; --card:#16263D; --ink:#E9EEF4; --body:#B9C7D8; --muted:#93A5BA; --line:#2A3D57;
+    --teal:#3FB3BE; --teal-t:#7FD1D8; --teal-soft:#123A45; --paper:#1C3049;
+    --ok-bg:#123A45; --ok-line:#3FB3BE; --ok-t:#8ADAE2;
+    --bad-bg:#3B2C10; --bad-line:#E3A23B; --bad-t:#F0C27A;
+    --btn:#7FD1D8; --btn-t:#0F1B2E;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1B2E; --card:#16263D; --ink:#E9EEF4; --body:#B9C7D8; --muted:#93A5BA; --line:#2A3D57;
+  --teal:#3FB3BE; --teal-t:#7FD1D8; --teal-soft:#123A45; --paper:#1C3049;
+  --ok-bg:#123A45; --ok-line:#3FB3BE; --ok-t:#8ADAE2;
+  --bad-bg:#3B2C10; --bad-line:#E3A23B; --bad-t:#F0C27A;
+  --btn:#7FD1D8; --btn-t:#0F1B2E;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'IBM Plex Sans',Arial,sans-serif;font-size:17px;line-height:1.5;-webkit-text-size-adjust:100%;}
+.wrap{max-width:780px;margin:0 auto;padding:18px 16px 56px;}
+h1,h2,h3{margin:0;font-weight:600;line-height:1.2;}
+h1,h2{font-family:'Source Serif 4',Georgia,serif;}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--teal-t);margin:0 0 8px;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px;}
+.stack>*+*{margin-top:14px;}
+p{margin:0;}
+.muted{color:var(--muted);}
+.body{color:var(--body);}
+button{font:inherit;color:inherit;cursor:pointer;}
+button:focus-visible{outline:3px solid var(--teal);outline-offset:2px;}
+.btn{background:var(--btn);color:var(--btn-t);border:0;border-radius:12px;padding:13px 20px;font-weight:600;font-size:16px;min-height:48px;}
+.btn.sec{background:transparent;color:var(--ink);border:1.5px solid var(--line);}
+.btn[disabled]{opacity:.45;cursor:not-allowed;}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.grow{flex:1;}
+/* header */
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:10px;}
+.top .t{font-weight:600;color:var(--ink);}
+.bar{height:8px;background:var(--paper);border-radius:6px;overflow:hidden;margin-bottom:14px;}
+.bar>i{display:block;height:100%;background:var(--teal);width:0;transition:width .25s;}
+/* map */
+.map{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-bottom:16px;}
+@media (max-width:520px){.map{grid-template-columns:repeat(5,1fr);}}
+.map button{position:relative;border:1.5px solid var(--line);background:var(--card);border-radius:10px;min-height:42px;font-weight:600;font-size:15px;color:var(--ink);}
+.map button.ok{background:var(--ok-bg);border-color:var(--ok-line);color:var(--ok-t);}
+.map button.bad{background:var(--bad-bg);border-color:var(--bad-line);color:var(--bad-t);}
+.map button.cur{outline:3px solid var(--ink);outline-offset:1px;}
+.map button .m{position:absolute;top:1px;right:5px;font-size:11px;font-weight:700;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:-8px 0 16px;}
+.legend span::before{content:"";display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:6px;vertical-align:-1px;border:1.5px solid var(--line);background:var(--card);}
+.legend .lo::before{background:var(--ok-bg);border-color:var(--ok-line);}
+.legend .lb::before{background:var(--bad-bg);border-color:var(--bad-line);}
+/* question */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.chip{font-size:13px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--paper);color:var(--body);}
+.chip.lv1{background:var(--teal-soft);color:var(--teal-t);}
+.chip.lv3{background:var(--bad-bg);color:var(--bad-t);}
+.q{font-size:19px;font-weight:500;line-height:1.45;color:var(--ink);}
+.opts{display:grid;gap:10px;margin-top:16px;}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;min-height:52px;color:var(--ink);}
+.opt .l{flex:none;width:28px;height:28px;border-radius:50%;background:var(--paper);display:grid;place-items:center;font-weight:600;font-size:14px;color:var(--body);}
+.opt:not([disabled]):hover{border-color:var(--teal);}
+.opt.right{background:var(--ok-bg);border-color:var(--ok-line);}
+.opt.right .l{background:var(--ok-line);color:var(--btn-t);}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad-line);}
+.opt.wrong .l{background:var(--bad-line);color:#fff;}
+.opt.dim{opacity:.62;}
+.opt[disabled]{cursor:default;}
+.tag{margin-left:auto;flex:none;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;align-self:center;}
+.opt.right .tag{color:var(--ok-t);} .opt.wrong .tag{color:var(--bad-t);}
+/* feedback */
+.fb{margin-top:16px;border-radius:14px;padding:16px 18px;border:1.5px solid var(--line);background:var(--card);}
+.fb.ok{background:var(--ok-bg);border-color:var(--ok-line);}
+.fb.bad{background:var(--bad-bg);border-color:var(--bad-line);}
+.fb h3{font-size:18px;margin-bottom:8px;}
+.fb.ok h3{color:var(--ok-t);} .fb.bad h3{color:var(--bad-t);}
+.fb .blk{margin-top:10px;color:var(--ink);}
+.fb .blk b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px;}
+.nav{display:flex;gap:10px;margin-top:18px;}
+.nav .btn{flex:1;}
+sub,sup{line-height:0;}
+/* results */
+.score{font-family:'Source Serif 4',Georgia,serif;font-size:64px;font-weight:700;line-height:1;color:var(--teal-t);}
+.grade{font-size:22px;font-weight:600;}
+table{width:100%;border-collapse:collapse;font-size:15px;}
+th,td{padding:9px 10px;text-align:left;border-bottom:1px solid var(--line);}
+th{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase;}
+tr.me td{background:var(--ok-bg);font-weight:600;color:var(--ok-t);}
+.tb{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;margin-top:10px;}
+.tb .n{font-weight:500;}
+.tb .v{font-weight:600;font-variant-numeric:tabular-nums;}
+.tb .b{grid-column:1/3;height:8px;border-radius:5px;background:var(--paper);overflow:hidden;}
+.tb .b i{display:block;height:100%;background:var(--teal);}
+.tb .b i.low{background:var(--bad-line);}
+.tb .h{grid-column:1/3;font-size:13px;color:var(--muted);margin-top:-2px;}
+.wl button{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;margin-top:8px;color:var(--ink);}
+.wl button small{display:block;color:var(--muted);}
+textarea{width:100%;min-height:96px;font:inherit;font-size:14px;background:var(--card);color:var(--ink);border:1.5px solid var(--line);border-radius:10px;padding:10px;}
+.foot{margin-top:28px;font-size:13px;color:var(--muted);text-align:center;}
+ul.plain{margin:8px 0 0;padding-left:20px;} ul.plain li{margin:4px 0;}
+</style>
+<style>[hidden]{display:none!important}</style></head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+(function(){
+/* ---------- ДАННЫЕ ---------- */
+var TOPICS = {
+  wave:  {n:'Природа волны',        ch:'глава 1'},
+  tissue:{n:'Волна и ткань',        ch:'глава 2'},
+  probe: {n:'Датчик и пучок',       ch:'главы 3–4'},
+  time:  {n:'Время и режимы',       ch:'главы 4–5'},
+  dopp:  {n:'Допплер',              ch:'глава 6'},
+  art:   {n:'Артефакты и эластография', ch:'главы 7–8'},
+  safe:  {n:'Безопасность и практика',  ch:'главы 9–10'}
+};
+var LEVELS = {1:'базовый',2:'средний',3:'сложный'};
+
+var Q = [
+{t:'wave',l:1,
+ q:'Какой тип волны распространяется в мягких тканях при диагностическом ультразвуковом исследовании?',
+ o:['Поперечная механическая волна','Продольная механическая волна','Электромагнитная волна','Поверхностная волна Рэлея','Стоячая волна'],c:1,
+ why:'Ультразвук — механическая волна: частицы среды колеблются вдоль направления распространения, создавая чередующиеся зоны сжатия и разрежения. Электромагнитной природы у него нет, поэтому в вакууме он не существует. Поперечные (сдвиговые) волны в мягких тканях быстро затухают и от датчика не распространяются.',
+ key:'Диагностический ультразвук — продольная механическая волна; переносит энергию, но не вещество.',
+ pr:'Сдвиговые волны для эластографии (SWE) создают искусственно внутри ткани фокусированным импульсом, а не излучают датчиком.'},
+
+{t:'wave',l:1,
+ q:'Какая величина в диагностическом диапазоне определяется <b>только свойствами среды</b>, но не источником?',
+ o:['Частота','Период','Скорость звука','Мощность излучения','Длительность импульса'],c:2,
+ why:'Частоту и период задаёт источник (датчик) и в среде они не меняются. Скорость зависит от жёсткости и плотности среды: c растёт с жёсткостью и падает с плотностью. В мягких тканях аппарат принимает c = 1540 м/с.',
+ key:'Частота — от источника; скорость — от среды; длина волны — от обоих: λ = c / f.',
+ pr:'Если реальная скорость отличается от 1540 м/с (например, в жировой ткани ≈ 1450 м/с), объект смещается по глубине.'},
+
+{t:'wave',l:1,
+ q:'Чему равна длина волны в мягких тканях при частоте 10 МГц (c = 1540 м/с)?',
+ o:['0,015 мм','0,077 мм','0,154 мм','0,31 мм','1,54 мм'],c:2,
+ why:'λ = c / f = 1540 м/с ÷ 10·10<sup>6</sup> Гц = 0,000154 м = 0,154 мм. Удобное правило: λ (мм) ≈ 1,5 / f (МГц).',
+ key:'λ (мм) ≈ 1,5 / f (МГц): чем выше частота, тем короче волна.',
+ pr:'Осевое разрешение определяется длиной импульса, то есть длиной волны: поэтому высокие частоты дают более мелкие детали.'},
+
+{t:'tissue',l:1,
+ q:'Что определяет долю энергии, отражённой на плоской границе двух сред при перпендикулярном падении?',
+ o:['Разность акустических импедансов сред','Только разность плотностей сред','Частота датчика','Толщина слоя геля','Глубина расположения границы'],c:0,
+ why:'R = ((Z₂ − Z₁) / (Z₂ + Z₁))², где Z = ρ·c. Важна именно разность импедансов: если она мала, отражение почти нет и граница почти не видна; если велика, отражается значительная доля энергии.',
+ key:'Отражение определяется разностью акустических импедансов, а не отдельно плотностью или скоростью.',
+ pr:'Печень и почка (Z ≈ 1,65 и 1,63 МРэл) отражают ≈ 0,004 % — их граница видна только за счёт различий в рассеянии.'},
+
+{t:'tissue',l:2,
+ q:'Датчик приложили к сухой коже без геля, и изображение почти не получено. Наиболее точное объяснение:',
+ o:['Кожа полностью поглощает ультразвук','Воздушная прослойка с очень малым импедансом отражает ≈ 99,9 % энергии','Без геля падает частота датчика','Без геля в ткани уменьшается скорость звука','Воздух вызывает резонанс пьезоэлементов'],c:1,
+ why:'Импеданс воздуха (≈ 0,0004 МРэл) на три порядка ниже импеданса мягких тканей (≈ 1,6 МРэл). По формуле отражения на границе «кожа — воздух» отражается ≈ 99,9 % интенсивности. Гель (Z ≈ 1,5 МРэл) заменяет воздух и согласует среды.',
+ key:'Гель — согласующая среда: он убирает воздушный зазор, а не «проводит» звук сам по себе.',
+ pr:'Пузыри в геле, волосы и плохой контакт — частая причина тёмных участков и «выпадения» сигнала.'},
+
+{t:'wave',l:1,
+ q:'Усиление приёмника увеличили на 6 дБ. Во сколько раз выросла <b>амплитуда</b> сигнала?',
+ o:['В 1,4 раза','В 2 раза','В 4 раза','В 6 раз','В 10 раз'],c:1,
+ why:'По амплитуде: дБ = 20·lg(A₂/A₁), поэтому +6 дБ означают A₂/A₁ = 10<sup>6/20</sup> ≈ 2. По интенсивности те же +6 дБ — это ×4 (множитель 10, а не 20). Три числа для запоминания: 3 дБ — ×2 по интенсивности, 6 дБ — ×2 по амплитуде, 10 дБ — ×10 по интенсивности.',
+ key:'+6 дБ = ×2 по амплитуде = ×4 по интенсивности.',
+ pr:'Регулировка общего усиления и TGC меняет только приём: излучаемая мощность (и нагрузка на пациента) при этом не растёт.'},
+
+{t:'tissue',l:3,
+ q:'Датчик 4 МГц, объект на глубине 8 см, коэффициент затухания α = 0,5 дБ/(см·МГц). Какие потери сигнала следует ожидать (путь туда и обратно)?',
+ o:['8 дБ','16 дБ','32 дБ','64 дБ','4 дБ'],c:2,
+ why:'Потери (дБ) = α · f · L. Ультразвук проходит путь до объекта и обратно: L = 2 × 8 = 16 см. Потери = 0,5 × 4 × 16 = 32 дБ. Ответ 16 дБ получится, если забыть про обратный путь.',
+ key:'Потери (дБ) = α · f · L, где L — полный путь (глубина × 2).',
+ pr:'На 7 МГц те же потери составили бы 56 дБ — поэтому для глубоких структур выбирают более низкую частоту и усиливают дальнюю зону кривой TGC.'},
+
+{t:'tissue',l:2,
+ q:'Какой датчик оптимален для щитовидной железы (глубина 2–4 см)?',
+ o:['Линейный 10–15 МГц','Конвексный 2–3,5 МГц','Секторный 1–3 МГц','Линейный 2–3 МГц','Внутрисосудистый 20–40 МГц'],c:0,
+ why:'Для малой глубины выгодна высокая частота: разрешение выше, а потери из-за небольшого пути допустимы. Линейный датчик даёт прямоугольное поле без потери ширины в ближней зоне. Низкочастотные конвексный и секторный датчики рассчитаны на глубину 10–25 см.',
+ key:'Берите максимальную частоту, которая ещё позволяет увидеть нужную глубину.',
+ pr:'Щитовидная и молочная железы, мошонка, сосуды шеи — 9–15 МГц; брюшная полость — 2–5 МГц.'},
+
+{t:'probe',l:1,
+ q:'Какова главная функция демпфирующего (заднего) слоя датчика?',
+ o:['Укорачивать импульс и улучшать осевое разрешение','Фокусировать пучок по толщине среза','Согласовывать импеданс пьезокерамики и ткани','Повышать чувствительность датчика','Экранировать датчик от электрических помех'],c:0,
+ why:'Демпфер гасит колебания пьезоэлементов, импульс становится коротким (2–3 периода), а полоса частот — широкой; осевое разрешение = длина импульса / 2. Платой становится чуть меньшая чувствительность. Фокусирует по элевации линза, согласует импедансы согласующий слой (≈ λ/4).',
+ key:'Короткий импульс = лучшее осевое разрешение; цена — снижение чувствительности.',
+ pr:'Широкая полоса делает возможными тканевую гармонику и составные частоты.'},
+
+{t:'probe',l:2,
+ q:'Частота 5 МГц, в импульсе 2 периода (c = 1540 м/с). Каково осевое разрешение?',
+ o:['≈ 0,15 мм','≈ 0,31 мм','≈ 0,62 мм','≈ 1,2 мм','≈ 3,1 мм'],c:1,
+ why:'λ = 1540 / 5·10<sup>6</sup> ≈ 0,31 мм. Длина импульса SPL = n·λ = 2 × 0,31 = 0,62 мм. Осевое разрешение = SPL / 2 ≈ 0,31 мм. Ответ 0,62 мм получается, если забыть поделить на 2 (учесть путь туда и обратно).',
+ key:'Осевое разрешение = SPL / 2 = n·λ / 2.',
+ pr:'На 10 МГц при том же n оно ≈ 0,15 мм. Осевое разрешение почти всегда лучше латерального, а латеральное лучше элевационного.'},
+
+{t:'probe',l:2,
+ q:'Как изменится длина ближней зоны нефокусированного дискового источника, L = D² / (4λ), при <b>увеличении диаметра и повышении частоты</b>?',
+ o:['Уменьшится','Увеличится','Не изменится','Сначала увеличится, затем уменьшится','Изменится только при включении гармоники'],c:1,
+ why:'L = D² / (4λ). Увеличение диаметра D увеличивает числитель (в квадрате); повышение частоты укорачивает λ и уменьшает знаменатель. Оба изменения удлиняют ближнюю зону. Пример: D = 10 мм, 5 МГц → L ≈ 81 мм; при 2,5 МГц ≈ 40 мм.',
+ key:'Чем больше апертура и выше частота, тем длиннее ближняя зона и уже пучок на глубине.',
+ pr:'Фокус лучше ставить на уровень интересующей структуры или чуть глубже — там пучок наиболее узкий.'},
+
+{t:'time',l:2,
+ q:'Глубина сканирования 20 см. Какова максимально возможная частота повторения импульсов (PRF)?',
+ o:['≈ 1,9 кГц','≈ 3,85 кГц','≈ 7,7 кГц','≈ 15,4 кГц','≈ 77 кГц'],c:1,
+ why:'Следующий импульс нельзя излучать, пока не вернулось эхо с максимальной глубины. Время возврата — 13 мкс на 1 см, для 20 см это 260 мкс. PRF ≈ 77 000 / глубина (см) = 77 000 / 20 ≈ 3850 Гц.',
+ key:'PRF ≈ 77 000 / глубина (см).',
+ pr:'Глубже область — ниже PRF, ниже частота кадров и предел Найквиста в импульсном допплере.'},
+
+{t:'time',l:2,
+ q:'Что приведёт к <b>снижению</b> частоты кадров в B-режиме?',
+ o:['Уменьшение глубины','Сужение сектора','Добавление ещё двух фокальных зон','Уменьшение числа линий в кадре','Отключение пространственного компаундинга'],c:2,
+ why:'Частота кадров ≈ 77 000 / (глубина · число линий). Каждая дополнительная фокальная зона требует отдельных импульсов на каждой линии, поэтому кадр строится дольше. Остальные действия, наоборот, сокращают время построения кадра.',
+ key:'Кадры падают при росте глубины, сектора, плотности линий, числа фокусов, включении компаундинга и допплера.',
+ pr:'Для подвижных объектов (сердце, плод) число фокусов и сектор сокращают до необходимого минимума.'},
+
+{t:'time',l:2,
+ q:'В чём принцип тканевой гармоники (THI)?',
+ o:['Излучение на f₀, приём на 2f₀','Излучение на 2f₀, приём на f₀','Излучение и приём на f₀/2','Излучение на нескольких углах с усреднением кадров','Излучение непрерывной волной'],c:0,
+ why:'При распространении мощного импульса волна искажается (нелинейное распространение), и в тканях постепенно возникает вторая гармоника 2f₀. Аппарат излучает на основной частоте, а принимает на удвоенной. Гармоника не образуется в ближнем поле и в боковых лепестках — поэтому шумов и артефактов меньше.',
+ key:'THI: излучаем f₀, принимаем 2f₀; меньше артефактов ближней зоны и боковых лепестков.',
+ pr:'Особенно полезна при ожирении и трудном доступе; критерии оценки камней и кист подтверждайте и в обычном режиме.'},
+
+{t:'dopp',l:3,
+ q:'Частота датчика 5 МГц, скорость кровотока 1 м/с, угол между лучом и потоком 60°, c = 1540 м/с. Чему равен допплеровский сдвиг?',
+ o:['0 Гц','≈ 1,6 кГц','≈ 3,2 кГц','≈ 6,5 кГц','≈ 13 кГц'],c:2,
+ why:'f<sub>d</sub> = 2·f₀·v·cos θ / c = 2 × 5·10<sup>6</sup> × 1 × 0,5 / 1540 ≈ 3247 Гц. Ответ 1,6 кГц получится без множителя 2, ответ 6,5 кГц — если не учесть cos 60° = 0,5.',
+ key:'f<sub>d</sub> = 2·f₀·v·cos θ / c; множитель 2 — из-за двойного допплеровского сдвига.',
+ pr:'Сдвиги лежат в слышимом диапазоне (сотни Гц — единицы кГц), поэтому спектральный допплер сопровождается звуком.'},
+
+{t:'dopp',l:2,
+ q:'Импульсный допплер, PRF = 6 кГц. Какой максимальный допплеровский сдвиг можно измерить без алиасинга?',
+ o:['1,5 кГц','3 кГц','6 кГц','12 кГц','Ограничения нет'],c:1,
+ why:'Предел Найквиста: f<sub>d,max</sub> = PRF / 2 = 3 кГц. При превышении спектр «заворачивается» на противоположную сторону нулевой линии.',
+ key:'Алиасинг возникает при f<sub>d</sub> &gt; PRF / 2.',
+ pr:'Устранение: увеличить шкалу (PRF), сместить нулевую линию, уменьшить глубину, снизить частоту датчика, перейти на CW или HPRF.'},
+
+{t:'dopp',l:3,
+ q:'Оператор ввёл в корректор угол 65°, хотя реальный угол между лучом и потоком 60°. Как изменится вычисленная скорость?',
+ o:['Занизится примерно на 18 %','Завысится примерно на 18 %','Завысится примерно в 2 раза','Не изменится','Занизится примерно на 8 %'],c:1,
+ why:'Скорость вычисляют делением на cos θ, а измеренный сдвиг остаётся тем же. v<sub>изм</sub> / v<sub>ист</sub> = cos 60° / cos 65° = 0,500 / 0,423 ≈ 1,18. Чем больше угол, тем круче косинус: при θ = 30° такая же ошибка даёт всего ≈ 6 %.',
+ key:'Ошибка угла в 5° при 60° даёт ≈ +18 % к скорости; угол должен быть ≤ 60°, корректор — по оси потока.',
+ pr:'Завышенный PSV может ложно повысить степень стеноза (например, ВСА).'},
+
+{t:'art',l:2,
+ q:'В мочевом пузыре у передней стенки — слоистая «взвесь». При повороте пациента она не смещается, при снижении общего усиления исчезает. Наиболее вероятная причина:',
+ o:['Истинный осадок','Сгусток крови','Артефакт боковых лепестков и толщины среза','Дистальное усиление','Зеркальное изображение'],c:2,
+ why:'Истинный осадок подчиняется силе тяжести: он лежит на самом низком участке (задняя стенка при положении на спине) и смещается при смене положения. Слои у передней стенки, исчезающие при снижении усиления, — типичные боковые лепестки и артефакт толщины среза: эхо вне оси пучка попадает на ось.',
+ key:'Артефакт меняет вид при смене положения, угла и усиления; не повторяется в другой проекции — считайте его артефактом.',
+ pr:'Помогают снижение усиления, тканевая гармоника, пространственный компаундинг и смена окна.'},
+
+{t:'art',l:3,
+ q:'Скорость сдвиговой волны в ткани печени c<sub>s</sub> = 3 м/с, плотность ρ = 1000 кг/м³. Чему равен модуль Юнга E = 3ρc<sub>s</sub>²?',
+ o:['9 кПа','18 кПа','27 кПа','54 кПа','3 кПа'],c:2,
+ why:'E = 3 · ρ · c<sub>s</sub>² = 3 × 1000 × 3² = 27 000 Па = 27 кПа. Скорость выросла в 1,5 раза относительно 2 м/с (12 кПа), а жёсткость — в 2,25 раза: зависимость квадратичная.',
+ key:'E = 3ρc<sub>s</sub>²: рост скорости в k раз увеличивает жёсткость в k² раз.',
+ pr:'Пороги в кПа не переносятся между аппаратами и методами; в чистой жидкости сдвиговые волны не распространяются.'},
+
+{t:'safe',l:2,
+ q:'Изображение слишком тёмное. Какое действие по принципу ALARA следует предпринять <b>в последнюю очередь</b>?',
+ o:['Повысить выходную мощность','Повысить общее усиление','Скорректировать TGC','Сменить частоту или положение фокуса','Включить тканевую гармонику'],c:0,
+ why:'Усиление, TGC, частота, фокус и гармоника не увеличивают излучаемую энергию: они меняют приём и обработку. Выходная мощность повышает MI и TI, то есть нагрузку на пациента, поэтому её увеличивают только тогда, когда остальное исчерпано.',
+ key:'Порядок: усиление и TGC → частота и фокус → гармоника → выходная мощность.',
+ pr:'В I триместре допплер — только по показаниям, при TI ≤ 1,0 и минимальном времени; ЧСС эмбриона оценивают М-режимом.'}
+];
+
+/* ---------- СОСТОЯНИЕ ---------- */
+var KEY='us-physics-quiz-v1';
+var N=Q.length, LET=['A','B','C','D','E'];
+var S=null;            // {perm:[], ans:[], cur:0, done:false}
+var view='intro';    // intro | quiz | result
+var app=document.getElementById('app');
+
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function fresh(){return {perm:Q.map(function(){return shuffle([0,1,2,3,4]);}),ans:Q.map(function(){return -1;}),cur:0,done:false};}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function load(){try{var r=localStorage.getItem(KEY);if(!r)return null;var s=JSON.parse(r);if(s&&s.perm&&s.perm.length===N&&s.ans&&s.ans.length===N)return s;}catch(e){}return null;}
+function clearSave(){try{localStorage.removeItem(KEY);}catch(e){}}
+function cd(i){return S.perm[i].indexOf(Q[i].c);}         // правильная позиция в показанном порядке
+function answered(i){return S.ans[i]>=0;}
+function isOk(i){return S.ans[i]===cd(i);}
+function nAnswered(){return S.ans.filter(function(x){return x>=0;}).length;}
+function nOk(){var k=0;for(var i=0;i<N;i++)if(answered(i)&&isOk(i))k++;return k;}
+function $(s){return document.querySelector(s);}
+function esc(s){return String(s).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+function toTop(){window.scrollTo(0,0);}
+
+/* ---------- ЭКРАНЫ ---------- */
+function renderIntro(){
+  var saved=load(), prog='';
+  if(saved){var a=saved.ans.filter(function(x){return x>=0;}).length;prog='<div class="card stack"><p class="body">Есть сохранённый прогресс: отвечено <b>'+a+' из '+N+'</b>.</p><div class="row"><button class="btn grow" id="cont">Продолжить</button><button class="btn sec grow" id="again">Начать заново</button></div></div>';}
+  app.innerHTML=
+   '<div class="stack">'+
+   '<div><p class="eyebrow">Интерактивный тест</p><h1 style="font-size:32px">Физика ультразвука в медицине</h1><p class="body" style="margin-top:8px">20 вопросов по лекции: волна и ткань, датчик и пучок, допплер, артефакты и эластография, безопасность.</p></div>'+
+   '<div class="card stack">'+
+   '<h3 style="font-size:18px">Как проходить</h3>'+
+   '<ul class="plain body"><li>Один правильный вариант из пяти. После ответа сразу показывается разбор.</li><li>Ответ нельзя изменить, но можно вернуться к любому вопросу через карту вопросов.</li><li>Порядок вариантов перемешивается при каждой попытке.</li><li>Расчётные задачи: используйте c = 1540 м/с и α = 0,5 дБ/(см·МГц) для мягких тканей.</li></ul>'+
+   '<p class="muted" style="font-size:14px">Состав: 6 базовых, 10 средних и 4 сложных вопроса. Прогресс сохраняется в этом браузере.</p>'+
+   '</div>'+ prog +
+   (saved?'':'<button class="btn" id="start" style="width:100%">Начать тест</button>')+
+   '<p class="foot">Значения — учебные ориентиры; пороги и нормы сверяйте с актуальными руководствами.</p></div>';
+  var b;
+  if((b=$('#start')))b.onclick=function(){S=fresh();save();view='quiz';render();};
+  if((b=$('#cont')))b.onclick=function(){S=saved;view=S.done?'result':'quiz';render();};
+  if((b=$('#again')))b.onclick=function(){S=fresh();save();view='quiz';render();};
+}
+
+function mapHTML(){
+  var h='<div class="map" role="navigation" aria-label="Карта вопросов">';
+  for(var i=0;i<N;i++){
+    var c='',m='';
+    if(answered(i)){c=isOk(i)?'ok':'bad';m=isOk(i)?'✓':'✕';}
+    if(i===S.cur)c+=' cur';
+    h+='<button class="'+c+'" data-go="'+i+'" aria-label="Вопрос '+(i+1)+(answered(i)?(isOk(i)?', верно':', неверно'):', без ответа')+'">'+(i+1)+(m?'<span class="m">'+m+'</span>':'')+'</button>';
+  }
+  return h+'</div><div class="legend"><span>без ответа</span><span class="lo">верно ✓</span><span class="lb">неверно ✕</span></div>';
+}
+
+function renderQuiz(){
+  var i=S.cur, q=Q[i], perm=S.perm[i], a=S.ans[i], done=answered(i), okc=cd(i);
+  var pct=Math.round(nAnswered()/N*100);
+  var h='<div class="top"><span class="t">Вопрос '+(i+1)+' из '+N+'</span><span class="muted" style="font-size:14px">Верно: '+nOk()+' · отвечено: '+nAnswered()+'</span></div>'+
+        '<div class="bar"><i style="width:'+pct+'%"></i></div>'+mapHTML()+
+        '<div class="card"><div class="chips"><span class="chip">'+TOPICS[q.t].n+'</span><span class="chip lv'+q.l+'">'+LEVELS[q.l]+'</span></div>'+
+        '<p class="q">'+q.q+'</p><div class="opts" role="group" aria-label="Варианты ответа">';
+  for(var k=0;k<5;k++){
+    var cls='opt',tag='';
+    if(done){
+      if(k===okc){cls+=' right';tag='<span class="tag">верно</span>';}
+      else if(k===a){cls+=' wrong';tag='<span class="tag">ваш ответ</span>';}
+      else cls+=' dim';
+    }
+    h+='<button class="'+cls+'" data-opt="'+k+'"'+(done?' disabled':'')+'><span class="l">'+LET[k]+'</span><span>'+q.o[perm[k]]+'</span>'+tag+'</button>';
+  }
+  h+='</div>';
+  if(done){
+    var good=isOk(i);
+    h+='<div class="fb '+(good?'ok':'bad')+'" id="fb"><h3>'+(good?'Верно':'Неверно — правильный ответ: '+LET[okc])+'</h3>'+
+       '<p>'+q.why+'</p>'+
+       '<div class="blk"><b>Ключевой вывод</b>'+q.key+'</div>'+
+       '<div class="blk"><b>В практике УЗИ</b>'+q.pr+'</div></div>';
+  }
+  h+='</div><div class="nav"><button class="btn sec" id="prev"'+(i===0?' disabled':'')+'>← Назад</button>';
+  if(i<N-1)h+='<button class="btn" id="next">Далее →</button>';
+  else h+='<button class="btn" id="fin"'+(nAnswered()<N?' disabled':'')+'>'+(nAnswered()<N?'Осталось ответить: '+(N-nAnswered()):'Показать результат')+'</button>';
+  h+='</div>';
+  if(i<N-1&&nAnswered()===N)h+='<div class="nav"><button class="btn sec" id="fin2">Перейти к результату</button></div>';
+  app.innerHTML=h;
+  var b;
+  app.querySelectorAll('[data-go]').forEach(function(x){x.onclick=function(){S.cur=+x.getAttribute('data-go');save();renderQuiz();toTop();};});
+  app.querySelectorAll('[data-opt]').forEach(function(x){x.onclick=function(){choose(+x.getAttribute('data-opt'));};});
+  if((b=$('#prev')))b.onclick=function(){if(S.cur>0){S.cur--;save();renderQuiz();toTop();}};
+  if((b=$('#next')))b.onclick=function(){if(S.cur<N-1){S.cur++;save();renderQuiz();toTop();}};
+  if((b=$('#fin')))b.onclick=finish;
+  if((b=$('#fin2')))b.onclick=finish;
+}
+
+function choose(k){
+  var i=S.cur; if(answered(i))return;
+  S.ans[i]=k; save(); renderQuiz();
+  var fb=$('#fb'); if(fb&&fb.scrollIntoView)fb.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+function finish(){if(nAnswered()<N)return;S.done=true;save();view='result';render();toTop();}
+
+function grade(p){
+  if(p>=90)return {n:'Отлично',d:'Материал усвоен уверенно.'};
+  if(p>=75)return {n:'Хорошо',d:'Повторите отмеченные слабые темы.'};
+  if(p>=60)return {n:'Удовлетворительно',d:'Вернитесь к лекции по слабым темам и пройдите тест ещё раз.'};
+  return {n:'Нужно повторить',d:'Разберите лекцию по главам и пройдите тест заново.'};
+}
+var SCALE=[['18–20','90–100 %','Отлично',90],['15–17','75–89 %','Хорошо',75],['12–14','60–74 %','Удовлетворительно',60],['0–11','< 60 %','Нужно повторить',0]];
+
+function stats(){
+  var by={};Object.keys(TOPICS).forEach(function(k){by[k]={ok:0,n:0};});
+  for(var i=0;i<N;i++){var t=Q[i].t;by[t].n++;if(isOk(i))by[t].ok++;}
+  return by;
+}
+function resultText(){
+  var k=nOk(),p=Math.round(k/N*100),g=grade(p),by=stats(),weak=[];
+  Object.keys(by).forEach(function(t){if(by[t].n&&by[t].ok/by[t].n<0.75)weak.push(TOPICS[t].n+' ('+by[t].ok+'/'+by[t].n+')');});
+  return 'Физика ультразвука — тест: '+k+' из '+N+' ('+p+' %) — '+g.n+'.'+(weak.length?' К повторению: '+weak.join('; ')+'.':' Слабых тем нет.');
+}
+function renderResult(){
+  var k=nOk(),p=Math.round(k/N*100),g=grade(p),by=stats();
+  var h='<div class="stack"><div><p class="eyebrow">Результат</p>'+
+    '<div class="card stack"><div class="score">'+k+' / '+N+'</div><div class="grade">'+g.n+' · '+p+' %</div><p class="body">'+g.d+'</p></div></div>'+
+    '<div class="card"><h3 style="font-size:18px;margin-bottom:8px">Шкала оценки</h3><table><tr><th>Баллы</th><th>Доля</th><th>Оценка</th></tr>';
+  SCALE.forEach(function(r){h+='<tr'+(g.n===r[2]?' class="me"':'')+'><td>'+r[0]+'</td><td>'+r[1]+'</td><td>'+r[2]+(g.n===r[2]?' ← ваш результат':'')+'</td></tr>';});
+  h+='</table></div><div class="card"><h3 style="font-size:18px">Результат по темам</h3>';
+  Object.keys(TOPICS).forEach(function(t){
+    var r=by[t],w=r.n?Math.round(r.ok/r.n*100):0,low=r.n&&r.ok/r.n<0.75;
+    h+='<div class="tb"><span class="n">'+TOPICS[t].n+'</span><span class="v">'+r.ok+' / '+r.n+'</span><div class="b"><i class="'+(low?'low':'')+'" style="width:'+w+'%"></i></div>'+(low?'<div class="h">Повторить: '+TOPICS[t].ch+' лекции</div>':'')+'</div>';
+  });
+  h+='</div>';
+  var wrong=[];for(var i=0;i<N;i++)if(!isOk(i))wrong.push(i);
+  h+='<div class="card wl"><h3 style="font-size:18px">Разбор ошибок</h3>';
+  if(!wrong.length)h+='<p class="body" style="margin-top:8px">Ошибок нет — все ответы верные.</p>';
+  else wrong.forEach(function(i){h+='<button data-rev="'+i+'"><b>Вопрос '+(i+1)+'</b> · '+TOPICS[Q[i].t].n+'<small>'+Q[i].key+'</small></button>';});
+  h+='</div><div class="row"><button class="btn grow" id="retry">Пройти заново</button><button class="btn sec grow" id="review">Просмотреть все вопросы</button></div>'+
+     '<button class="btn sec" id="copy" style="width:100%">Скопировать результат</button><div id="copybox"></div>'+
+     '<p class="foot">Жумагулов Н.М. · АДЦ «Сономедплюс»</p></div>';
+  app.innerHTML=h;
+  app.querySelectorAll('[data-rev]').forEach(function(x){x.onclick=function(){S.cur=+x.getAttribute('data-rev');view='quiz';save();render();toTop();};});
+  $('#retry').onclick=function(){S=fresh();save();view='quiz';render();toTop();};
+  $('#review').onclick=function(){S.cur=0;view='quiz';save();render();toTop();};
+  $('#copy').onclick=function(){
+    var t=resultText(),box=$('#copybox');
+    function fallback(){box.innerHTML='<textarea readonly id="ta">'+esc(t)+'</textarea>';var ta=$('#ta');ta.focus();ta.select();}
+    try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){box.innerHTML='<p class="muted" style="margin-top:8px;font-size:14px">Скопировано.</p>';},fallback);}else fallback();}catch(e){fallback();}
+  };
+}
+
+/* ---------- КЛАВИАТУРА ---------- */
+document.addEventListener('keydown',function(e){
+  if(view!=='quiz'||!S)return;
+  if(e.target&&(e.target.tagName==='TEXTAREA'))return;
+  var n=parseInt(e.key,10);
+  if(n>=1&&n<=5){choose(n-1);return;}
+  if(e.key==='ArrowRight'){if(S.cur<N-1&&answered(S.cur)){S.cur++;save();renderQuiz();toTop();}}
+  if(e.key==='ArrowLeft'){if(S.cur>0){S.cur--;save();renderQuiz();toTop();}}
+});
+
+function render(){
+  if(view==='intro')renderIntro();
+  else if(view==='quiz')renderQuiz();
+  else renderResult();
+}
+render();
+})();
+</script>
+<script>window.TG_CFG={title:'Физика ультразвука (20 вопросов)',needFio:true,getReport:function(){function v(e){return e&&e.getClientRects().length>0} if(!v(document.getElementById('retry')))return null;if(typeof resultText==='function')return resultText();var s=document.querySelector('.score'),g=document.querySelector('.grade');return (s?s.innerText:'')+' '+(g?g.innerText:'');}};</script><script src="tg.js"></script>
+</body>
+</html>

@@ -1,256 +1,640 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Тест по УЗИ поджелудочной железы</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=PT+Serif:wght@700&display=swap">
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тест: УЗИ поджелудочной железы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=PT+Sans:wght@400;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
-/* Раскладка: узкая колонка вопроса + карта вопросов сбоку; на телефоне карта уходит под вопрос */
 :root{
-  --bg:#f4f7f9; --card:#ffffff; --ink:#16243d; --muted:#5b6b82; --line:#d5dfe6;
-  --navy:#1f3864; --teal:#00808a; --teal-soft:#e3f1f2;
-  --ok:#1f7a4d; --ok-soft:#e4f4ea; --bad:#b3261e; --bad-soft:#fbe9e7;
-  --display:"PT Serif",Georgia,serif; --body:"Golos Text",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#f3f6f7; --paper:#ffffff; --ink:#18232f; --muted:#5b6b78; --line:#d5e0e3;
+  --navy:#1f3864; --teal:#007a7a; --teal-soft:#e2f1f1;
+  --ok:#1e7a46; --ok-soft:#e3f3e9; --bad:#b3261e; --bad-soft:#fbe7e5;
+  --f-display:"Spectral", Georgia, "Times New Roman", serif;
+  --f-body:"PT Sans", "Segoe UI", Arial, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
 }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
-  --bg:#0f1826; --card:#172335; --ink:#e7edf5; --muted:#9aaac0; --line:#2b3b52;
-  --navy:#a9c1ee; --teal:#4fc3cb; --teal-soft:#16343a;
-  --ok:#6fd39c; --ok-soft:#163526; --bad:#ff9a8f; --bad-soft:#40201d; color-scheme:dark } }
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1519; --paper:#172027; --ink:#e5edf0; --muted:#9db0ba; --line:#2b3a43;
+  --navy:#9cb6e6; --teal:#4cc3c3; --teal-soft:#16302f;
+  --ok:#6ad19a; --ok-soft:#163024; --bad:#ff8a80; --bad-soft:#3a1d1b; color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0f1826; --card:#172335; --ink:#e7edf5; --muted:#9aaac0; --line:#2b3b52;
-  --navy:#a9c1ee; --teal:#4fc3cb; --teal-soft:#16343a;
-  --ok:#6fd39c; --ok-soft:#163526; --bad:#ff9a8f; --bad-soft:#40201d; color-scheme:dark }
+  --bg:#0f1519; --paper:#172027; --ink:#e5edf0; --muted:#9db0ba; --line:#2b3a43;
+  --navy:#9cb6e6; --teal:#4cc3c3; --teal-soft:#16302f;
+  --ok:#6ad19a; --ok-soft:#163024; --bad:#ff8a80; --bad-soft:#3a1d1b; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;padding-inline:16px;padding-block:24px 40px}
-.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
-header h1{font-family:var(--display);font-size:clamp(1.5rem,4vw,2.1rem);line-height:1.15;margin:0;color:var(--navy);text-wrap:balance}
-header p{margin:6px 0 0;color:var(--muted);font-size:.92rem}
-.bar{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;font-size:.9rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.bar b{color:var(--ink)}
-.track{flex:1 1 160px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;min-width:120px}
-.track i{display:block;height:100%;background:var(--teal);width:0;transition:width .25s}
-.grid{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:20px;align-items:start}
-@media (max-width:820px){.grid{grid-template-columns:minmax(0,1fr)}}
-.q{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--teal);padding:22px;min-width:0}
-.tag{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);font-weight:600}
-.q h2{font-size:1.14rem;line-height:1.4;margin:8px 0 16px;font-weight:600;text-wrap:pretty}
-.opts{display:flex;flex-direction:column;gap:10px}
-.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%;font:inherit;color:inherit;background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:12px 14px;cursor:pointer}
-.opt:hover:not(:disabled){border-color:var(--teal);background:var(--teal-soft)}
-.opt:focus-visible,.nav button:focus-visible,.map button:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:grid;gap:18px}
+header{display:grid;gap:6px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,5vw,38px);line-height:1.1;margin:0;color:var(--navy);text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.track{flex:1 1 220px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--teal);transition:width .25s}
+.stat{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px clamp(16px,4vw,28px);display:grid;gap:14px}
+.qmeta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.tag{color:var(--teal);text-transform:uppercase;letter-spacing:.06em}
+.qtext{font-family:var(--f-display);font-weight:600;font-size:clamp(19px,3.2vw,23px);line-height:1.3;margin:0;text-wrap:pretty}
+.opts{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.opt{width:100%;display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:start;text-align:left;font:inherit;color:var(--ink);
+  background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .opt:disabled{cursor:default}
-.opt .k{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-weight:600;font-size:.82rem;color:var(--muted)}
-.opt.right{border-color:var(--ok);background:var(--ok-soft)} .opt.right .k{background:var(--ok);border-color:var(--ok);color:var(--card)}
-.opt.wrong{border-color:var(--bad);background:var(--bad-soft)} .opt.wrong .k{background:var(--bad);border-color:var(--bad);color:var(--card)}
-.fb{margin-top:16px;padding:14px 16px;border-left:4px solid var(--navy);background:var(--teal-soft);font-size:.95rem}
-.fb strong{display:block;margin-bottom:4px}
-.fb.good strong{color:var(--ok)} .fb.poor strong{color:var(--bad)}
-.nav{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;margin-top:18px}
-.nav button,.again{font:inherit;font-weight:600;padding:10px 18px;border-radius:6px;border:1.5px solid var(--navy);background:var(--card);color:var(--navy);cursor:pointer}
-.nav button.primary,.again{background:var(--teal);border-color:var(--teal);color:var(--bg)}
-.nav button:disabled{opacity:.4;cursor:default}
-aside{background:var(--card);border:1px solid var(--line);padding:16px}
-aside h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 10px;font-weight:600}
-.map{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
-@media (max-width:820px){.map{grid-template-columns:repeat(10,1fr)}}
-@media (max-width:480px){.map{grid-template-columns:repeat(6,1fr)}}
-.map button{font:inherit;font-size:.82rem;font-weight:600;aspect-ratio:1;border:1.5px solid var(--line);background:var(--card);color:var(--muted);border-radius:4px;cursor:pointer;font-variant-numeric:tabular-nums;padding:0}
-.map button.ok{background:var(--ok-soft);border-color:var(--ok);color:var(--ok)}
-.map button.no{background:var(--bad-soft);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
-.map button.cur{outline:2.5px solid var(--navy);outline-offset:1px}
-.legend{margin:12px 0 0;padding:0;list-style:none;font-size:.8rem;color:var(--muted);display:flex;flex-direction:column;gap:3px}
-.scale{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;font-size:.82rem;color:var(--muted)}
-.scale table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
-.scale td{padding:2px 0}.scale td:last-child{text-align:right}
-.res{background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);padding:24px}
-.res .big{font-family:var(--display);font-size:2.6rem;color:var(--navy);line-height:1;font-variant-numeric:tabular-nums}
-.res .grade{font-size:1.15rem;font-weight:700;margin:8px 0 2px}
-.res ul{padding-left:1.1em;margin:8px 0 0}.res li{margin-bottom:8px}
-.res h3{margin:20px 0 6px;font-size:1rem}
-.secs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 20px;font-size:.92rem;font-variant-numeric:tabular-nums}
-.secs div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dotted var(--line);padding:3px 0}
-.again{margin-top:20px}
-footer{font-size:.8rem;color:var(--muted)}
-
-.timer{font-weight:700;color:var(--navy);border:1.5px solid var(--line);background:var(--card);border-radius:6px;padding:3px 10px;white-space:nowrap}
-.timer.low{color:var(--bad);border-color:var(--bad);background:var(--bad-soft)}
-.intro p{margin:0 0 10px}.intro ul{margin:0 0 16px;padding-left:1.2em}
-.intro label{display:block;font-weight:600;margin-bottom:6px}
-.intro input{font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:6px;padding:10px 12px;width:100%;max-width:420px}
-.intro input:focus-visible,.send textarea:focus-visible,.send a:focus-visible,.send button:focus-visible,.early:focus-visible,.again:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
-.err{color:var(--bad);font-size:.9rem;min-height:1.4em;margin:6px 0 10px}
-.early{margin-top:14px;width:100%;font:inherit;font-weight:600;font-size:.88rem;padding:8px 10px;border-radius:6px;border:1.5px solid var(--line);background:var(--card);color:var(--muted);cursor:pointer}
-.early.sure{border-color:var(--bad);color:var(--bad);background:var(--bad-soft)}
-.who{color:var(--muted);font-size:.92rem;margin-top:4px;font-variant-numeric:tabular-nums}
-.send{margin-top:22px;border:1.5px solid var(--teal);background:var(--teal-soft);padding:16px;border-radius:6px}
-.send h3{margin:0 0 4px}.send p{margin:0 0 10px;font-size:.92rem}
-.send textarea{width:100%;min-height:150px;font:inherit;font-size:.86rem;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:4px;padding:10px;resize:vertical}
-.btnrow{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;align-items:center}
-.btnrow button,.btnrow a{font:inherit;font-weight:600;font-size:.92rem;padding:9px 14px;border-radius:6px;border:1.5px solid var(--teal);background:var(--teal);color:var(--bg);cursor:pointer;text-decoration:none}
-.btnrow a{background:var(--card);color:var(--navy);border-color:var(--navy)}
-.copied{font-size:.88rem;color:var(--ok);font-weight:600}
-@media (prefers-reduced-motion:reduce){.track i{transition:none}}
+.letter{font-family:var(--f-mono);font-weight:700;width:28px;height:28px;display:grid;place-items:center;border-radius:6px;background:var(--teal-soft);color:var(--teal)}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.correct .letter{background:var(--ok);color:var(--paper)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .letter{background:var(--bad);color:var(--paper)}
+.fb{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+.verdict{font-weight:700}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+.src{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;border-radius:8px;padding:10px 16px;cursor:pointer;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy)}
+.btn.primary{background:var(--navy);color:var(--paper)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.maphead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+h2{font-family:var(--f-display);font-size:18px;margin:0;color:var(--navy)}
+.legend{font-size:13px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.map{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
+@media (max-width:480px){.map{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.cell{font-family:var(--f-mono);font-size:13px;font-weight:700;aspect-ratio:1;max-width:100%;border-radius:6px;border:1.5px solid var(--line);background:var(--paper);color:var(--muted);cursor:pointer;font-variant-numeric:tabular-nums}
+.cell.cur{border-color:var(--navy);color:var(--navy)}
+.cell.ok{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.cell.bad{background:var(--bad);border-color:var(--bad);color:var(--paper)}
+.cell:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.result{display:grid;gap:12px}
+.score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.big{font-family:var(--f-display);font-size:52px;font-weight:700;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.grade{font-weight:700;font-size:18px}
+.scale{width:100%;border-collapse:collapse;font-size:14px}
+.scale td{border-top:1px solid var(--line);padding:6px 4px}
+.scale td:last-child{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.scale tr.me td{color:var(--teal);font-weight:700}
+.wrongs{margin:0;padding-left:20px;display:grid;gap:4px}
+.wrongs button{font:inherit;background:none;border:0;padding:0;color:var(--teal);cursor:pointer;text-align:left;text-decoration:underline}
+footer{font-size:13px;color:var(--muted)}
+.timer{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;color:var(--navy);
+  border:1.5px solid var(--line);border-radius:8px;padding:4px 12px;background:var(--paper)}
+.timer small{font-family:var(--f-body);font-weight:400;font-size:12px;color:var(--muted)}
+.timer.warn{color:var(--bad);border-color:var(--bad);background:var(--bad-soft)}
+.timer.stop{color:var(--muted)}
+.who{display:grid;gap:6px}
+.who label{font-weight:700;color:var(--navy)}
+.who input,.report,.verify textarea{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+.who input:focus-visible,.report:focus-visible,.verify textarea:focus-visible{outline:3px solid var(--teal);outline-offset:1px;border-color:var(--teal)}
+.who input[readonly]{background:var(--teal-soft)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.hint.err{color:var(--bad)}
+.report{font-family:var(--f-mono);font-size:13px;line-height:1.5;min-height:200px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ok-msg{color:var(--ok);font-weight:700} .bad-msg{color:var(--bad);font-weight:700}
+.verify{display:grid;gap:8px;margin-top:8px}
+.verify textarea{font-family:var(--f-mono);font-size:13px;min-height:140px}
+details summary{cursor:pointer;color:var(--teal);font-weight:700}
+.notice{margin:0;padding:10px 12px;border-radius:8px;background:var(--bad-soft);color:var(--bad);font-weight:700}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
 </style>
-
+</head>
+<body>
 <div class="wrap">
   <header>
-    <h1>Тест по УЗИ поджелудочной железы</h1>
-    <p>30 вопросов с одним верным ответом, 30 минут. Разбор показывается сразу после выбора. Жумагулов Н.М. · АДЦ «Сономедплюс»</p>
+    <span class="eyebrow">Первичная специализация · УЗ-диагностика</span>
+    <h1>УЗИ поджелудочной железы</h1>
+    <p class="sub">30 вопросов: методику, норму, панкреатиты, кисты и опухоли поджелудочной железы. После ответа сразу показывается правильный вариант и пояснение. На тест отводится 30 минут: отсчёт начинается с первого ответа, по истечении времени тест завершается автоматически. После завершения результат автоматически уходит преподавателю.</p>
+    <div class="bar"><div class="track" aria-hidden="true"><div class="fill" id="fill"></div></div><span class="stat" id="stat">0 / 30 отвечено · верно 0</span><span class="timer" id="timer" role="timer" aria-live="off"><span id="clock">30:00</span><small id="tnote">старт с первым ответом</small></span></div>
   </header>
-  <div class="bar" aria-live="polite">
-    <span>Отвечено <b id="done">0</b> из 30</span>
-    <span>Верно <b id="right">0</b></span>
-    <span class="timer" id="timer" role="timer" aria-live="off">Осталось 30:00</span>
-    <div class="track" aria-hidden="true"><i id="prog"></i></div>
-  </div>
-  <div class="grid">
-    <main id="main"></main>
-    <aside>
-      <h3>Карта вопросов</h3>
-      <div class="map" id="map"></div>
-      <ul class="legend">
-        <li>Зелёный — верно</li>
-        <li>Красный зачёркнутый — ошибка</li>
-        <li>Рамка — текущий вопрос</li>
-      </ul>
-      <button type="button" class="early" id="early" hidden>Завершить досрочно</button>
-      <div class="scale">
-        <table>
-          <tr><td>Отлично</td><td>27–30 (от 90 %)</td></tr>
-          <tr><td>Хорошо</td><td>23–26 (от 75 %)</td></tr>
-          <tr><td>Удовлетворительно</td><td>18–22 (от 60 %)</td></tr>
-          <tr><td>Неудовлетворительно</td><td>0–17</td></tr>
-        </table>
-      </div>
-    </aside>
-  </div>
-  <footer>Вопросы составлены по руководству «УЗИ поджелудочной железы» (Atlanta 2012, Kyoto 2024, Европейские рекомендации 2018, NCCN). Порядок вариантов перемешивается при каждом запуске.</footer>
+
+  <section class="card who">
+    <label for="fio">ФИО курсанта</label>
+    <input id="fio" type="text" autocomplete="name" placeholder="Например: Иванов Иван Иванович" maxlength="120">
+    <p class="hint" id="fiohint">Введите фамилию, имя и отчество. Без ФИО ответы не принимаются; после первого ответа ФИО изменить нельзя.</p>
+  </section>
+
+  <section class="card" id="qcard" aria-live="polite"></section>
+  <section class="card result" id="result" hidden></section>
+
+  <section class="card">
+    <div class="maphead"><h2>Карта вопросов</h2>
+      <div class="legend"><span><i style="background:var(--ok)"></i>верно</span><span><i style="background:var(--bad)"></i>неверно</span><span><i style="border:1.5px solid var(--line)"></i>без ответа</span></div></div>
+    <div class="map" id="map"></div>
+    <div class="nav"><button class="btn" id="restart" type="button">Начать заново</button><button class="btn primary" id="finish" type="button">Показать результат</button></div>
+  </section>
+
+  <footer>Ответы — по руководству «УЗИ поджелудочной железы». Клавиши: 1–4 — выбор ответа, ← → — переход.
+    <details><summary>Проверка отчёта (для преподавателя)</summary>
+      <div class="verify"><label for="vin">Вставьте текст отчёта, полученный от курсанта:</label>
+        <textarea id="vin" spellcheck="false"></textarea>
+        <div class="actions"><button class="btn" id="vbtn" type="button">Проверить код</button><span id="vout" role="status"></span></div>
+        <p class="hint">Код показывает, что текст отчёта не редактировали после теста. Защита простая: курсант, разбирающийся в коде страницы, может её обойти.</p>
+      </div></details>
+  </footer>
 </div>
-
 <script>
-// Первый вариант в исходных данных — верный; порядок перемешивается при запуске.
+const CFG={"title": "УЗИ поджелудочной железы", "minutes": 30, "salt": "sono-pancreas", "file": "pancreas"};
 const Q=[
-{s:"Методика",q:"Какая структура служит главным ориентиром тела и хвоста поджелудочной железы при поперечном сканировании?",o:["Селезёночная вена, идущая вдоль задней поверхности железы","Гастродуоденальная артерия у передне-латерального края","Нижняя полая вена позади железы","Левая почечная вена между аортой и ВБА"],e:"Селезёночная вена проходит вдоль задней поверхности тела и хвоста и «подчёркивает» железу сзади. Гастродуоденальная артерия и НПВ — ориентиры головки."},
-{s:"Методика",q:"Где расположен крючковидный отросток относительно верхней брыжеечной вены (ВБВ)?",o:["Позади ВБВ","Кпереди от ВБВ","Левее верхней брыжеечной артерии","Над конфлюенсом, у чревного ствола"],e:"Крючковидный отросток лежит позади ВБВ. Поэтому его ищут на продольном срезе через ВБВ и ниже уровня конфлюенса — иначе опухоли этой зоны пропускаются."},
-{s:"Методика",q:"Какой доступ обязателен в каждом исследовании для осмотра хвоста железы?",o:["Транслиенальный коронарный из левых межреберий, пациент на правом боку","Продольный срез по правой среднеключичной линии","Поперечный срез на уровне пупка","Правый межрёберный доступ через правую долю печени"],e:"Хвост лежит в воротах селезёнки и из эпигастрия часто экранирован газом. Селезёнка служит акустическим окном; без этого доступа образования хвоста пропускаются чаще всего."},
-{s:"Методика",q:"Пациент выпил 400 мл воды и лёг на правый бок. Какие отделы железы в этом положении видны лучше?",o:["Тело и хвост — вода заполняет дно и тело желудка","Головка и зона БДС — вода заполняет антральный отдел","Только крючковидный отросток","Отделы не меняются, вода нужна лишь для оценки стенки желудка"],e:"В руководстве: на правом боку вода перемещается в дно и тело желудка и служит окном для тела и хвоста. На левом боку заполняются антральный отдел и ДПК — лучше видны головка и дистальный холедох."},
-{s:"Методика",q:"Как правильно измерять главный панкреатический проток (ГПП)?",o:["Внутренний просвет в теле железы, перпендикулярно оси протока","Вместе со стенками, в хвосте","В головке, в косом срезе, по наружным контурам","В любом отделе, где проток шире всего, вместе со стенками"],e:"Измеряют внутренний просвет — от внутреннего края до внутреннего края стенок — в теле, в сечении, перпендикулярном протоку. Измерение со стенками или в косом срезе завышает диаметр."},
-{s:"Норма",q:"Какова верхняя граница нормы диаметра ГПП в теле железы у взрослого?",o:["2 мм; до 3 мм допустимо у пожилых при ровных стенках","4 мм независимо от возраста","5 мм; расширением считают только 10 мм и более","1 мм; любой видимый проток — патология"],e:"В теле норма — до 2 мм, у пожилых допустимо до 3 мм при ровных стенках и отсутствии других изменений. Больше 3 мм — расширение, требующее объяснения."},
-{s:"Норма",q:"У пациента 78 лет железа небольшая, однородная, гиперэхогенная, ГПП 2,5 мм с ровными стенками. Как это расценить?",o:["Возрастная жировая инволюция, вариант нормы","Хронический панкреатит","Аутоиммунный панкреатит","Признаки опухоли с атрофией паренхимы"],e:"С возрастом паренхима замещается жировой тканью: эхогенность растёт, размеры уменьшаются. Насторожить у пожилого должна, наоборот, гипоэхогенная «сочная» железа."},
-{s:"Норма",q:"В задних отделах головки и крючковидном отростке — гипоэхогенная зона с чёткой прямой границей, без деформации контура; протоки не расширены, сосуды не смещены. Что это вероятнее всего?",o:["Гипоэхогенная вентральная закладка — вариант нормы","Аденокарцинома головки","Очаговый панкреонекроз","Нейроэндокринная опухоль"],e:"Вентральная закладка содержит меньше жира и выглядит гипоэхогеннее остальной железы. От опухоли её отличают линейная граница, отсутствие масс-эффекта и неизменённые протоки."},
-{s:"Протокол",q:"Головка и тело осмотрены и не изменены, хвост закрыт газом даже после приёма воды и смены положения. Как сформулировать заключение?",o:["Указать, что хвост не визуализируется, и при сохранении показаний рекомендовать КТ или МРТ","«Поджелудочная железа без патологии»","«Диффузные изменения поджелудочной железы»","Не упоминать хвост: его оценка не входит в стандартный протокол"],e:"Невизуализированный отдел называют невизуализированным. «Без патологии» при невидимом хвосте — фактическая ошибка: именно там чаще всего пропускают образования."},
-{s:"Острый панкреатит",q:"Сколько критериев по Atlanta 2012 нужно для диагноза острого панкреатита?",o:["Два из трёх: типичная боль, липаза или амилаза ≥ 3 норм, характерная картина при визуализации","Все три критерия одновременно","Достаточно одного — изменений на УЗИ","Обязательно КТ с контрастом плюс любой другой критерий"],e:"Нужны два из трёх. При типичной боли и ферментемии визуализация для постановки диагноза не требуется."},
-{s:"Острый панкреатит",q:"Какова главная задача УЗИ при поступлении пациента с острым панкреатитом?",o:["Установить этиологию: камни желчного пузыря, расширение холедоха","Определить степень тяжести по Atlanta","Оценить объём некроза паренхимы","Исключить диагноз при нормальной картине железы"],e:"УЗИ ищет билиарную причину. Тяжесть определяют клинически по органной недостаточности, а некроз без контрастирования на УЗИ достоверно не оценивается."},
-{s:"Острый панкреатит",q:"Типичная опоясывающая боль, липаза в 5 раз выше нормы, железа на УЗИ выглядит обычной. Какой вывод верен?",o:["Острый панкреатит не исключён: при лёгкой отёчной форме железа может выглядеть нормально","Острый панкреатит исключён","Диагноз возможен только после КТ","Вероятнее хронический панкреатит вне обострения"],e:"Два критерия Atlanta из трёх уже есть. Нормальная эхокартина не отменяет клинико-лабораторный диагноз; в первые сутки железа к тому же часто недоступна осмотру из-за пареза кишечника."},
-{s:"Острый панкреатит",q:"Через 6 недель после некротизирующего панкреатита выявлено отграниченное стенкой скопление с неоднородным содержимым и эхогенными секвестрами. Как оно называется по Atlanta 2012?",o:["Отграниченный некроз (WON)","Псевдокиста","Острое некротическое скопление (ANC)","Острое перипанкреатическое жидкостное скопление (APFC)"],e:"Срок больше 4 недель, сформированная стенка и солидный компонент после некротизирующего панкреатита — это WON. Псевдокиста солидного компонента не содержит; ANC и APFC — скопления первых 4 недель без стенки."},
-{s:"Острый панкреатит",q:"На 10-й день интерстициального отёчного панкреатита в сальниковой сумке — однородное анэхогенное скопление без стенки, повторяющее форму пространства. Что это?",o:["Острое перипанкреатическое жидкостное скопление (APFC)","Псевдокиста","Отграниченный некроз (WON)","Острое некротическое скопление (ANC)"],e:"До 4 недель, отёчный панкреатит, нет стенки, однородная жидкость — APFC. Псевдокистой оно станет только после формирования стенки, позже 4 недель."},
-{s:"Острый панкреатит",q:"У пациента с острым панкреатитом нет клинического улучшения. В какой срок от начала заболевания КТ оптимальна для оценки некроза?",o:["72–96 часов","Первые 6 часов","12–24 часа","Не раньше 4 недель"],e:"В руководстве указан срок 72–96 часов: раньше некроз может быть ещё не виден. Ранняя КТ оправдана только при диагностической неопределённости."},
-{s:"Острый панкреатит",q:"У пациента с панкреатитом в проекции головки — округлое анэхогенное образование 3 см, планируется пункция. Что обязательно сделать сначала?",o:["Включить ЦДК, чтобы исключить псевдоаневризму","Измерить образование в трёх плоскостях","Дать пациенту воду и повторить осмотр","Оценить эластографию стенки"],e:"Псевдоаневризма в В-режиме неотличима от псевдокисты; при ЦДК в ней виден турбулентный кровоток «инь–ян». Пункция без допплеровского контроля грозит фатальным кровотечением. При выявлении — срочная КТ-ангиография."},
-{s:"Острый панкреатит",q:"После панкреатита — спленомегалия и варикоз вен дна желудка при неизменённой печени. Какое осложнение это объясняет?",o:["Тромбоз селезёночной вены с левосторонней портальной гипертензией","Цирроз печени","Тромбоз нижней полой вены","Псевдоаневризма гастродуоденальной артерии"],e:"Селезёночная вена прилежит к задней поверхности железы и тромбируется при панкреатите. Итог — сегментарная (левосторонняя) портальная гипертензия при нормальной печени."},
-{s:"Хронический панкреатит",q:"Какой признак относится к достоверным ультразвуковым признакам хронического панкреатита?",o:["Кальцинаты паренхимы и внутрипротоковые конкременты","Повышенная эхогенность железы","Нечёткость контуров","Размер головки 31 мм"],e:"Достоверные признаки — кальцинаты, конкременты, расширенный неровный ГПП. Повышенная эхогенность неспецифична и чаще отражает жировую инфильтрацию."},
-{s:"Хронический панкреатит",q:"Пациент с ожирением и диабетом 2 типа: железа диффузно гиперэхогенная, размеры и контуры обычные, ГПП 1,5 мм, кальцинатов нет. Какое заключение корректно?",o:["Эхографические признаки жировой инфильтрации поджелудочной железы","Хронический панкреатит","Диффузные изменения по типу хронического панкреатита","Аутоиммунный панкреатит"],e:"Повышение эхогенности без изменений размеров, контуров и протока — жировая инфильтрация. Диагноз хронического панкреатита по этому признаку — самая частая ошибка заключений."},
-{s:"Хронический панкреатит",q:"В паренхиме — мелкие гиперэхогенные включения без акустической тени. Какой приём помогает подтвердить, что это кальцинаты?",o:["ЦДК: мерцающий (twinkling) артефакт позади включения","Компрессия датчиком","Приём воды","Осмотр в положении стоя"],e:"Мелкие кальцинаты могут не давать тени. Мерцающий артефакт при ЦДК позади гиперэхогенного включения указывает на кальцинат."},
-{s:"Хронический панкреатит",q:"Мужчина 65 лет: железа диффузно увеличена, «колбасовидная», резко гипоэхогенная, с гипоэхогенным ободком; ГПП сужен на протяжении без расширения выше. О чём следует подумать?",o:["Аутоиммунный панкреатит","Протоковая аденокарцинома","Жировая инфильтрация","Муцинозная кистозная опухоль"],e:"Диффузное «колбасовидное» увеличение, «капсула» и длинное сужение ГПП без престенотического расширения типичны для аутоиммунного панкреатита 1 типа. До начала стероидов рак исключают морфологически."},
-{s:"Хронический панкреатит",q:"Мужчина 47 лет, злоупотребляет алкоголем, рвота после еды. Между головкой и двенадцатиперстной кишкой — гипоэхогенная пластинчатая зона. Какой признак говорит в пользу groove-панкреатита, а не рака головки?",o:["Мелкие кисты в утолщённой стенке кишки и плавное коническое сужение холедоха","Резкий «обрыв» холедоха и ГПП","Охват и сужение гастродуоденальной артерии","Метастазы в печени"],e:"Кисты в стенке ДПК и в борозде, плавное длинное сужение холедоха и сохранные сосуды характерны для парадуоденального панкреатита. Но уверенно разделить их по УЗИ нельзя — нужны КТ/МРТ и эндоУЗИ с биопсией."},
-{s:"Кистозные образования",q:"Женщина 45 лет: в хвосте — макрокистозное образование 5 см с перегородками и периферической кальцификацией, связи с ГПП нет, панкреатита в анамнезе не было. Наиболее вероятный диагноз?",o:["Муцинозная кистозная опухоль (MCN)","Серозная цистаденома","IPMN боковых ветвей","Псевдокиста"],e:"MCN — женщины 40–50 лет, тело и хвост, макрокистозное строение, «скорлуповидная» кальцификация, нет связи с протоком. Для IPMN связь с протоком обязательна."},
-{s:"Кистозные образования",q:"Женщина 68 лет: образование из множества мелких кист в виде «сот» с центральным рубцом и кальцинатом в нём. Что это вероятнее всего?",o:["Серозная цистаденома","Муцинозная кистозная опухоль","Солидная псевдопапиллярная опухоль","IPMN главного протока"],e:"Микрокистозное строение «соты» и центральный рубец с кальцинатом типичны для серозной цистаденомы. Злокачественного потенциала она практически не имеет."},
-{s:"Кистозные образования",q:"Какой из признаков по Kyoto 2024 относится к признакам высокого риска (high-risk stigmata) при IPMN?",o:["ГПП ≥ 10 мм","Киста ≥ 30 мм","ГПП 5–9 мм","Скорость роста кисты ≥ 2,5 мм в год"],e:"ГПП ≥ 10 мм — признак высокого риска и повод обсуждать резекцию. Киста ≥ 30 мм, ГПП 5–9 мм и рост ≥ 2,5 мм/год — настораживающие признаки, показание к эндоУЗИ."},
-{s:"Кистозные образования",q:"У пациента без панкреатита и травмы в анамнезе случайно найдена киста головки 18 мм. Какая тактика верна?",o:["Считать кисту неопластической, пока не доказано обратное, и направить на МРТ с МРХПГ","Описать как псевдокисту и не наблюдать","Сразу направить на резекцию","Повторить УЗИ через 5 лет"],e:"Без анамнеза панкреатита кистозное образование считают неопластическим. МРТ с МРХПГ покажет связь с протоком и признаки риска."},
-{s:"Опухоли",q:"Что называют симптомом «двойного протока» и на что он указывает?",o:["Одновременное расширение ГПП и холедоха — обструкция на уровне головки или ампулы","Удвоение ГПП при pancreas divisum","Расширение ГПП и селезёночной вены — тромбоз","Два параллельных протока в теле — вариант нормы"],e:"Расширение обоих протоков означает обструкцию в зоне их слияния: опухоль головки, ампулы, дистального холедоха или вклинённый камень БДС."},
-{s:"Опухоли",q:"ГПП расширен до 6 мм и резко обрывается на уровне перешейка, тело и хвост атрофичны; образование не видно. Какое заключение верно?",o:["Необходимо исключить опухоль: КТ по панкреатическому протоколу, эндоУЗИ","Хронический панкреатит, наблюдение через год","Возрастные изменения","Образования нет — патологии не выявлено"],e:"Мелкая изоэхогенная опухоль часто проявляется только вторичными признаками. «Обрыв» протока с дистальной атрофией — достаточное основание для КТ, даже если образование не видно."},
-{s:"Опухоли",q:"В теле железы — чётко очерченное округлое гипоэхогенное образование 15 мм, гиперваскулярное при ЦДК, с гиперусилением в артериальную фазу при CEUS; ГПП не расширен. Что наиболее вероятно?",o:["Нейроэндокринная опухоль","Протоковая аденокарцинома","Очаговый панкреатит","Псевдокиста"],e:"Гиперваскулярность и артериальное гиперусиление при нерасширенном протоке характерны для нейроэндокринной опухоли. Аденокарцинома гиповаскулярна и гипоусиливается во все фазы."},
-{s:"Протокол",q:"Как правильно поступить с вопросом о резектабельности аденокарциномы в заключении УЗИ?",o:["Описать контакт опухоли с сосудами; резектабельность определяют по КТ на консилиуме","Указать «опухоль резектабельна», если ВБА не охвачена","Указать «опухоль нерезектабельна» при любом контакте с веной","Не описывать сосуды: это задача КТ"],e:"УЗИ не предназначено для оценки резектабельности, но сосуды описать нужно: сохранность жирового ободка вокруг ВБА, проходимость ВБВ, воротной и селезёночной вен. Решение принимают по КТ с панкреатическим протоколом."}
+{
+"t": "Методика",
+"q": "Какая структура служит главным ориентиром тела и хвоста поджелудочной железы при поперечном сканировании?",
+"o": [
+"Левая почечная вена между аортой и ВБА",
+"Гастродуоденальная артерия у передне-латерального края",
+"Нижняя полая вена позади железы",
+"Селезёночная вена, идущая вдоль задней поверхности железы"
+],
+"a": 3,
+"e": "Селезёночная вена проходит вдоль задней поверхности тела и хвоста и «подчёркивает» железу сзади. Гастродуоденальная артерия и НПВ — ориентиры головки."
+},
+{
+"t": "Методика",
+"q": "Где расположен крючковидный отросток относительно верхней брыжеечной вены (ВБВ)?",
+"o": [
+"Позади ВБВ",
+"Левее верхней брыжеечной артерии",
+"Кпереди от ВБВ",
+"Над конфлюенсом, у чревного ствола"
+],
+"a": 0,
+"e": "Крючковидный отросток лежит позади ВБВ. Поэтому его ищут на продольном срезе через ВБВ и ниже уровня конфлюенса — иначе опухоли этой зоны пропускаются."
+},
+{
+"t": "Методика",
+"q": "Какой доступ обязателен в каждом исследовании для осмотра хвоста железы?",
+"o": [
+"Поперечный срез на уровне пупка",
+"Продольный срез по правой среднеключичной линии",
+"Транслиенальный коронарный из левых межреберий, пациент на правом боку",
+"Правый межрёберный доступ через правую долю печени"
+],
+"a": 2,
+"e": "Хвост лежит в воротах селезёнки и из эпигастрия часто экранирован газом. Селезёнка служит акустическим окном; без этого доступа образования хвоста пропускаются чаще всего."
+},
+{
+"t": "Методика",
+"q": "Пациент выпил 400 мл воды и лёг на правый бок. Какие отделы железы в этом положении видны лучше?",
+"o": [
+"Головка и зона БДС — вода заполняет антральный отдел",
+"Тело и хвост — вода заполняет дно и тело желудка",
+"Только крючковидный отросток",
+"Отделы не меняются, вода нужна лишь для оценки стенки желудка"
+],
+"a": 1,
+"e": "В руководстве: на правом боку вода перемещается в дно и тело желудка и служит окном для тела и хвоста. На левом боку заполняются антральный отдел и ДПК — лучше видны головка и дистальный холедох."
+},
+{
+"t": "Методика",
+"q": "Как правильно измерять главный панкреатический проток (ГПП)?",
+"o": [
+"Вместе со стенками, в хвосте",
+"Внутренний просвет в теле железы, перпендикулярно оси протока",
+"В головке, в косом срезе, по наружным контурам",
+"В любом отделе, где проток шире всего, вместе со стенками"
+],
+"a": 1,
+"e": "Измеряют внутренний просвет — от внутреннего края до внутреннего края стенок — в теле, в сечении, перпендикулярном протоку. Измерение со стенками или в косом срезе завышает диаметр."
+},
+{
+"t": "Норма",
+"q": "Какова верхняя граница нормы диаметра ГПП в теле железы у взрослого?",
+"o": [
+"5 мм; расширением считают только 10 мм и более",
+"2 мм; до 3 мм допустимо у пожилых при ровных стенках",
+"1 мм; любой видимый проток — патология",
+"4 мм независимо от возраста"
+],
+"a": 1,
+"e": "В теле норма — до 2 мм, у пожилых допустимо до 3 мм при ровных стенках и отсутствии других изменений. Больше 3 мм — расширение, требующее объяснения."
+},
+{
+"t": "Норма",
+"q": "У пациента 78 лет железа небольшая, однородная, гиперэхогенная, ГПП 2,5 мм с ровными стенками. Как это расценить?",
+"o": [
+"Аутоиммунный панкреатит",
+"Признаки опухоли с атрофией паренхимы",
+"Возрастная жировая инволюция, вариант нормы",
+"Хронический панкреатит"
+],
+"a": 2,
+"e": "С возрастом паренхима замещается жировой тканью: эхогенность растёт, размеры уменьшаются. Насторожить у пожилого должна, наоборот, гипоэхогенная «сочная» железа."
+},
+{
+"t": "Норма",
+"q": "В задних отделах головки и крючковидном отростке — гипоэхогенная зона с чёткой прямой границей, без деформации контура; протоки не расширены, сосуды не смещены. Что это вероятнее всего?",
+"o": [
+"Очаговый панкреонекроз",
+"Гипоэхогенная вентральная закладка — вариант нормы",
+"Аденокарцинома головки",
+"Нейроэндокринная опухоль"
+],
+"a": 1,
+"e": "Вентральная закладка содержит меньше жира и выглядит гипоэхогеннее остальной железы. От опухоли её отличают линейная граница, отсутствие масс-эффекта и неизменённые протоки."
+},
+{
+"t": "Протокол",
+"q": "Головка и тело осмотрены и не изменены, хвост закрыт газом даже после приёма воды и смены положения. Как сформулировать заключение?",
+"o": [
+"Не упоминать хвост: его оценка не входит в стандартный протокол",
+"«Поджелудочная железа без патологии»",
+"«Диффузные изменения поджелудочной железы»",
+"Указать, что хвост не визуализируется, и при сохранении показаний рекомендовать КТ или МРТ"
+],
+"a": 3,
+"e": "Невизуализированный отдел называют невизуализированным. «Без патологии» при невидимом хвосте — фактическая ошибка: именно там чаще всего пропускают образования."
+},
+{
+"t": "Острый панкреатит",
+"q": "Сколько критериев по Atlanta 2012 нужно для диагноза острого панкреатита?",
+"o": [
+"Два из трёх: типичная боль, липаза или амилаза ≥ 3 норм, характерная картина при визуализации",
+"Обязательно КТ с контрастом плюс любой другой критерий",
+"Достаточно одного — изменений на УЗИ",
+"Все три критерия одновременно"
+],
+"a": 0,
+"e": "Нужны два из трёх. При типичной боли и ферментемии визуализация для постановки диагноза не требуется."
+},
+{
+"t": "Острый панкреатит",
+"q": "Какова главная задача УЗИ при поступлении пациента с острым панкреатитом?",
+"o": [
+"Определить степень тяжести по Atlanta",
+"Установить этиологию: камни желчного пузыря, расширение холедоха",
+"Исключить диагноз при нормальной картине железы",
+"Оценить объём некроза паренхимы"
+],
+"a": 1,
+"e": "УЗИ ищет билиарную причину. Тяжесть определяют клинически по органной недостаточности, а некроз без контрастирования на УЗИ достоверно не оценивается."
+},
+{
+"t": "Острый панкреатит",
+"q": "Типичная опоясывающая боль, липаза в 5 раз выше нормы, железа на УЗИ выглядит обычной. Какой вывод верен?",
+"o": [
+"Острый панкреатит не исключён: при лёгкой отёчной форме железа может выглядеть нормально",
+"Острый панкреатит исключён",
+"Диагноз возможен только после КТ",
+"Вероятнее хронический панкреатит вне обострения"
+],
+"a": 0,
+"e": "Два критерия Atlanta из трёх уже есть. Нормальная эхокартина не отменяет клинико-лабораторный диагноз; в первые сутки железа к тому же часто недоступна осмотру из-за пареза кишечника."
+},
+{
+"t": "Острый панкреатит",
+"q": "Через 6 недель после некротизирующего панкреатита выявлено отграниченное стенкой скопление с неоднородным содержимым и эхогенными секвестрами. Как оно называется по Atlanta 2012?",
+"o": [
+"Острое некротическое скопление (ANC)",
+"Острое перипанкреатическое жидкостное скопление (APFC)",
+"Отграниченный некроз (WON)",
+"Псевдокиста"
+],
+"a": 2,
+"e": "Срок больше 4 недель, сформированная стенка и солидный компонент после некротизирующего панкреатита — это WON. Псевдокиста солидного компонента не содержит; ANC и APFC — скопления первых 4 недель без стенки."
+},
+{
+"t": "Острый панкреатит",
+"q": "На 10-й день интерстициального отёчного панкреатита в сальниковой сумке — однородное анэхогенное скопление без стенки, повторяющее форму пространства. Что это?",
+"o": [
+"Острое перипанкреатическое жидкостное скопление (APFC)",
+"Псевдокиста",
+"Отграниченный некроз (WON)",
+"Острое некротическое скопление (ANC)"
+],
+"a": 0,
+"e": "До 4 недель, отёчный панкреатит, нет стенки, однородная жидкость — APFC. Псевдокистой оно станет только после формирования стенки, позже 4 недель."
+},
+{
+"t": "Острый панкреатит",
+"q": "У пациента с острым панкреатитом нет клинического улучшения. В какой срок от начала заболевания КТ оптимальна для оценки некроза?",
+"o": [
+"Первые 6 часов",
+"Не раньше 4 недель",
+"12–24 часа",
+"72–96 часов"
+],
+"a": 3,
+"e": "В руководстве указан срок 72–96 часов: раньше некроз может быть ещё не виден. Ранняя КТ оправдана только при диагностической неопределённости."
+},
+{
+"t": "Острый панкреатит",
+"q": "У пациента с панкреатитом в проекции головки — округлое анэхогенное образование 3 см, планируется пункция. Что обязательно сделать сначала?",
+"o": [
+"Оценить эластографию стенки",
+"Включить ЦДК, чтобы исключить псевдоаневризму",
+"Измерить образование в трёх плоскостях",
+"Дать пациенту воду и повторить осмотр"
+],
+"a": 1,
+"e": "Псевдоаневризма в В-режиме неотличима от псевдокисты; при ЦДК в ней виден турбулентный кровоток «инь–ян». Пункция без допплеровского контроля грозит фатальным кровотечением. При выявлении — срочная КТ-ангиография."
+},
+{
+"t": "Острый панкреатит",
+"q": "После панкреатита — спленомегалия и варикоз вен дна желудка при неизменённой печени. Какое осложнение это объясняет?",
+"o": [
+"Тромбоз нижней полой вены",
+"Тромбоз селезёночной вены с левосторонней портальной гипертензией",
+"Цирроз печени",
+"Псевдоаневризма гастродуоденальной артерии"
+],
+"a": 1,
+"e": "Селезёночная вена прилежит к задней поверхности железы и тромбируется при панкреатите. Итог — сегментарная (левосторонняя) портальная гипертензия при нормальной печени."
+},
+{
+"t": "Хронический панкреатит",
+"q": "Какой признак относится к достоверным ультразвуковым признакам хронического панкреатита?",
+"o": [
+"Повышенная эхогенность железы",
+"Нечёткость контуров",
+"Размер головки 31 мм",
+"Кальцинаты паренхимы и внутрипротоковые конкременты"
+],
+"a": 3,
+"e": "Достоверные признаки — кальцинаты, конкременты, расширенный неровный ГПП. Повышенная эхогенность неспецифична и чаще отражает жировую инфильтрацию."
+},
+{
+"t": "Хронический панкреатит",
+"q": "Пациент с ожирением и диабетом 2 типа: железа диффузно гиперэхогенная, размеры и контуры обычные, ГПП 1,5 мм, кальцинатов нет. Какое заключение корректно?",
+"o": [
+"Диффузные изменения по типу хронического панкреатита",
+"Аутоиммунный панкреатит",
+"Хронический панкреатит",
+"Эхографические признаки жировой инфильтрации поджелудочной железы"
+],
+"a": 3,
+"e": "Повышение эхогенности без изменений размеров, контуров и протока — жировая инфильтрация. Диагноз хронического панкреатита по этому признаку — самая частая ошибка заключений."
+},
+{
+"t": "Хронический панкреатит",
+"q": "В паренхиме — мелкие гиперэхогенные включения без акустической тени. Какой приём помогает подтвердить, что это кальцинаты?",
+"o": [
+"ЦДК: мерцающий (twinkling) артефакт позади включения",
+"Приём воды",
+"Осмотр в положении стоя",
+"Компрессия датчиком"
+],
+"a": 0,
+"e": "Мелкие кальцинаты могут не давать тени. Мерцающий артефакт при ЦДК позади гиперэхогенного включения указывает на кальцинат."
+},
+{
+"t": "Хронический панкреатит",
+"q": "Мужчина 65 лет: железа диффузно увеличена, «колбасовидная», резко гипоэхогенная, с гипоэхогенным ободком; ГПП сужен на протяжении без расширения выше. О чём следует подумать?",
+"o": [
+"Муцинозная кистозная опухоль",
+"Протоковая аденокарцинома",
+"Жировая инфильтрация",
+"Аутоиммунный панкреатит"
+],
+"a": 3,
+"e": "Диффузное «колбасовидное» увеличение, «капсула» и длинное сужение ГПП без престенотического расширения типичны для аутоиммунного панкреатита 1 типа. До начала стероидов рак исключают морфологически."
+},
+{
+"t": "Хронический панкреатит",
+"q": "Мужчина 47 лет, злоупотребляет алкоголем, рвота после еды. Между головкой и двенадцатиперстной кишкой — гипоэхогенная пластинчатая зона. Какой признак говорит в пользу groove-панкреатита, а не рака головки?",
+"o": [
+"Охват и сужение гастродуоденальной артерии",
+"Метастазы в печени",
+"Резкий «обрыв» холедоха и ГПП",
+"Мелкие кисты в утолщённой стенке кишки и плавное коническое сужение холедоха"
+],
+"a": 3,
+"e": "Кисты в стенке ДПК и в борозде, плавное длинное сужение холедоха и сохранные сосуды характерны для парадуоденального панкреатита. Но уверенно разделить их по УЗИ нельзя — нужны КТ/МРТ и эндоУЗИ с биопсией."
+},
+{
+"t": "Кистозные образования",
+"q": "Женщина 45 лет: в хвосте — макрокистозное образование 5 см с перегородками и периферической кальцификацией, связи с ГПП нет, панкреатита в анамнезе не было. Наиболее вероятный диагноз?",
+"o": [
+"Серозная цистаденома",
+"Псевдокиста",
+"Муцинозная кистозная опухоль (MCN)",
+"IPMN боковых ветвей"
+],
+"a": 2,
+"e": "MCN — женщины 40–50 лет, тело и хвост, макрокистозное строение, «скорлуповидная» кальцификация, нет связи с протоком. Для IPMN связь с протоком обязательна."
+},
+{
+"t": "Кистозные образования",
+"q": "Женщина 68 лет: образование из множества мелких кист в виде «сот» с центральным рубцом и кальцинатом в нём. Что это вероятнее всего?",
+"o": [
+"Серозная цистаденома",
+"Муцинозная кистозная опухоль",
+"Солидная псевдопапиллярная опухоль",
+"IPMN главного протока"
+],
+"a": 0,
+"e": "Микрокистозное строение «соты» и центральный рубец с кальцинатом типичны для серозной цистаденомы. Злокачественного потенциала она практически не имеет."
+},
+{
+"t": "Кистозные образования",
+"q": "Какой из признаков по Kyoto 2024 относится к признакам высокого риска (high-risk stigmata) при IPMN?",
+"o": [
+"ГПП 5–9 мм",
+"ГПП ≥ 10 мм",
+"Скорость роста кисты ≥ 2,5 мм в год",
+"Киста ≥ 30 мм"
+],
+"a": 1,
+"e": "ГПП ≥ 10 мм — признак высокого риска и повод обсуждать резекцию. Киста ≥ 30 мм, ГПП 5–9 мм и рост ≥ 2,5 мм/год — настораживающие признаки, показание к эндоУЗИ."
+},
+{
+"t": "Кистозные образования",
+"q": "У пациента без панкреатита и травмы в анамнезе случайно найдена киста головки 18 мм. Какая тактика верна?",
+"o": [
+"Сразу направить на резекцию",
+"Описать как псевдокисту и не наблюдать",
+"Считать кисту неопластической, пока не доказано обратное, и направить на МРТ с МРХПГ",
+"Повторить УЗИ через 5 лет"
+],
+"a": 2,
+"e": "Без анамнеза панкреатита кистозное образование считают неопластическим. МРТ с МРХПГ покажет связь с протоком и признаки риска."
+},
+{
+"t": "Опухоли",
+"q": "Что называют симптомом «двойного протока» и на что он указывает?",
+"o": [
+"Одновременное расширение ГПП и холедоха — обструкция на уровне головки или ампулы",
+"Два параллельных протока в теле — вариант нормы",
+"Удвоение ГПП при pancreas divisum",
+"Расширение ГПП и селезёночной вены — тромбоз"
+],
+"a": 0,
+"e": "Расширение обоих протоков означает обструкцию в зоне их слияния: опухоль головки, ампулы, дистального холедоха или вклинённый камень БДС."
+},
+{
+"t": "Опухоли",
+"q": "ГПП расширен до 6 мм и резко обрывается на уровне перешейка, тело и хвост атрофичны; образование не видно. Какое заключение верно?",
+"o": [
+"Необходимо исключить опухоль: КТ по панкреатическому протоколу, эндоУЗИ",
+"Хронический панкреатит, наблюдение через год",
+"Образования нет — патологии не выявлено",
+"Возрастные изменения"
+],
+"a": 0,
+"e": "Мелкая изоэхогенная опухоль часто проявляется только вторичными признаками. «Обрыв» протока с дистальной атрофией — достаточное основание для КТ, даже если образование не видно."
+},
+{
+"t": "Опухоли",
+"q": "В теле железы — чётко очерченное округлое гипоэхогенное образование 15 мм, гиперваскулярное при ЦДК, с гиперусилением в артериальную фазу при CEUS; ГПП не расширен. Что наиболее вероятно?",
+"o": [
+"Псевдокиста",
+"Протоковая аденокарцинома",
+"Нейроэндокринная опухоль",
+"Очаговый панкреатит"
+],
+"a": 2,
+"e": "Гиперваскулярность и артериальное гиперусиление при нерасширенном протоке характерны для нейроэндокринной опухоли. Аденокарцинома гиповаскулярна и гипоусиливается во все фазы."
+},
+{
+"t": "Протокол",
+"q": "Как правильно поступить с вопросом о резектабельности аденокарциномы в заключении УЗИ?",
+"o": [
+"Не описывать сосуды: это задача КТ",
+"Указать «опухоль нерезектабельна» при любом контакте с веной",
+"Описать контакт опухоли с сосудами; резектабельность определяют по КТ на консилиуме",
+"Указать «опухоль резектабельна», если ВБА не охвачена"
+],
+"a": 2,
+"e": "УЗИ не предназначено для оценки резектабельности, но сосуды описать нужно: сохранность жирового ободка вокруг ВБА, проходимость ВБВ, воротной и селезёночной вен. Решение принимают по КТ с панкреатическим протоколом."
+}
 ];
-const N=Q.length,LIMIT=30*60,TITLE='Тест по УЗИ поджелудочной железы',$=id=>document.getElementById(id);
-let order=Q.map(()=>[0,1,2,3]),ans=Array(N).fill(null),cur=0,phase='intro',showRes=true,who='',deadline=0,used=0,tick=null,endedAt=null,byTime=false;
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function el(t,c,txt){const e=document.createElement(t);if(c)e.className=c;if(txt!=null)e.textContent=txt;return e}
-function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
-function left(){return Math.max(0,Math.ceil((deadline-Date.now())/1000))}
-function isRight(i){return ans[i]!==null&&order[i][ans[i]]===0}
-function stats(){return{d:ans.filter(a=>a!==null).length,r:Q.filter((_,i)=>isRight(i)).length}}
-function paintTimer(){const t=$('timer'),s=left();
-  t.textContent=phase==='done'?'Затрачено '+fmt(used):'Осталось '+fmt(phase==='run'?s:LIMIT);
-  t.classList.toggle('low',phase==='run'&&s<=300)}
-function begin(){order=Q.map(()=>shuffle([0,1,2,3]));ans=Array(N).fill(null);cur=0;phase='run';byTime=false;
-  deadline=Date.now()+LIMIT*1000;clearInterval(tick);tick=setInterval(()=>{if(left()<=0){byTime=true;finish()}else paintTimer()},500);render()}
-function finish(){if(phase!=='run')return;used=Math.min(LIMIT,LIMIT-left());clearInterval(tick);phase='done';showRes=true;endedAt=new Date();render()}
-function render(){
-  const {d,r}=stats();$('done').textContent=d;$('right').textContent=r;$('prog').style.width=(d/N*100)+'%';paintTimer();
-  const early=$('early');early.hidden=phase!=='run';early.classList.remove('sure');early.textContent='Завершить досрочно';
-  const map=$('map');map.replaceChildren();
-  Q.forEach((_,i)=>{const b=el('button','',i+1);b.type='button';const a=ans[i];
-    if(a!==null)b.className=isRight(i)?'ok':'no';else if(phase==='done')b.className='no';
-    if(i===cur&&phase!=='intro'&&!(phase==='done'&&showRes))b.classList.add('cur');
-    b.disabled=phase==='intro';
-    b.setAttribute('aria-label','Вопрос '+(i+1)+(a===null?', без ответа':isRight(i)?', верно':', ошибка'));
-    b.onclick=()=>{showRes=false;cur=i;render()};map.append(b)});
-  const main=$('main');main.replaceChildren();
-  main.append(phase==='intro'?intro():phase==='done'&&showRes?result():question());
+const TITLE=CFG.title;
+// Автоотправка результата преподавателю в Telegram
+const TG_TOKEN="8469771865:AAFRhxAfYsggVYE3UEPd82PXrPBmk56xwis", TG_CHAT="188183172";
+const tgOn = !TG_TOKEN.startsWith("__") && !TG_CHAT.startsWith("__");
+function attemptNo(){ try{ const k=CFG.salt+"-attempts"; const n=(+localStorage.getItem(k)||0)+1; localStorage.setItem(k,n); return n; }catch(e){ return null; } }
+// Несколько способов доставки: страница по ссылке может блокировать часть запросов
+let cspBlocked=false;
+document.addEventListener("securitypolicyviolation",e=>{ if(String(e.blockedURI||"").includes("telegram")) cspBlocked=true; });
+const tgURL=text=>`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?`+new URLSearchParams({chat_id:TG_CHAT, text, _:Date.now()+"-"+Math.random().toString(36).slice(2)});
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function sendToTeacher(text){
+  if(!tgOn) return "off";
+  try{
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {method:"POST", mode:"no-cors", body:new URLSearchParams({chat_id:TG_CHAT, text})});
+    sendWay=1; return "sent";
+  }catch(e){}
+  return "fail";
 }
-function intro(){
-  const box=el('section','q intro');box.append(el('div','tag','Перед началом'),el('h2','','Введите фамилию и имя и начните тест'));
-  const ul=el('ul');['30 вопросов, на каждый один верный ответ.','На весь тест 30 минут. Таймер запускается кнопкой «Начать тест» и не останавливается.','Когда время выйдет, тест завершится сам; вопросы без ответа засчитываются как ошибки.','В конце появится результат, который нужно отправить преподавателю.'].forEach(t=>ul.append(el('li','',t)));
-  const lab=el('label','','Фамилия и имя');lab.htmlFor='fio';
-  const inp=el('input');inp.id='fio';inp.type='text';inp.autocomplete='name';inp.maxLength=80;inp.value=who;
-  const err=el('div','err');err.id='fioerr';err.setAttribute('aria-live','polite');
-  const nav=el('div','nav'),go=el('button','primary','Начать тест');go.type='button';
-  const run=()=>{const v=inp.value.trim().replace(/\s+/g,' ');if(v.length<3){err.textContent='Укажите фамилию и имя — без них результат нельзя будет засчитать.';inp.focus();return}who=v;begin()};
-  go.onclick=run;inp.onkeydown=e=>{if(e.key==='Enter')run()};
-  nav.append(el('span'),go);box.append(ul,lab,inp,err,nav);return box;
+const L=["А","Б","В","Г","Д","Е"];
+const ans=Array(Q.length).fill(null); let cur=0; let reportText=null;
+const LIMIT=CFG.minutes*60*1000; let startAt=null, endAt=null, finished=false, timedOut=false, tick=null;
+const fmt=ms=>{const t=Math.max(0,Math.ceil(ms/1000)); return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");};
+const $=id=>document.getElementById(id);
+function startTimer(){ startAt=Date.now(); tick=setInterval(updateClock,250); updateClock(); }
+function stopTimer(){ if(tick){clearInterval(tick); tick=null;} endAt=endAt||Date.now(); }
+function updateClock(){
+  const el=$("timer"), left = startAt===null ? LIMIT : LIMIT-((endAt||Date.now())-startAt);
+  $("clock").textContent=fmt(left);
+  $("tnote").textContent = startAt===null ? "старт с первым ответом" : finished ? (timedOut?"время вышло":"тест завершён") : "осталось";
+  el.classList.toggle("warn", !finished && startAt!==null && left<=2*60*1000);
+  el.classList.toggle("stop", finished);
+  if(!finished && startAt!==null && left<=0){ timedOut=true; showResult(); }
 }
-function question(){
-  const q=Q[cur],a=ans[cur],lock=phase==='done',box=el('section','q');
-  box.append(el('div','tag','Вопрос '+(cur+1)+' из '+N+' · '+q.s),el('h2','',q.q));
-  const opts=el('div','opts');
-  order[cur].forEach((src,pos)=>{const b=el('button','opt');b.type='button';
-    b.append(el('span','k','АБВГ'[pos]),el('span','',q.o[src]));
-    if(a!==null||lock){b.disabled=true;if(src===0)b.classList.add('right');else if(pos===a)b.classList.add('wrong')}
-    b.onclick=()=>{if(phase!=='run')return;ans[cur]=pos;render()};opts.append(b)});
-  box.append(opts);
-  if(a!==null||lock){const ok=isRight(cur),f=el('div','fb '+(ok?'good':'poor'));
-    const letter='АБВГ'[order[cur].indexOf(0)];
-    f.append(el('strong','',ok?'Верно.':a===null?'Ответ не дан. Правильный ответ: '+letter+'.':'Неверно. Правильный ответ: '+letter+'.'),el('span','',q.e));box.append(f)}
-  const nav=el('div','nav'),p=el('button','','← Назад'),n=el('button','primary');
-  p.type=n.type='button';p.disabled=cur===0;p.onclick=()=>{cur--;render()};
-  if(lock){n.textContent='К результату';n.onclick=()=>{showRes=true;render()}}
-  else if(ans.every(x=>x!==null)){n.textContent='Завершить и показать результат';n.onclick=finish}
-  else if(cur===N-1){const first=ans.findIndex(x=>x===null);n.textContent='К вопросу без ответа ('+(first+1)+')';n.onclick=()=>{cur=first;render()}}
-  else{n.textContent='Далее →';n.onclick=()=>{cur++;render()}}
-  nav.append(p,n);box.append(nav);return box;
+function grade(p){ if(p>=90) return ["Отлично",0]; if(p>=75) return ["Хорошо",1]; if(p>=60) return ["Удовлетворительно",2]; return ["Неудовлетворительно",3]; }
+function stats(){ const done=ans.filter(v=>v!==null).length, ok=ans.filter((v,i)=>v===Q[i].a).length; return {done,ok}; }
+function renderQ(){
+  const x=Q[cur], v=ans[cur], answered=v!==null;
+  const c=$("qcard"); c.innerHTML="";
+  const meta=document.createElement("div"); meta.className="qmeta";
+  meta.innerHTML=`<span class="tag">${x.t}</span><span>Вопрос ${cur+1} из ${Q.length}</span>`;
+  const h=document.createElement("p"); h.className="qtext"; h.textContent=x.q;
+  const ul=document.createElement("ul"); ul.className="opts";
+  x.o.forEach((o,i)=>{ const li=document.createElement("li"); const b=document.createElement("button"); b.type="button"; b.className="opt"; b.id=`opt-${cur}-${i}`;
+    b.innerHTML=`<span class="letter">${L[i]}</span><span></span>`; b.lastChild.textContent=o;
+    if(answered || finished){ b.disabled=true; if(i===x.a) b.classList.add("correct"); else if(i===v) b.classList.add("wrong"); }
+    b.addEventListener("click",()=>choose(i)); li.appendChild(b); ul.appendChild(li); });
+  c.append(meta,h,ul);
+  if(answered){ const fb=document.createElement("div"); fb.className="fb"; const ok=v===x.a;
+    fb.innerHTML=`<span class="verdict ${ok?"ok":"bad"}">${ok?"Верно.":"Неверно. Правильный ответ — "+L[x.a]+"."}</span><span></span><span class="src"></span>`;
+    fb.children[1].textContent=x.e||""; if(x.s) fb.children[2].textContent="Источник: "+x.s; else fb.children[2].remove();
+    if(x.k){ const k=document.createElement("span"); k.innerHTML="<b>Вывод:</b> "; k.appendChild(document.createTextNode(x.k)); fb.insertBefore(k, fb.lastChild&&fb.lastChild.className==="src"?fb.lastChild:null); }
+    if(x.p){ const p=document.createElement("span"); p.innerHTML="<b>На практике:</b> "; p.appendChild(document.createTextNode(x.p)); fb.insertBefore(p, fb.lastChild&&fb.lastChild.className==="src"?fb.lastChild:null); }
+    c.appendChild(fb); }
+  const nav=document.createElement("div"); nav.className="nav";
+  nav.innerHTML=`<button class="btn" type="button" id="prev">← Назад</button><button class="btn primary" type="button" id="next">${cur===Q.length-1?"К результату":"Далее →"}</button>`;
+  c.appendChild(nav);
+  $("prev").disabled=cur===0; $("prev").onclick=()=>go(cur-1);
+  $("next").onclick=()=> cur===Q.length-1? showResult(): go(cur+1);
+  renderMap();
 }
-function grade(pct){return pct>=90?'Отлично':pct>=75?'Хорошо':pct>=60?'Удовлетворительно':'Неудовлетворительно'}
-function sections(){const by={};Q.forEach((q,i)=>{by[q.s]=by[q.s]||[0,0];by[q.s][1]++;if(isRight(i))by[q.s][0]++});return Object.entries(by)}
-function report(){
-  const {r}=stats(),pct=Math.round(r/N*100),p2=n=>String(n).padStart(2,'0'),d=endedAt;
-  const wrong=[],empty=[];Q.forEach((_,i)=>{if(ans[i]===null)empty.push(i+1);else if(!isRight(i))wrong.push(i+1)});
-  return [TITLE,'Курсант: '+who,'Результат: '+r+' из '+N+' ('+pct+' %) — '+grade(pct),
-    'Время: '+fmt(used)+' из '+fmt(LIMIT)+(byTime?' (время вышло)':''),
-    'Дата: '+p2(d.getDate())+'.'+p2(d.getMonth()+1)+'.'+d.getFullYear()+' '+p2(d.getHours())+':'+p2(d.getMinutes()),
-    'Ошибки: '+(wrong.length?'№ '+wrong.join(', '):'нет'),'Без ответа: '+(empty.length?'№ '+empty.join(', '):'нет'),
-    'По разделам: '+sections().map(([s,[a,b]])=>s+' '+a+'/'+b).join('; ')].join('\n');
+function fioOk(){ const v=$("fio").value.trim().replace(/\s+/g," "); return v.split(" ").length>=2 && /^[A-Za-zА-Яа-яЁёӨөҮүҢң'\- ]+$/.test(v) ? v : null; }
+function choose(i){ if(finished || ans[cur]!==null) return;
+  if(!fioOk()){ const h=$("fiohint"); h.textContent="Сначала введите ФИО полностью — хотя бы фамилию и имя, буквами."; h.classList.add("err"); $("fio").focus(); return; }
+  if(startAt===null){ startTimer(); $("fio").value=fioOk(); $("fio").readOnly=true; const h=$("fiohint"); h.classList.remove("err"); h.textContent="ФИО зафиксировано до конца попытки."; }
+  ans[cur]=i; renderQ(); }
+$("fio").addEventListener("input",()=>{ const h=$("fiohint"); if(h.classList.contains("err") && fioOk()){ h.classList.remove("err"); h.textContent="ФИО принято. Можно отвечать."; } });
+const SALT=CFG.salt;
+function hash(str){ let h=0x811c9dc5; for(const ch of str){ h^=ch.codePointAt(0); h=Math.imul(h,0x01000193)>>>0; } let h2=0x9e3779b9; for(const ch of (str+SALT)){ h2^=ch.codePointAt(0); h2=Math.imul(h2,0x85ebca6b)>>>0; }
+  const a=h.toString(36).toUpperCase().padStart(7,"0").slice(-4), b=h2.toString(36).toUpperCase().padStart(7,"0").slice(-4); return a+"-"+b; }
+const body=t=>t.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).filter(x=>!x.startsWith("Код проверки:")).join("\n");
+function stamp(d){ const z=n=>String(n).padStart(2,"0"); return `${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}`; }
+let sendState=null, sendWay=0;
+function showSend(){ const el=document.getElementById("autosend"); if(!el) return;
+  if(sendState==="pending"){ el.className="hint"; el.textContent="Отправляем результат преподавателю…"; }
+  else if(sendState==="sent"){ el.className="ok-msg"; el.textContent="Результат отправлен преподавателю. Если преподаватель его не получил, нажмите «Отправить через Telegram»."; }
+  else if(sendState==="fail"){ el.className="bad-msg"; el.textContent="На этой странице автоматическая отправка недоступна. Нажмите «Отправить через Telegram» и выберите чат преподавателя (или скопируйте отчёт)."; }
+  else el.textContent=""; }
+let downloads=null; (async()=>{ try{ downloads = window.claude && await window.claude.use("downloads"); }catch(e){ downloads=null; } const b=document.getElementById("dl"); if(b) b.hidden=!downloads; })();
+function go(i){ if(i<0||i>=Q.length) return; cur=i; $("result").hidden=true; $("qcard").hidden=false; renderQ(); }
+function renderMap(){
+  const m=$("map"); m.innerHTML="";
+  Q.forEach((x,i)=>{ const b=document.createElement("button"); b.type="button"; b.className="cell"; b.textContent=i+1; b.id=`cell-${i}`;
+    b.setAttribute("aria-label",`Вопрос ${i+1}`);
+    if(ans[i]!==null) b.classList.add(ans[i]===x.a?"ok":"bad"); if(i===cur && !$("qcard").hidden) b.classList.add("cur");
+    b.onclick=()=>go(i); m.appendChild(b); });
+  const {done,ok}=stats(); $("fill").style.width=(done/Q.length*100)+"%";
+  $("stat").textContent=`${done} / ${Q.length} отвечено · верно ${ok}`;
 }
-function result(){
-  const {r}=stats(),pct=Math.round(r/N*100),box=el('section','res');
-  box.append(el('div','big',r+' / '+N),el('div','grade',grade(pct)+' · '+pct+' %'),
-    el('div','who',who+' · затрачено '+fmt(used)+' из '+fmt(LIMIT)+(byTime?' · время вышло':'')));
-  const send=el('div','send'),txt=report(),ta=el('textarea');ta.id='report';ta.readOnly=true;ta.value=txt;ta.setAttribute('aria-label','Текст результата');
-  const row=el('div','btnrow'),cp=el('button','','Скопировать результат'),msg=el('span','copied');cp.type='button';msg.setAttribute('aria-live','polite');
-  cp.onclick=()=>{const done=()=>{msg.textContent='Скопировано — вставьте в сообщение преподавателю.'};const fall=()=>{ta.focus();ta.select();msg.textContent='Текст выделен — скопируйте его вручную.'};
-    try{navigator.clipboard.writeText(txt).then(done,fall)}catch(e){fall()}};
-  const wa=el('a','','Отправить в WhatsApp'),tg=el('a','','Отправить в Telegram');
-  wa.href='https://wa.me/?text='+encodeURIComponent(txt);tg.href='https://t.me/share/url?url='+encodeURIComponent(' ')+'&text='+encodeURIComponent(txt);
-  wa.target=tg.target='_blank';wa.rel=tg.rel='noopener';
-  row.append(cp,wa,tg,msg);
-  send.append(el('h3','','Отправьте результат преподавателю'),el('p','','Страница не передаёт результат сама. Скопируйте текст или откройте мессенджер и выберите чат преподавателя.'),ta,row);
-  box.append(send,el('h3','','По разделам'));
-  const secs=el('div','secs');sections().forEach(([s,[a,b]])=>{const d=el('div');d.append(el('span','',s),el('b','',a+' из '+b));secs.append(d)});box.append(secs);
-  const miss=Q.map((q,i)=>i).filter(i=>!isRight(i));
-  if(miss.length){box.append(el('h3','','Разбор ошибок'));const ul=el('ul');
-    miss.forEach(i=>{const li=el('li');li.append(el('b','','№ '+(i+1)+(ans[i]===null?' (без ответа). ':'. ')),el('span','',Q[i].q+' '),el('b','','Верно: '),el('span','',Q[i].o[0]+'. '+Q[i].e));ul.append(li)});box.append(ul)}
-  else box.append(el('p','','Ошибок нет.'));
-  const again=el('button','again','Пройти заново');again.type='button';again.onclick=()=>{phase='intro';ans=Array(N).fill(null);cur=0;render()};box.append(again);return box;
+function showResult(){
+  if(!finished){ finished=true; stopTimer(); } updateClock();
+  const used = startAt===null ? 0 : Math.min(LIMIT,(endAt||Date.now())-startAt);
+  const {done,ok}=stats(), p=Math.round(ok/Q.length*100), [g,gi]=grade(p);
+  const r=$("result"); const wrong=Q.map((x,i)=>i).filter(i=>ans[i]!==Q[i].a);
+  const rows=[["Отлично","90–100%"],["Хорошо","75–89%"],["Удовлетворительно","60–74%"],["Неудовлетворительно","менее 60%"]];
+  r.innerHTML=`<h2>Результат</h2>${timedOut?`<p class="notice">Время вышло — тест завершён автоматически.</p>`:""}<div class="score"><span class="big">${ok}/${Q.length}</span><span class="grade">${p}% · ${g}</span></div><p class="stat">Затрачено времени: ${fmt(used)} из ${fmt(LIMIT)}</p>
+    ${done<Q.length?`<p class="sub">Без ответа осталось вопросов: ${Q.length-done}. Они засчитаны как неверные.</p>`:""}
+    <table class="scale"><tbody>${rows.map((rw,i)=>`<tr class="${i===gi?"me":""}"><td>${rw[0]}</td><td>${rw[1]}</td></tr>`).join("")}</tbody></table>
+    <h2>Отправка результата</h2>
+    <p id="autosend" role="status"></p>
+    <p class="hint">${tgOn?"Копия отчёта — на случай, если преподаватель попросит прислать его вручную.":"Скопируйте отчёт и отправьте его преподавателю в Telegram или WhatsApp."} Не редактируйте текст — иначе код проверки не совпадёт.</p>
+    <textarea class="report" id="report" readonly spellcheck="false"></textarea>
+    <div class="actions"><button class="btn primary" id="copy" type="button">Скопировать отчёт</button>${tgOn?`<button class="btn" id="resend" type="button">Отправить ещё раз</button>`:""}<button class="btn" id="share" type="button">Отправить через Telegram</button><button class="btn" id="dl" type="button" ${downloads?"":"hidden"}>Скачать файл</button><span id="sendmsg" role="status"></span></div>
+    ${wrong.length?`<h2>Повторить</h2><ol class="wrongs">${wrong.map(i=>`<li><button type="button" data-i="${i}">Вопрос ${i+1}: ${Q[i].t.toLowerCase()}</button></li>`).join("")}</ol>`:"<p>Все ответы верны.</p>"}`;
+  r.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>go(+b.dataset.i));
+  if(!reportText){ const lines=[`Тест «${TITLE}» — результат`, `ФИО: ${fioOk()||"не указано"}`, `Дата: ${stamp(new Date(endAt||Date.now()))}`,
+      `Результат: ${ok} из ${Q.length} (${p}%) — ${g}`, `Время: ${fmt(used)} из ${fmt(LIMIT)}${timedOut?" (время вышло)":""}`,
+      `Без ответа: ${Q.length-done}`, `Ошибки в вопросах: ${wrong.length?wrong.map(i=>i+1).join(", "):"нет"}`];
+    const att=attemptNo(); if(att) lines.splice(3,0,`Попытка на этом устройстве: ${att}`);
+    reportText = lines.join("\n")+"\nКод проверки: "+hash(body(lines.join("\n")));
+    sendState="pending";
+    sendToTeacher(reportText).then(st=>{ sendState=st; showSend(); }); }
+  $("report").value=reportText; showSend();
+  const msg=t=>{ const m=$("sendmsg"); m.textContent=t; m.className="ok-msg"; };
+  $("copy").onclick=()=>{ const ta=$("report"); try{ navigator.clipboard.writeText(reportText).then(()=>msg("Скопировано. Вставьте в чат с преподавателем."),()=>{ ta.focus(); ta.select(); msg("Текст выделен — нажмите Ctrl+C (или «Копировать»)."); }); }catch(e){ ta.focus(); ta.select(); msg("Текст выделен — нажмите Ctrl+C (или «Копировать»)."); } };
+  if($("resend")) $("resend").onclick=()=>{ sendState="pending"; showSend(); sendToTeacher(reportText+"\n(повторная отправка)").then(st=>{ sendState=st; showSend(); }); };
+  $("share").onclick=()=>{ window.open("https://t.me/share/url?url="+encodeURIComponent(" ")+"&text="+encodeURIComponent(reportText),"_blank","noopener"); };
+  $("dl").onclick=async()=>{ if(!downloads) return; const name=CFG.file+"_"+(fioOk()||"курсант").replace(/[^A-Za-zА-Яа-яЁёӨөҮүҢң0-9]+/g,"_")+".txt";
+    try{ const res=await downloads.save({filename:name, data:reportText}); msg(res.status==="saved"?"Файл сохранён.":"Файл передан."); }
+    catch(e){ const m=$("sendmsg"); m.className="bad-msg"; m.textContent = e&&e.code==="declined" ? "Сохранение отменено." : "Скачать не удалось — скопируйте отчёт."; } };
+  $("qcard").hidden=true; r.hidden=false; renderMap(); r.scrollIntoView({block:"start"});
 }
-$('early').onclick=function(){if(this.classList.contains('sure'))finish();else{this.classList.add('sure');this.textContent='Точно завершить? Нажмите ещё раз'}};
-render();
+$("finish").onclick=showResult;
+$("restart").onclick=()=>{ ans.fill(null); stopTimer(); startAt=null; endAt=null; finished=false; timedOut=false; reportText=null; sendState=null; $("fio").readOnly=false; const h=$("fiohint"); h.classList.remove("err"); h.textContent="Введите фамилию, имя и отчество. Без ФИО ответы не принимаются; после первого ответа ФИО изменить нельзя."; updateClock(); go(0); window.scrollTo(0,0); };
+$("vbtn").onclick=()=>{ const t=$("vin").value, o=$("vout"); const m=t.match(/Код проверки:\s*([0-9A-Z]{4}-[0-9A-Z]{4})/);
+  if(!m){ o.className="bad-msg"; o.textContent="В тексте нет строки «Код проверки»."; return; }
+  const good = hash(body(t))===m[1]; o.className=good?"ok-msg":"bad-msg"; o.textContent= good ? "Код верный: отчёт не изменён." : "Код не совпадает: текст отчёта изменён."; };
+document.addEventListener("keydown",e=>{
+  if(e.target.closest && e.target.closest("input,textarea")) return;
+  if($("qcard").hidden) return;
+  const kn=+e.key; if(kn>=1 && kn<=Q[cur].o.length) choose(kn-1);
+  else if(e.key==="ArrowRight") go(cur+1); else if(e.key==="ArrowLeft") go(cur-1);
+});
+renderQ();
 </script>
-
-<script>window.TG_CFG={title:'УЗИ поджелудочной железы',needFio:false,getReport:function(){function v(e){return e&&e.getClientRects().length>0} var e=document.getElementById('report');return v(e)?e.value:null;}};</script><script src="tg.js"></script>
-</body></html>
+</body>
+</html>

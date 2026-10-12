@@ -1,484 +1,640 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Тест: диффузные и очаговые заболевания печени</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=PT+Sans:wght@400;700&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
-:root {
-  --navy: #1F3A5F; --teal: #1B8A8F; --teal-soft: #E3F2F2; --bg: #F3F7FA; --paper: #FFFFFF;
-  --ink: #1D2733; --muted: #5F6B77; --line: #D5DEE6; --ok: #2E7D32; --ok-soft: #E8F5E9;
-  --bad: #B03A2E; --bad-soft: #FBEAE8; --sector: #1F2A36;
-  box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
+:root{
+  --bg:#f3f6f7; --paper:#ffffff; --ink:#18232f; --muted:#5b6b78; --line:#d5e0e3;
+  --navy:#1f3864; --teal:#007a7a; --teal-soft:#e2f1f1;
+  --ok:#1e7a46; --ok-soft:#e3f3e9; --bad:#b3261e; --bad-soft:#fbe7e5;
+  --f-display:"Spectral", Georgia, "Times New Roman", serif;
+  --f-body:"PT Sans", "Segoe UI", Arial, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --navy: #9CC1EA; --teal: #4FC1C4; --teal-soft: #173A3D; --bg: #10171F; --paper: #17212C;
-    --ink: #E4EAF0; --muted: #9AA8B5; --line: #2C3A48; --ok: #6FCF7A; --ok-soft: #173020;
-    --bad: #F08A7E; --bad-soft: #3A1C19; --sector: #0B1016;
-  }
-}
-:root[data-theme="dark"] {
-  --navy: #9CC1EA; --teal: #4FC1C4; --teal-soft: #173A3D; --bg: #10171F; --paper: #17212C;
-  --ink: #E4EAF0; --muted: #9AA8B5; --line: #2C3A48; --ok: #6FCF7A; --ok-soft: #173020;
-  --bad: #F08A7E; --bad-soft: #3A1C19; --sector: #0B1016;
-}
-html { scroll-padding-top: env(safe-area-inset-top, 0px); }
-*, *::before, *::after { box-sizing: border-box; }
-body {
-  margin: 0; background: var(--bg); color: var(--ink);
-  font-family: "PT Sans", "Segoe UI", Arial, sans-serif; font-size: 17px; line-height: 1.5;
-}
-.wrap { max-width: 860px; margin: 0 auto; padding: 24px 18px 48px; }
-header.top { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: center; margin-bottom: 22px; }
-h1 { font-family: "PT Serif", Georgia, serif; font-size: clamp(1.45rem, 3.6vw, 2rem); line-height: 1.2; margin: 0 0 6px; color: var(--navy); }
-.sub { color: var(--muted); margin: 0; }
-/* the sector: progress drawn as an ultrasound fan filling with echo */
-.fan { width: 132px; height: 118px; }
-.fan-bg { fill: var(--sector); }
-.fan-fill { fill: var(--teal); transition: d .4s ease; }
-.fan-text { fill: var(--navy); font: 700 15px "PT Sans", sans-serif; }
-@media (prefers-reduced-motion: reduce) { .fan-fill { transition: none; } }
-
-.map { display: grid; grid-template-columns: repeat(15, 1fr); gap: 6px; margin: 0 0 20px; }
-.map button {
-  aspect-ratio: 1; border: 1.5px solid var(--line); background: var(--paper); color: var(--muted);
-  border-radius: 6px; font: 700 13px "PT Sans", sans-serif; cursor: pointer; padding: 0;
-}
-.map button.cur { border-color: var(--navy); color: var(--navy); box-shadow: inset 0 0 0 1.5px var(--navy); }
-.map button.ok { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
-.map button.bad { background: var(--bad-soft); border-color: var(--bad); color: var(--bad); }
-@media (max-width: 560px) { .map { grid-template-columns: repeat(10, 1fr); } }
-
-.card { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 22px 22px 18px; }
-.qhead { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .92rem; margin-bottom: 8px; }
-.topic { color: var(--teal); font-weight: 700; }
-.qtext { font-family: "PT Serif", Georgia, serif; font-size: 1.2rem; line-height: 1.45; margin: 0 0 16px; color: var(--ink); }
-.opts { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
-.opt {
-  width: 100%; text-align: left; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start;
-  padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink);
-  font: inherit; cursor: pointer;
-}
-.opt:hover:not(:disabled) { border-color: var(--teal); }
-.opt .k { width: 26px; height: 26px; border-radius: 50%; border: 1.5px solid var(--line); display: grid; place-items: center; font-weight: 700; font-size: .85rem; color: var(--muted); }
-.opt.right { border-color: var(--ok); background: var(--ok-soft); }
-.opt.right .k { border-color: var(--ok); color: var(--ok); }
-.opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
-.opt.wrong .k { border-color: var(--bad); color: var(--bad); }
-.opt:disabled { cursor: default; }
-.feedback { margin-top: 16px; padding: 12px 14px; border-left: 4px solid var(--teal); background: var(--teal-soft); border-radius: 0 8px 8px 0; }
-.feedback b.ok { color: var(--ok); } .feedback b.bad { color: var(--bad); }
-.nav { display: flex; justify-content: space-between; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
-.btn {
-  font: 700 1rem "PT Sans", sans-serif; padding: 11px 18px; border-radius: 8px; cursor: pointer;
-  border: 1.5px solid var(--navy); background: var(--paper); color: var(--navy);
-}
-.btn.primary { background: var(--navy); color: var(--paper); }
-.btn:disabled { opacity: .4; cursor: default; }
-button:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
-
-.result h2 { font-family: "PT Serif", Georgia, serif; color: var(--navy); margin: 0 0 4px; font-size: 1.6rem; }
-.score { font-family: "PT Serif", Georgia, serif; font-size: clamp(2.6rem, 9vw, 4rem); color: var(--navy); line-height: 1; margin: 10px 0 4px; }
-.grade { font-weight: 700; font-size: 1.15rem; }
-.scale { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: .95rem; }
-.scale td { padding: 6px 8px; border-bottom: 1px solid var(--line); }
-.scale tr.me td { background: var(--teal-soft); font-weight: 700; }
-.bars { display: grid; gap: 8px; margin: 12px 0 18px; }
-.bar { display: grid; grid-template-columns: 170px 1fr 52px; gap: 10px; align-items: center; font-size: .95rem; }
-.bar .track { height: 10px; background: var(--line); border-radius: 5px; overflow: hidden; }
-.bar .track i { display: block; height: 100%; background: var(--teal); }
-@media (max-width: 520px) { .bar { grid-template-columns: 1fr 52px; } .bar .track { grid-column: 1 / -1; order: 3; } }
-.mist { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
-.mist li { border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
-.mist .q { font-weight: 700; margin-bottom: 4px; }
-.mist .a { color: var(--ok); } .mist .y { color: var(--bad); }
-.timer { display: inline-flex; align-items: center; gap: 8px; font: 700 1.05rem "PT Sans", sans-serif; color: var(--navy);
-  border: 1.5px solid var(--line); background: var(--paper); border-radius: 8px; padding: 6px 12px; margin-bottom: 14px; }
-.timer.warn { color: #9A6B00; border-color: #E0B84A; }
-.timer.crit { color: var(--bad); border-color: var(--bad); }
-.bar-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-.who { color: var(--muted); font-size: .95rem; margin-bottom: 14px; }
-.start label { display: block; font-weight: 700; margin: 14px 0 6px; }
-.start input { width: 100%; font: inherit; padding: 10px 12px; border: 1.5px solid var(--line); border-radius: 8px; background: var(--paper); color: var(--ink); }
-.start input:focus-visible { outline: 3px solid var(--teal); outline-offset: 1px; }
-.rules { margin: 14px 0 0; padding-left: 20px; color: var(--ink); }
-.rules li { margin-bottom: 4px; }
-.err { color: var(--bad); margin-top: 8px; min-height: 1.4em; }
-.send { margin-top: 18px; padding: 16px; border: 1.5px solid var(--teal); border-radius: 10px; background: var(--teal-soft); }
-.send h3 { margin: 0 0 8px; color: var(--navy); }
-.send pre { white-space: pre-wrap; font: .92rem/1.45 "PT Sans", sans-serif; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; margin: 10px 0; color: var(--ink); }
-.send .row { display: flex; gap: 8px; flex-wrap: wrap; }
-.send a.btn { text-decoration: none; display: inline-block; }
-.note { color: var(--muted); font-size: .88rem; margin-top: 8px; }
-.foot { color: var(--muted); font-size: .88rem; margin-top: 26px; }
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1519; --paper:#172027; --ink:#e5edf0; --muted:#9db0ba; --line:#2b3a43;
+  --navy:#9cb6e6; --teal:#4cc3c3; --teal-soft:#16302f;
+  --ok:#6ad19a; --ok-soft:#163024; --bad:#ff8a80; --bad-soft:#3a1d1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1519; --paper:#172027; --ink:#e5edf0; --muted:#9db0ba; --line:#2b3a43;
+  --navy:#9cb6e6; --teal:#4cc3c3; --teal-soft:#16302f;
+  --ok:#6ad19a; --ok-soft:#163024; --bad:#ff8a80; --bad-soft:#3a1d1b; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:grid;gap:18px}
+header{display:grid;gap:6px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,5vw,38px);line-height:1.1;margin:0;color:var(--navy);text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.track{flex:1 1 220px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--teal);transition:width .25s}
+.stat{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px clamp(16px,4vw,28px);display:grid;gap:14px}
+.qmeta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.tag{color:var(--teal);text-transform:uppercase;letter-spacing:.06em}
+.qtext{font-family:var(--f-display);font-weight:600;font-size:clamp(19px,3.2vw,23px);line-height:1.3;margin:0;text-wrap:pretty}
+.opts{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.opt{width:100%;display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:start;text-align:left;font:inherit;color:var(--ink);
+  background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.opt:disabled{cursor:default}
+.letter{font-family:var(--f-mono);font-weight:700;width:28px;height:28px;display:grid;place-items:center;border-radius:6px;background:var(--teal-soft);color:var(--teal)}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.correct .letter{background:var(--ok);color:var(--paper)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .letter{background:var(--bad);color:var(--paper)}
+.fb{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+.verdict{font-weight:700}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+.src{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;border-radius:8px;padding:10px 16px;cursor:pointer;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy)}
+.btn.primary{background:var(--navy);color:var(--paper)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.maphead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+h2{font-family:var(--f-display);font-size:18px;margin:0;color:var(--navy)}
+.legend{font-size:13px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.map{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
+@media (max-width:480px){.map{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.cell{font-family:var(--f-mono);font-size:13px;font-weight:700;aspect-ratio:1;max-width:100%;border-radius:6px;border:1.5px solid var(--line);background:var(--paper);color:var(--muted);cursor:pointer;font-variant-numeric:tabular-nums}
+.cell.cur{border-color:var(--navy);color:var(--navy)}
+.cell.ok{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.cell.bad{background:var(--bad);border-color:var(--bad);color:var(--paper)}
+.cell:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.result{display:grid;gap:12px}
+.score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.big{font-family:var(--f-display);font-size:52px;font-weight:700;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.grade{font-weight:700;font-size:18px}
+.scale{width:100%;border-collapse:collapse;font-size:14px}
+.scale td{border-top:1px solid var(--line);padding:6px 4px}
+.scale td:last-child{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.scale tr.me td{color:var(--teal);font-weight:700}
+.wrongs{margin:0;padding-left:20px;display:grid;gap:4px}
+.wrongs button{font:inherit;background:none;border:0;padding:0;color:var(--teal);cursor:pointer;text-align:left;text-decoration:underline}
+footer{font-size:13px;color:var(--muted)}
+.timer{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;color:var(--navy);
+  border:1.5px solid var(--line);border-radius:8px;padding:4px 12px;background:var(--paper)}
+.timer small{font-family:var(--f-body);font-weight:400;font-size:12px;color:var(--muted)}
+.timer.warn{color:var(--bad);border-color:var(--bad);background:var(--bad-soft)}
+.timer.stop{color:var(--muted)}
+.who{display:grid;gap:6px}
+.who label{font-weight:700;color:var(--navy)}
+.who input,.report,.verify textarea{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+.who input:focus-visible,.report:focus-visible,.verify textarea:focus-visible{outline:3px solid var(--teal);outline-offset:1px;border-color:var(--teal)}
+.who input[readonly]{background:var(--teal-soft)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.hint.err{color:var(--bad)}
+.report{font-family:var(--f-mono);font-size:13px;line-height:1.5;min-height:200px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ok-msg{color:var(--ok);font-weight:700} .bad-msg{color:var(--bad);font-weight:700}
+.verify{display:grid;gap:8px;margin-top:8px}
+.verify textarea{font-family:var(--f-mono);font-size:13px;min-height:140px}
+details summary{cursor:pointer;color:var(--teal);font-weight:700}
+.notice{margin:0;padding:10px 12px;border-radius:8px;background:var(--bad-soft);color:var(--bad);font-weight:700}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="top">
-    <div>
-      <h1>УЗИ печени: диффузные и очаговые заболевания</h1>
-      <p class="sub">Тест по руководству (версия 2.0). 30 вопросов, один правильный ответ, 20 минут. Результат отправляется преподавателю.</p>
-    </div>
-    <svg class="fan" viewBox="0 0 132 118" role="img" aria-label="Прогресс">
-      <path class="fan-bg" d="M66 8 L10 80 A91 91 0 0 0 122 80 Z"/>
-      <path class="fan-fill" id="fanFill" d=""/>
-      <text class="fan-text" id="fanText" x="66" y="114" text-anchor="middle"></text>
-    </svg>
+  <header>
+    <span class="eyebrow">Первичная специализация · УЗ-диагностика</span>
+    <h1>Диффузные и очаговые заболевания печени</h1>
+    <p class="sub">30 вопросов: методику и нормы, диффузные поражения, фиброз и портальную гипертензию, очаговые образования. После ответа сразу показывается правильный вариант и пояснение. На тест отводится 20 минут: отсчёт начинается с первого ответа, по истечении времени тест завершается автоматически. После завершения результат автоматически уходит преподавателю.</p>
+    <div class="bar"><div class="track" aria-hidden="true"><div class="fill" id="fill"></div></div><span class="stat" id="stat">0 / 30 отвечено · верно 0</span><span class="timer" id="timer" role="timer" aria-live="off"><span id="clock">20:00</span><small id="tnote">старт с первым ответом</small></span></div>
   </header>
 
-  <div id="bar"></div>
-  <nav class="map" id="map" aria-label="Карта вопросов"></nav>
-  <main id="stage"></main>
-  <p class="foot">Составлено по руководству «УЗИ печени: диффузные и очаговые заболевания» (врач УЗД Жумагулов Н. М., версия 2.0): MASLD 2023, SRU 2020, Baveno VII, US/CEUS LI-RADS, WFUMB/EFSUMB, EASL, ВОЗ-IWGE/ВОЗ 2025; нормы — в сравнении с В.В. Митьковым.</p>
+  <section class="card who">
+    <label for="fio">ФИО курсанта</label>
+    <input id="fio" type="text" autocomplete="name" placeholder="Например: Иванов Иван Иванович" maxlength="120">
+    <p class="hint" id="fiohint">Введите фамилию, имя и отчество. Без ФИО ответы не принимаются; после первого ответа ФИО изменить нельзя.</p>
+  </section>
+
+  <section class="card" id="qcard" aria-live="polite"></section>
+  <section class="card result" id="result" hidden></section>
+
+  <section class="card">
+    <div class="maphead"><h2>Карта вопросов</h2>
+      <div class="legend"><span><i style="background:var(--ok)"></i>верно</span><span><i style="background:var(--bad)"></i>неверно</span><span><i style="border:1.5px solid var(--line)"></i>без ответа</span></div></div>
+    <div class="map" id="map"></div>
+    <div class="nav"><button class="btn" id="restart" type="button">Начать заново</button><button class="btn primary" id="finish" type="button">Показать результат</button></div>
+  </section>
+
+  <footer>Ответы — по руководству «УЗИ печени» (версия 2.0). Клавиши: 1–4 — выбор ответа, ← → — переход.
+    <details><summary>Проверка отчёта (для преподавателя)</summary>
+      <div class="verify"><label for="vin">Вставьте текст отчёта, полученный от курсанта:</label>
+        <textarea id="vin" spellcheck="false"></textarea>
+        <div class="actions"><button class="btn" id="vbtn" type="button">Проверить код</button><span id="vout" role="status"></span></div>
+        <p class="hint">Код показывает, что текст отчёта не редактировали после теста. Защита простая: курсант, разбирающийся в коде страницы, может её обойти.</p>
+      </div></details>
+  </footer>
 </div>
-
 <script>
-const Q = [
- {t:"Методика и нормы", q:"Почему длину правой доли по среднеключичной линии (норма ≤ 155–160 мм) нельзя напрямую сравнивать с КВР по Митькову (норма ≤ 150 мм)?",
-  o:["Митьков использовал другую единицу измерения","Это разные измерения: КВР — в косом срезе вдоль рёберной дуги, длина — в продольном срезе","Международная норма устарела","КВР измеряют только у детей"], a:1,
-  e:"Цифры различаются, потому что различаются методики. В протоколе указывают, что именно измерено."},
- {t:"Методика и нормы", q:"Воротная вена 14 мм, кровоток гепатопетальный 21 см/с, контур печени ровный, жёсткость 5,4 кПа, коллатералей и асцита нет. Как правильно?",
-  o:["Портальная гипертензия, так как вена > 13 мм","Пограничный диаметр; признаков портальной гипертензии не выявлено","Тромбоз воротной вены","Цирроз печени"], a:1,
-  e:"Диаметр воротной вены — только вспомогательный признак. Без гепатофугального кровотока, коллатералей, асцита и высокой жёсткости портальная гипертензия не доказана."},
- {t:"Методика и нормы", q:"Что УЗИ НЕ может надёжно сделать?",
-  o:["Выявить стеатоз","Измерить жёсткость печени","Диагностировать MASH","Выявить опухолевый тромб в вене"], a:2,
-  e:"MASH (стеатогепатит) — морфологический диагноз. УЗИ выявляет стеатоз, но не воспаление и баллонную дистрофию гепатоцитов."},
- {t:"Методика и нормы", q:"Что обязательно указывать в протоколе в разделе «Качество исследования»?",
-  o:["Только марку аппарата","Подготовку, ограничения визуализации (ожирение, метеоризм, дыхание) и при скрининге ГЦР — VIS-A/B/C","Фамилию направившего врача","Количество сохранённых снимков"], a:1,
-  e:"Ограничения визуализации снижают чувствительность УЗИ; в US LI-RADS для этого есть отдельная оценка VIS."},
- {t:"Диффузные", q:"Чем MetALD отличается от MASLD?",
-  o:["MetALD — это MASLD у детей","MetALD — MASLD плюс умеренное употребление алкоголя (140–350 г/нед у женщин, 210–420 г/нед у мужчин)","MetALD — стеатоз без метаболических факторов","MetALD — синоним MASH"], a:1,
-  e:"Номенклатура 2023 г.: MetALD объединяет метаболическую дисфункцию и умеренное употребление алкоголя."},
- {t:"Диффузные", q:"Эхогенность печени умеренно повышена, стенки портальных ветвей и диафрагма видны нечётко. Какая степень стеатоза?",
-  o:["1","2","3","Норма"], a:1,
-  e:"1 степень — сосуды и диафрагма чёткие; 2 — нечёткие; 3 — не видны, задние отделы правой доли не визуализируются."},
- {t:"Диффузные", q:"Почему при MASLD главной задачей является оценка фиброза, а не степени стеатоза?",
-  o:["Стеатоз невозможно увидеть при УЗИ","Прогноз (осложнения, смертность) определяет стадия фиброза","Фиброз лечится, а стеатоз нет","Так требует страховая компания"], a:1,
-  e:"По EASL–EASD–EASO 2024 стратификация идёт через FIB-4 и эластографию именно для оценки риска фиброза."},
- {t:"Диффузные", q:"Какой признак цирроза в В-режиме считается наиболее точным?",
-  o:["Увеличение печени","Бугристость поверхности при осмотре линейным датчиком","Повышенная эхогенность","Расширение холедоха"], a:1,
-  e:"Размер печени при циррозе бывает любым; эхогенность неспецифична. Бугристость поверхности — наиболее точный отдельный В-признак."},
- {t:"Диффузные", q:"Признак псевдоочага при неравномерном стеатозе:",
-  o:["Сосуды огибают участок","Сосуды проходят сквозь участок без смещения; на CEUS — изоусиление во все фазы","Гипоэхогенный ободок","Раннее вымывание на CEUS"], a:1,
-  e:"Псевдоочаг не имеет масс-эффекта и накапливает контраст так же, как окружающая паренхима."},
- {t:"Эластография", q:"2D-SWE: медиана 10,8 кПа. Можно ли применить порог Baveno VII «< 10 кПа исключает cACLD»?",
-  o:["Да, пороги универсальны","Нет: пороги Baveno VII относятся к транзиентной эластографии (FibroScan); для SWE — SRU 2020 и пороги производителя","Да, но только у женщин","Нет, эластография при MASLD не применяется"], a:1,
-  e:"Пороги разных методов не взаимозаменяемы. По SRU 2020 значение 9–13 кПа — «серая зона», подозрение на cACLD."},
- {t:"Эластография", q:"Результат SWE с IQR/M 34%. Как правильно поступить?",
-  o:["Результат автоматически недействителен, в протокол не вносить","Проверить технику, повторить серию; если разброс остаётся — интерпретировать осторожно и указать в протоколе сниженное качество","Уменьшить число измерений до трёх","Перейти на компрессионную эластографию"], a:1,
-  e:"IQR/M > 30% — повышенная вариабельность: сначала устранить технические причины (дыхание, давление датчиком, зона)."},
- {t:"Эластография", q:"Что ложно повышает жёсткость печени?",
-  o:["Натощак 6 часов","Застой при сердечной недостаточности, острый гепатит, холестаз, приём пищи","Задержка дыхания в нейтральной фазе","Межрёберный доступ"], a:1,
-  e:"При этих состояниях жёсткость отражает не фиброз, а отёк, застой или повышенный кровоток."},
- {t:"Эластография", q:"Что означает cACLD?",
-  o:["Острая печёночная недостаточность","Компенсированное прогрессирующее хроническое заболевание печени — выраженный фиброз или компенсированный цирроз","Цирроз с асцитом","Аутоиммунный гепатит"], a:1,
-  e:"Понятие Baveno VII: F3 и F4 без осложнений объединены, потому что тактика у них сходна."},
- {t:"Сосудистые", q:"Какие УЗ-признаки наиболее весомы для портальной гипертензии?",
-  o:["Воротная вена > 13 мм","Гепатофугальный кровоток и портосистемные коллатерали","Селезёнка 125 мм","Утолщение стенки желчного пузыря"], a:1,
-  e:"Коллатерали по Baveno VII достаточны для диагноза КЗПГ; гепатофугальный кровоток высокоспецифичен."},
- {t:"Сосудистые", q:"Какой признак отличает опухолевый тромб воротной вены от мягкого?",
-  o:["Анэхогенность тромба","Артериальный пульсирующий спектр внутри тромба и накопление контраста при CEUS","Нормальный диаметр вены","Отсутствие связи с опухолью"], a:1,
-  e:"Опухолевый тромб васкуляризирован; на CEUS — LR-TIV."},
- {t:"Сосудистые", q:"Пульсирующий кровоток в воротной вене с индексом (Vmax − Vmin)/Vmax > 0,5 характерен для:",
-  o:["Стеатоза","Застоя при правожелудочковой недостаточности или трикуспидальной регургитации","Гемангиомы","Острого гепатита"], a:1,
-  e:"Повышенное давление в правых отделах передаётся через синусоиды на воротную систему."},
- {t:"Сосудистые", q:"Какой признак почти патогномоничен для синдрома Бадда-Киари?",
-  o:["Спленомегалия","Внутрипечёночные венозные коллатерали («запятые»)","Асцит","Расширение холедоха"], a:1,
-  e:"Коллатерали отводят кровь к субкапсулярным и добавочным венам в обход окклюзии."},
- {t:"CEUS и очаги", q:"Как правильно оценивать вымывание при CEUS?",
-  o:["Любое вымывание означает злокачественность","По времени начала (< 60 с / ≥ 60 с) и степени (слабое / выраженное) с учётом клинического фона","Только по степени","Вымывание не имеет значения"], a:1,
-  e:"Позднее слабое — типично для ГЦР в группе риска; раннее или выраженное — для не-ГЦР-злокачественных опухолей (LR-M)."},
- {t:"CEUS и очаги", q:"Какой очаг может вымываться, будучи доброкачественным?",
-  o:["Простая киста","Воспалительная аденома или абсцесс в фазе формирования","Очаговый стеатоз","Сохранный участок паренхимы"], a:1,
-  e:"Вымывание — не абсолютный признак злокачественности; интерпретация требует контекста."},
- {t:"CEUS и очаги", q:"Женщина 32 лет без факторов риска: гиперэхогенный однородный очаг 12 мм в S6 с псевдоусилением, без кровотока. Верная тактика?",
-  o:["CEUS LI-RADS","Заключение о типичной гемангиоме; наблюдение обычно не требуется (EASL 2016)","Биопсия","КТ каждые 3 месяца"], a:1,
-  e:"LI-RADS у пациентки вне группы риска не применяется. CEUS или МРТ понадобились бы при онкоанамнезе, циррозе или атипичной картине."},
- {t:"CEUS и очаги", q:"Что врач УЗД может определить у гепатоцеллюлярной аденомы?",
-  o:["Молекулярный подтип β-катенин","Размер, эхоструктуру, васкуляризацию, признаки кровоизлияния; подтип — нет, для характеристики нужна МРТ","Риск малигнизации в процентах","Гистологический тип"], a:1,
-  e:"Молекулярная классификация — клинический контекст, а не ультразвуковая диагностика."},
- {t:"CEUS и очаги", q:"Гиперэхогенный метастаз. Верное утверждение:",
-  o:["Источник — всегда колоректальный рак","Эхогенность метастаза неспецифична и не определяет первичную опухоль","Это исключает рак молочной железы","Нужно искать только нейроэндокринную опухоль"], a:1,
-  e:"Ассоциации эхогенности с источниками — типичные, но не диагностические."},
- {t:"LI-RADS", q:"Цирроз; узел 13 мм; CEUS: некольцевидное артериальное гиперусиление, вымывание с 85 с, слабое. Категория?",
-  o:["LR-3","LR-4","LR-5","LR-M"], a:2,
-  e:"≥ 10 мм + некольцевидное АГУ + позднее (≥ 60 с) слабое вымывание у пациента группы риска — LR-5."},
- {t:"LI-RADS", q:"Тот же узел, но вымывание начинается на 40-й секунде и выраженное. Категория и смысл?",
-  o:["LR-5 — определённо ГЦР","LR-M — вероятно злокачественный, но не специфично для ГЦР (возможны ХК, смешанная ГЦР-ХК)","LR-2 — вероятно доброкачественный","LR-TIV"], a:1,
-  e:"Раннее и/или выраженное вымывание ведёт к LR-M; нужна биопсия или решение мультидисциплинарной группы."},
- {t:"LI-RADS", q:"US LI-RADS v2024: при скрининге выявлен очаг 7 мм, не определённо доброкачественный. Тактика?",
-  o:["Сразу биопсия","US-2: два контрольных УЗИ с интервалом 3–6 месяцев; при стабильности < 10 мм — US-1","Контроль через 2 года","US-3: КТ/МРТ"], a:1,
-  e:"В v2024 срок наблюдения при US-2 сокращён с 2 лет до двух контрольных исследований через 3–6 месяцев."},
- {t:"LI-RADS", q:"У кого LI-RADS НЕ применяют?",
-  o:["У пациента с циррозом в исходе гепатита C","При хроническом гепатите B","У пациента с синдромом Бадда-Киари или после операции Фонтена","У пациента с ГЦР в анамнезе"], a:2,
-  e:"При сосудистом циррозе часты гиперваскулярные доброкачественные узлы — критерии LR-5 теряют специфичность. Также не применяют у детей до 18 лет."},
- {t:"Эхинококкоз", q:"Однокамерная киста 62 мм с двухконтурной стенкой и «гидатидным песком». Тип по ВОЗ-IWGE?",
-  o:["CL","CE1","CE3a","CE5"], a:1,
-  e:"CE1 — активная киста. Ориентир ВОЗ 2025 для 5–10 см: PAIR + альбендазол при отсутствии сообщения с протоками; решение — за хирургом/инфекционистом."},
- {t:"Эхинококкоз", q:"Что изменилось в руководстве ВОЗ 2025 по сравнению с консенсусом 2010 для кист CE2/CE3b ≤ 5 см?",
-  o:["Рекомендована экстренная операция","Предлагается альбендазол без вмешательства","Рекомендовано наблюдение без лечения","Рекомендован PAIR"], a:1,
-  e:"Для CE2/CE3b > 5 см — хирургия + альбендазол. Все рекомендации ВОЗ 2025 условные, с очень низкой степенью доказательности."},
- {t:"Эхинококкоз", q:"Верное утверждение об альвеококкозе в эндемичном регионе:",
-  o:["Любой солидный очаг — альвеококкоз, пока не доказано иное","Альвеококкоз учитывают в дифференциальной диагностике инфильтративных, неоднородных, кальцинированных очагов; диагноз — по совокупности данных и серологии","Паттерн EMUC-US сам по себе является диагнозом","При подозрении нужна диагностическая пункция"], a:1,
-  e:"EMUC-US описывает паттерн; диагноз ставится по эпидемиологии, клинике, визуализации, серологии, при необходимости — гистологии."},
- {t:"Практика", q:"Мужчина 27 лет после ДТП, гемодинамика стабильна, FAST отрицательный. Верный вывод?",
-  o:["Повреждение печени исключено","Отрицательный FAST не исключает повреждение печени; при механизме травмы — КТ с контрастом или повторный FAST","Нужна только рентгенография","Пациента можно выписать без наблюдения"], a:1,
-  e:"Внутрипаренхиматозная и подкапсульная гематомы, малый объём жидкости могут не давать положительного FAST."},
+const CFG={"title": "Диффузные и очаговые заболевания печени", "minutes": 20, "salt": "sono-liver", "file": "liver"};
+const Q=[
+{
+"t": "Методика и нормы",
+"q": "Почему длину правой доли по среднеключичной линии (норма ≤ 155–160 мм) нельзя напрямую сравнивать с КВР по Митькову (норма ≤ 150 мм)?",
+"o": [
+"КВР измеряют только у детей",
+"Международная норма устарела",
+"Это разные измерения: КВР — в косом срезе вдоль рёберной дуги, длина — в продольном срезе",
+"Митьков использовал другую единицу измерения"
+],
+"a": 2,
+"e": "Цифры различаются, потому что различаются методики. В протоколе указывают, что именно измерено."
+},
+{
+"t": "Методика и нормы",
+"q": "Воротная вена 14 мм, кровоток гепатопетальный 21 см/с, контур печени ровный, жёсткость 5,4 кПа, коллатералей и асцита нет. Как правильно?",
+"o": [
+"Портальная гипертензия, так как вена > 13 мм",
+"Пограничный диаметр; признаков портальной гипертензии не выявлено",
+"Тромбоз воротной вены",
+"Цирроз печени"
+],
+"a": 1,
+"e": "Диаметр воротной вены — только вспомогательный признак. Без гепатофугального кровотока, коллатералей, асцита и высокой жёсткости портальная гипертензия не доказана."
+},
+{
+"t": "Методика и нормы",
+"q": "Что УЗИ НЕ может надёжно сделать?",
+"o": [
+"Выявить опухолевый тромб в вене",
+"Выявить стеатоз",
+"Измерить жёсткость печени",
+"Диагностировать MASH"
+],
+"a": 3,
+"e": "MASH (стеатогепатит) — морфологический диагноз. УЗИ выявляет стеатоз, но не воспаление и баллонную дистрофию гепатоцитов."
+},
+{
+"t": "Методика и нормы",
+"q": "Что обязательно указывать в протоколе в разделе «Качество исследования»?",
+"o": [
+"Подготовку, ограничения визуализации (ожирение, метеоризм, дыхание) и при скрининге ГЦР — VIS-A/B/C",
+"Фамилию направившего врача",
+"Количество сохранённых снимков",
+"Только марку аппарата"
+],
+"a": 0,
+"e": "Ограничения визуализации снижают чувствительность УЗИ; в US LI-RADS для этого есть отдельная оценка VIS."
+},
+{
+"t": "Диффузные",
+"q": "Чем MetALD отличается от MASLD?",
+"o": [
+"MetALD — стеатоз без метаболических факторов",
+"MetALD — это MASLD у детей",
+"MetALD — синоним MASH",
+"MetALD — MASLD плюс умеренное употребление алкоголя (140–350 г/нед у женщин, 210–420 г/нед у мужчин)"
+],
+"a": 3,
+"e": "Номенклатура 2023 г.: MetALD объединяет метаболическую дисфункцию и умеренное употребление алкоголя."
+},
+{
+"t": "Диффузные",
+"q": "Эхогенность печени умеренно повышена, стенки портальных ветвей и диафрагма видны нечётко. Какая степень стеатоза?",
+"o": [
+"2",
+"Норма",
+"3",
+"1"
+],
+"a": 0,
+"e": "1 степень — сосуды и диафрагма чёткие; 2 — нечёткие; 3 — не видны, задние отделы правой доли не визуализируются."
+},
+{
+"t": "Диффузные",
+"q": "Почему при MASLD главной задачей является оценка фиброза, а не степени стеатоза?",
+"o": [
+"Прогноз (осложнения, смертность) определяет стадия фиброза",
+"Фиброз лечится, а стеатоз нет",
+"Так требует страховая компания",
+"Стеатоз невозможно увидеть при УЗИ"
+],
+"a": 0,
+"e": "По EASL–EASD–EASO 2024 стратификация идёт через FIB-4 и эластографию именно для оценки риска фиброза."
+},
+{
+"t": "Диффузные",
+"q": "Какой признак цирроза в В-режиме считается наиболее точным?",
+"o": [
+"Расширение холедоха",
+"Увеличение печени",
+"Бугристость поверхности при осмотре линейным датчиком",
+"Повышенная эхогенность"
+],
+"a": 2,
+"e": "Размер печени при циррозе бывает любым; эхогенность неспецифична. Бугристость поверхности — наиболее точный отдельный В-признак."
+},
+{
+"t": "Диффузные",
+"q": "Признак псевдоочага при неравномерном стеатозе:",
+"o": [
+"Гипоэхогенный ободок",
+"Сосуды проходят сквозь участок без смещения; на CEUS — изоусиление во все фазы",
+"Сосуды огибают участок",
+"Раннее вымывание на CEUS"
+],
+"a": 1,
+"e": "Псевдоочаг не имеет масс-эффекта и накапливает контраст так же, как окружающая паренхима."
+},
+{
+"t": "Эластография",
+"q": "2D-SWE: медиана 10,8 кПа. Можно ли применить порог Baveno VII «< 10 кПа исключает cACLD»?",
+"o": [
+"Нет, эластография при MASLD не применяется",
+"Нет: пороги Baveno VII относятся к транзиентной эластографии (FibroScan); для SWE — SRU 2020 и пороги производителя",
+"Да, пороги универсальны",
+"Да, но только у женщин"
+],
+"a": 1,
+"e": "Пороги разных методов не взаимозаменяемы. По SRU 2020 значение 9–13 кПа — «серая зона», подозрение на cACLD."
+},
+{
+"t": "Эластография",
+"q": "Результат SWE с IQR/M 34%. Как правильно поступить?",
+"o": [
+"Уменьшить число измерений до трёх",
+"Результат автоматически недействителен, в протокол не вносить",
+"Перейти на компрессионную эластографию",
+"Проверить технику, повторить серию; если разброс остаётся — интерпретировать осторожно и указать в протоколе сниженное качество"
+],
+"a": 3,
+"e": "IQR/M > 30% — повышенная вариабельность: сначала устранить технические причины (дыхание, давление датчиком, зона)."
+},
+{
+"t": "Эластография",
+"q": "Что ложно повышает жёсткость печени?",
+"o": [
+"Задержка дыхания в нейтральной фазе",
+"Застой при сердечной недостаточности, острый гепатит, холестаз, приём пищи",
+"Межрёберный доступ",
+"Натощак 6 часов"
+],
+"a": 1,
+"e": "При этих состояниях жёсткость отражает не фиброз, а отёк, застой или повышенный кровоток."
+},
+{
+"t": "Эластография",
+"q": "Что означает cACLD?",
+"o": [
+"Цирроз с асцитом",
+"Аутоиммунный гепатит",
+"Компенсированное прогрессирующее хроническое заболевание печени — выраженный фиброз или компенсированный цирроз",
+"Острая печёночная недостаточность"
+],
+"a": 2,
+"e": "Понятие Baveno VII: F3 и F4 без осложнений объединены, потому что тактика у них сходна."
+},
+{
+"t": "Сосудистые",
+"q": "Какие УЗ-признаки наиболее весомы для портальной гипертензии?",
+"o": [
+"Селезёнка 125 мм",
+"Воротная вена > 13 мм",
+"Утолщение стенки желчного пузыря",
+"Гепатофугальный кровоток и портосистемные коллатерали"
+],
+"a": 3,
+"e": "Коллатерали по Baveno VII достаточны для диагноза КЗПГ; гепатофугальный кровоток высокоспецифичен."
+},
+{
+"t": "Сосудистые",
+"q": "Какой признак отличает опухолевый тромб воротной вены от мягкого?",
+"o": [
+"Отсутствие связи с опухолью",
+"Нормальный диаметр вены",
+"Артериальный пульсирующий спектр внутри тромба и накопление контраста при CEUS",
+"Анэхогенность тромба"
+],
+"a": 2,
+"e": "Опухолевый тромб васкуляризирован; на CEUS — LR-TIV."
+},
+{
+"t": "Сосудистые",
+"q": "Пульсирующий кровоток в воротной вене с индексом (Vmax − Vmin)/Vmax > 0,5 характерен для:",
+"o": [
+"Стеатоза",
+"Застоя при правожелудочковой недостаточности или трикуспидальной регургитации",
+"Острого гепатита",
+"Гемангиомы"
+],
+"a": 1,
+"e": "Повышенное давление в правых отделах передаётся через синусоиды на воротную систему."
+},
+{
+"t": "Сосудистые",
+"q": "Какой признак почти патогномоничен для синдрома Бадда-Киари?",
+"o": [
+"Асцит",
+"Спленомегалия",
+"Расширение холедоха",
+"Внутрипечёночные венозные коллатерали («запятые»)"
+],
+"a": 3,
+"e": "Коллатерали отводят кровь к субкапсулярным и добавочным венам в обход окклюзии."
+},
+{
+"t": "CEUS и очаги",
+"q": "Как правильно оценивать вымывание при CEUS?",
+"o": [
+"По времени начала (< 60 с / ≥ 60 с) и степени (слабое / выраженное) с учётом клинического фона",
+"Вымывание не имеет значения",
+"Любое вымывание означает злокачественность",
+"Только по степени"
+],
+"a": 0,
+"e": "Позднее слабое — типично для ГЦР в группе риска; раннее или выраженное — для не-ГЦР-злокачественных опухолей (LR-M)."
+},
+{
+"t": "CEUS и очаги",
+"q": "Какой очаг может вымываться, будучи доброкачественным?",
+"o": [
+"Воспалительная аденома или абсцесс в фазе формирования",
+"Простая киста",
+"Сохранный участок паренхимы",
+"Очаговый стеатоз"
+],
+"a": 0,
+"e": "Вымывание — не абсолютный признак злокачественности; интерпретация требует контекста."
+},
+{
+"t": "CEUS и очаги",
+"q": "Женщина 32 лет без факторов риска: гиперэхогенный однородный очаг 12 мм в S6 с псевдоусилением, без кровотока. Верная тактика?",
+"o": [
+"Заключение о типичной гемангиоме; наблюдение обычно не требуется (EASL 2016)",
+"Биопсия",
+"КТ каждые 3 месяца",
+"CEUS LI-RADS"
+],
+"a": 0,
+"e": "LI-RADS у пациентки вне группы риска не применяется. CEUS или МРТ понадобились бы при онкоанамнезе, циррозе или атипичной картине."
+},
+{
+"t": "CEUS и очаги",
+"q": "Что врач УЗД может определить у гепатоцеллюлярной аденомы?",
+"o": [
+"Гистологический тип",
+"Риск малигнизации в процентах",
+"Размер, эхоструктуру, васкуляризацию, признаки кровоизлияния; подтип — нет, для характеристики нужна МРТ",
+"Молекулярный подтип β-катенин"
+],
+"a": 2,
+"e": "Молекулярная классификация — клинический контекст, а не ультразвуковая диагностика."
+},
+{
+"t": "CEUS и очаги",
+"q": "Гиперэхогенный метастаз. Верное утверждение:",
+"o": [
+"Это исключает рак молочной железы",
+"Источник — всегда колоректальный рак",
+"Нужно искать только нейроэндокринную опухоль",
+"Эхогенность метастаза неспецифична и не определяет первичную опухоль"
+],
+"a": 3,
+"e": "Ассоциации эхогенности с источниками — типичные, но не диагностические."
+},
+{
+"t": "LI-RADS",
+"q": "Цирроз; узел 13 мм; CEUS: некольцевидное артериальное гиперусиление, вымывание с 85 с, слабое. Категория?",
+"o": [
+"LR-M",
+"LR-5",
+"LR-3",
+"LR-4"
+],
+"a": 1,
+"e": "≥ 10 мм + некольцевидное АГУ + позднее (≥ 60 с) слабое вымывание у пациента группы риска — LR-5."
+},
+{
+"t": "LI-RADS",
+"q": "Тот же узел, но вымывание начинается на 40-й секунде и выраженное. Категория и смысл?",
+"o": [
+"LR-M — вероятно злокачественный, но не специфично для ГЦР (возможны ХК, смешанная ГЦР-ХК)",
+"LR-5 — определённо ГЦР",
+"LR-TIV",
+"LR-2 — вероятно доброкачественный"
+],
+"a": 0,
+"e": "Раннее и/или выраженное вымывание ведёт к LR-M; нужна биопсия или решение мультидисциплинарной группы."
+},
+{
+"t": "LI-RADS",
+"q": "US LI-RADS v2024: при скрининге выявлен очаг 7 мм, не определённо доброкачественный. Тактика?",
+"o": [
+"Сразу биопсия",
+"US-2: два контрольных УЗИ с интервалом 3–6 месяцев; при стабильности < 10 мм — US-1",
+"Контроль через 2 года",
+"US-3: КТ/МРТ"
+],
+"a": 1,
+"e": "В v2024 срок наблюдения при US-2 сокращён с 2 лет до двух контрольных исследований через 3–6 месяцев."
+},
+{
+"t": "LI-RADS",
+"q": "У кого LI-RADS НЕ применяют?",
+"o": [
+"У пациента с ГЦР в анамнезе",
+"При хроническом гепатите B",
+"У пациента с синдромом Бадда-Киари или после операции Фонтена",
+"У пациента с циррозом в исходе гепатита C"
+],
+"a": 2,
+"e": "При сосудистом циррозе часты гиперваскулярные доброкачественные узлы — критерии LR-5 теряют специфичность. Также не применяют у детей до 18 лет."
+},
+{
+"t": "Эхинококкоз",
+"q": "Однокамерная киста 62 мм с двухконтурной стенкой и «гидатидным песком». Тип по ВОЗ-IWGE?",
+"o": [
+"CL",
+"CE3a",
+"CE1",
+"CE5"
+],
+"a": 2,
+"e": "CE1 — активная киста. Ориентир ВОЗ 2025 для 5–10 см: PAIR + альбендазол при отсутствии сообщения с протоками; решение — за хирургом/инфекционистом."
+},
+{
+"t": "Эхинококкоз",
+"q": "Что изменилось в руководстве ВОЗ 2025 по сравнению с консенсусом 2010 для кист CE2/CE3b ≤ 5 см?",
+"o": [
+"Рекомендовано наблюдение без лечения",
+"Предлагается альбендазол без вмешательства",
+"Рекомендован PAIR",
+"Рекомендована экстренная операция"
+],
+"a": 1,
+"e": "Для CE2/CE3b > 5 см — хирургия + альбендазол. Все рекомендации ВОЗ 2025 условные, с очень низкой степенью доказательности."
+},
+{
+"t": "Эхинококкоз",
+"q": "Верное утверждение об альвеококкозе в эндемичном регионе:",
+"o": [
+"Альвеококкоз учитывают в дифференциальной диагностике инфильтративных, неоднородных, кальцинированных очагов; диагноз — по совокупности данных и серологии",
+"При подозрении нужна диагностическая пункция",
+"Любой солидный очаг — альвеококкоз, пока не доказано иное",
+"Паттерн EMUC-US сам по себе является диагнозом"
+],
+"a": 0,
+"e": "EMUC-US описывает паттерн; диагноз ставится по эпидемиологии, клинике, визуализации, серологии, при необходимости — гистологии."
+},
+{
+"t": "Практика",
+"q": "Мужчина 27 лет после ДТП, гемодинамика стабильна, FAST отрицательный. Верный вывод?",
+"o": [
+"Пациента можно выписать без наблюдения",
+"Нужна только рентгенография",
+"Повреждение печени исключено",
+"Отрицательный FAST не исключает повреждение печени; при механизме травмы — КТ с контрастом или повторный FAST"
+],
+"a": 3,
+"e": "Внутрипаренхиматозная и подкапсульная гематомы, малый объём жидкости могут не давать положительного FAST."
+}
 ];
-const LET = ["А","Б","В","Г"];
-const KEY = "liver-quiz-guide-v2";
-const LIMIT = 20 * 60 * 1000;
-const TEST_NAME = "УЗИ печени: диффузные и очаговые заболевания (руководство v2.0)";
-let st = load() || fresh(0);
-let tick = null;
-
-function fresh(attempt) {
-  return { phase: "start", name: "", group: "", attempt: attempt + 1, i: 0, ans: Array(Q.length).fill(null),
-    ord: Q.map(q => shuffle([...q.o.keys()])), startedAt: null, finishedAt: null, timeout: false };
+const TITLE=CFG.title;
+// Автоотправка результата преподавателю в Telegram
+const TG_TOKEN="8469771865:AAFRhxAfYsggVYE3UEPd82PXrPBmk56xwis", TG_CHAT="188183172";
+const tgOn = !TG_TOKEN.startsWith("__") && !TG_CHAT.startsWith("__");
+function attemptNo(){ try{ const k=CFG.salt+"-attempts"; const n=(+localStorage.getItem(k)||0)+1; localStorage.setItem(k,n); return n; }catch(e){ return null; } }
+// Несколько способов доставки: страница по ссылке может блокировать часть запросов
+let cspBlocked=false;
+document.addEventListener("securitypolicyviolation",e=>{ if(String(e.blockedURI||"").includes("telegram")) cspBlocked=true; });
+const tgURL=text=>`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?`+new URLSearchParams({chat_id:TG_CHAT, text, _:Date.now()+"-"+Math.random().toString(36).slice(2)});
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function sendToTeacher(text){
+  if(!tgOn) return "off";
+  try{
+    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {method:"POST", mode:"no-cors", body:new URLSearchParams({chat_id:TG_CHAT, text})});
+    sendWay=1; return "sent";
+  }catch(e){}
+  return "fail";
 }
-function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {} }
-function load() {
-  try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.ans && s.ans.length === Q.length && s.ord && s.phase) return s; } catch (e) {}
-  return null;
+const L=["А","Б","В","Г","Д","Е"];
+const ans=Array(Q.length).fill(null); let cur=0; let reportText=null;
+const LIMIT=CFG.minutes*60*1000; let startAt=null, endAt=null, finished=false, timedOut=false, tick=null;
+const fmt=ms=>{const t=Math.max(0,Math.ceil(ms/1000)); return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");};
+const $=id=>document.getElementById(id);
+function startTimer(){ startAt=Date.now(); tick=setInterval(updateClock,250); updateClock(); }
+function stopTimer(){ if(tick){clearInterval(tick); tick=null;} endAt=endAt||Date.now(); }
+function updateClock(){
+  const el=$("timer"), left = startAt===null ? LIMIT : LIMIT-((endAt||Date.now())-startAt);
+  $("clock").textContent=fmt(left);
+  $("tnote").textContent = startAt===null ? "старт с первым ответом" : finished ? (timedOut?"время вышло":"тест завершён") : "осталось";
+  el.classList.toggle("warn", !finished && startAt!==null && left<=2*60*1000);
+  el.classList.toggle("stop", finished);
+  if(!finished && startAt!==null && left<=0){ timedOut=true; showResult(); }
 }
-const esc = (t) => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-const answered = () => st.ans.filter(x => x !== null).length;
-const correct = () => st.ans.reduce((n, x, i) => n + (x === Q[i].a ? 1 : 0), 0);
-const left = () => Math.max(0, LIMIT - (Date.now() - st.startedAt));
-const mmss = (ms) => { const t = Math.round(ms / 1000); return String(Math.floor(t / 60)).padStart(2, "0") + ":" + String(t % 60).padStart(2, "0"); };
-
-function fan() {
-  const f = answered() / Q.length, a0 = Math.PI * 0.5 + 0.66, a1 = Math.PI * 0.5 - 0.66;
-  const R = 91 * f + 0.01, cx = 66, cy = 8;
-  const p = (a) => [cx + R * Math.cos(a), cy + R * Math.sin(a)];
-  const [x0, y0] = p(a0), [x1, y1] = p(a1);
-  document.getElementById("fanFill").setAttribute("d", `M${cx} ${cy} L${x0} ${y0} A${R} ${R} 0 0 0 ${x1} ${y1} Z`);
-  document.getElementById("fanText").textContent = `${answered()} / ${Q.length}`;
+function grade(p){ if(p>=90) return ["Отлично",0]; if(p>=75) return ["Хорошо",1]; if(p>=60) return ["Удовлетворительно",2]; return ["Неудовлетворительно",3]; }
+function stats(){ const done=ans.filter(v=>v!==null).length, ok=ans.filter((v,i)=>v===Q[i].a).length; return {done,ok}; }
+function renderQ(){
+  const x=Q[cur], v=ans[cur], answered=v!==null;
+  const c=$("qcard"); c.innerHTML="";
+  const meta=document.createElement("div"); meta.className="qmeta";
+  meta.innerHTML=`<span class="tag">${x.t}</span><span>Вопрос ${cur+1} из ${Q.length}</span>`;
+  const h=document.createElement("p"); h.className="qtext"; h.textContent=x.q;
+  const ul=document.createElement("ul"); ul.className="opts";
+  x.o.forEach((o,i)=>{ const li=document.createElement("li"); const b=document.createElement("button"); b.type="button"; b.className="opt"; b.id=`opt-${cur}-${i}`;
+    b.innerHTML=`<span class="letter">${L[i]}</span><span></span>`; b.lastChild.textContent=o;
+    if(answered || finished){ b.disabled=true; if(i===x.a) b.classList.add("correct"); else if(i===v) b.classList.add("wrong"); }
+    b.addEventListener("click",()=>choose(i)); li.appendChild(b); ul.appendChild(li); });
+  c.append(meta,h,ul);
+  if(answered){ const fb=document.createElement("div"); fb.className="fb"; const ok=v===x.a;
+    fb.innerHTML=`<span class="verdict ${ok?"ok":"bad"}">${ok?"Верно.":"Неверно. Правильный ответ — "+L[x.a]+"."}</span><span></span><span class="src"></span>`;
+    fb.children[1].textContent=x.e||""; if(x.s) fb.children[2].textContent="Источник: "+x.s; else fb.children[2].remove();
+    if(x.k){ const k=document.createElement("span"); k.innerHTML="<b>Вывод:</b> "; k.appendChild(document.createTextNode(x.k)); fb.insertBefore(k, fb.lastChild&&fb.lastChild.className==="src"?fb.lastChild:null); }
+    if(x.p){ const p=document.createElement("span"); p.innerHTML="<b>На практике:</b> "; p.appendChild(document.createTextNode(x.p)); fb.insertBefore(p, fb.lastChild&&fb.lastChild.className==="src"?fb.lastChild:null); }
+    c.appendChild(fb); }
+  const nav=document.createElement("div"); nav.className="nav";
+  nav.innerHTML=`<button class="btn" type="button" id="prev">← Назад</button><button class="btn primary" type="button" id="next">${cur===Q.length-1?"К результату":"Далее →"}</button>`;
+  c.appendChild(nav);
+  $("prev").disabled=cur===0; $("prev").onclick=()=>go(cur-1);
+  $("next").onclick=()=> cur===Q.length-1? showResult(): go(cur+1);
+  renderMap();
 }
-
-function drawBar() {
-  const b = document.getElementById("bar");
-  if (st.phase !== "test") { b.innerHTML = ""; return; }
-  const l = left();
-  b.innerHTML = `<div class="bar-row"><div class="who">${esc(st.name)}${st.group ? ", " + esc(st.group) : ""}</div>
-    <div class="timer ${l <= 60000 ? "crit" : l <= 300000 ? "warn" : ""}" role="timer" aria-label="Осталось времени">⏱ <span id="clock">${mmss(l)}</span></div></div>`;
+function fioOk(){ const v=$("fio").value.trim().replace(/\s+/g," "); return v.split(" ").length>=2 && /^[A-Za-zА-Яа-яЁёӨөҮүҢң'\- ]+$/.test(v) ? v : null; }
+function choose(i){ if(finished || ans[cur]!==null) return;
+  if(!fioOk()){ const h=$("fiohint"); h.textContent="Сначала введите ФИО полностью — хотя бы фамилию и имя, буквами."; h.classList.add("err"); $("fio").focus(); return; }
+  if(startAt===null){ startTimer(); $("fio").value=fioOk(); $("fio").readOnly=true; const h=$("fiohint"); h.classList.remove("err"); h.textContent="ФИО зафиксировано до конца попытки."; }
+  ans[cur]=i; renderQ(); }
+$("fio").addEventListener("input",()=>{ const h=$("fiohint"); if(h.classList.contains("err") && fioOk()){ h.classList.remove("err"); h.textContent="ФИО принято. Можно отвечать."; } });
+const SALT=CFG.salt;
+function hash(str){ let h=0x811c9dc5; for(const ch of str){ h^=ch.codePointAt(0); h=Math.imul(h,0x01000193)>>>0; } let h2=0x9e3779b9; for(const ch of (str+SALT)){ h2^=ch.codePointAt(0); h2=Math.imul(h2,0x85ebca6b)>>>0; }
+  const a=h.toString(36).toUpperCase().padStart(7,"0").slice(-4), b=h2.toString(36).toUpperCase().padStart(7,"0").slice(-4); return a+"-"+b; }
+const body=t=>t.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).filter(x=>!x.startsWith("Код проверки:")).join("\n");
+function stamp(d){ const z=n=>String(n).padStart(2,"0"); return `${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}`; }
+let sendState=null, sendWay=0;
+function showSend(){ const el=document.getElementById("autosend"); if(!el) return;
+  if(sendState==="pending"){ el.className="hint"; el.textContent="Отправляем результат преподавателю…"; }
+  else if(sendState==="sent"){ el.className="ok-msg"; el.textContent="Результат отправлен преподавателю. Если преподаватель его не получил, нажмите «Отправить через Telegram»."; }
+  else if(sendState==="fail"){ el.className="bad-msg"; el.textContent="На этой странице автоматическая отправка недоступна. Нажмите «Отправить через Telegram» и выберите чат преподавателя (или скопируйте отчёт)."; }
+  else el.textContent=""; }
+let downloads=null; (async()=>{ try{ downloads = window.claude && await window.claude.use("downloads"); }catch(e){ downloads=null; } const b=document.getElementById("dl"); if(b) b.hidden=!downloads; })();
+function go(i){ if(i<0||i>=Q.length) return; cur=i; $("result").hidden=true; $("qcard").hidden=false; renderQ(); }
+function renderMap(){
+  const m=$("map"); m.innerHTML="";
+  Q.forEach((x,i)=>{ const b=document.createElement("button"); b.type="button"; b.className="cell"; b.textContent=i+1; b.id=`cell-${i}`;
+    b.setAttribute("aria-label",`Вопрос ${i+1}`);
+    if(ans[i]!==null) b.classList.add(ans[i]===x.a?"ok":"bad"); if(i===cur && !$("qcard").hidden) b.classList.add("cur");
+    b.onclick=()=>go(i); m.appendChild(b); });
+  const {done,ok}=stats(); $("fill").style.width=(done/Q.length*100)+"%";
+  $("stat").textContent=`${done} / ${Q.length} отвечено · верно ${ok}`;
 }
-function startTick() {
-  clearInterval(tick);
-  tick = setInterval(() => {
-    if (st.phase !== "test") return clearInterval(tick);
-    const l = left();
-    if (l <= 0) { finish(true); return; }
-    const c = document.getElementById("clock");
-    if (c) { c.textContent = mmss(l); c.parentElement.className = "timer " + (l <= 60000 ? "crit" : l <= 300000 ? "warn" : ""); }
-  }, 500);
+function showResult(){
+  if(!finished){ finished=true; stopTimer(); } updateClock();
+  const used = startAt===null ? 0 : Math.min(LIMIT,(endAt||Date.now())-startAt);
+  const {done,ok}=stats(), p=Math.round(ok/Q.length*100), [g,gi]=grade(p);
+  const r=$("result"); const wrong=Q.map((x,i)=>i).filter(i=>ans[i]!==Q[i].a);
+  const rows=[["Отлично","90–100%"],["Хорошо","75–89%"],["Удовлетворительно","60–74%"],["Неудовлетворительно","менее 60%"]];
+  r.innerHTML=`<h2>Результат</h2>${timedOut?`<p class="notice">Время вышло — тест завершён автоматически.</p>`:""}<div class="score"><span class="big">${ok}/${Q.length}</span><span class="grade">${p}% · ${g}</span></div><p class="stat">Затрачено времени: ${fmt(used)} из ${fmt(LIMIT)}</p>
+    ${done<Q.length?`<p class="sub">Без ответа осталось вопросов: ${Q.length-done}. Они засчитаны как неверные.</p>`:""}
+    <table class="scale"><tbody>${rows.map((rw,i)=>`<tr class="${i===gi?"me":""}"><td>${rw[0]}</td><td>${rw[1]}</td></tr>`).join("")}</tbody></table>
+    <h2>Отправка результата</h2>
+    <p id="autosend" role="status"></p>
+    <p class="hint">${tgOn?"Копия отчёта — на случай, если преподаватель попросит прислать его вручную.":"Скопируйте отчёт и отправьте его преподавателю в Telegram или WhatsApp."} Не редактируйте текст — иначе код проверки не совпадёт.</p>
+    <textarea class="report" id="report" readonly spellcheck="false"></textarea>
+    <div class="actions"><button class="btn primary" id="copy" type="button">Скопировать отчёт</button>${tgOn?`<button class="btn" id="resend" type="button">Отправить ещё раз</button>`:""}<button class="btn" id="share" type="button">Отправить через Telegram</button><button class="btn" id="dl" type="button" ${downloads?"":"hidden"}>Скачать файл</button><span id="sendmsg" role="status"></span></div>
+    ${wrong.length?`<h2>Повторить</h2><ol class="wrongs">${wrong.map(i=>`<li><button type="button" data-i="${i}">Вопрос ${i+1}: ${Q[i].t.toLowerCase()}</button></li>`).join("")}</ol>`:"<p>Все ответы верны.</p>"}`;
+  r.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>go(+b.dataset.i));
+  if(!reportText){ const lines=[`Тест «${TITLE}» — результат`, `ФИО: ${fioOk()||"не указано"}`, `Дата: ${stamp(new Date(endAt||Date.now()))}`,
+      `Результат: ${ok} из ${Q.length} (${p}%) — ${g}`, `Время: ${fmt(used)} из ${fmt(LIMIT)}${timedOut?" (время вышло)":""}`,
+      `Без ответа: ${Q.length-done}`, `Ошибки в вопросах: ${wrong.length?wrong.map(i=>i+1).join(", "):"нет"}`];
+    const att=attemptNo(); if(att) lines.splice(3,0,`Попытка на этом устройстве: ${att}`);
+    reportText = lines.join("\n")+"\nКод проверки: "+hash(body(lines.join("\n")));
+    sendState="pending";
+    sendToTeacher(reportText).then(st=>{ sendState=st; showSend(); }); }
+  $("report").value=reportText; showSend();
+  const msg=t=>{ const m=$("sendmsg"); m.textContent=t; m.className="ok-msg"; };
+  $("copy").onclick=()=>{ const ta=$("report"); try{ navigator.clipboard.writeText(reportText).then(()=>msg("Скопировано. Вставьте в чат с преподавателем."),()=>{ ta.focus(); ta.select(); msg("Текст выделен — нажмите Ctrl+C (или «Копировать»)."); }); }catch(e){ ta.focus(); ta.select(); msg("Текст выделен — нажмите Ctrl+C (или «Копировать»)."); } };
+  if($("resend")) $("resend").onclick=()=>{ sendState="pending"; showSend(); sendToTeacher(reportText+"\n(повторная отправка)").then(st=>{ sendState=st; showSend(); }); };
+  $("share").onclick=()=>{ window.open("https://t.me/share/url?url="+encodeURIComponent(" ")+"&text="+encodeURIComponent(reportText),"_blank","noopener"); };
+  $("dl").onclick=async()=>{ if(!downloads) return; const name=CFG.file+"_"+(fioOk()||"курсант").replace(/[^A-Za-zА-Яа-яЁёӨөҮүҢң0-9]+/g,"_")+".txt";
+    try{ const res=await downloads.save({filename:name, data:reportText}); msg(res.status==="saved"?"Файл сохранён.":"Файл передан."); }
+    catch(e){ const m=$("sendmsg"); m.className="bad-msg"; m.textContent = e&&e.code==="declined" ? "Сохранение отменено." : "Скачать не удалось — скопируйте отчёт."; } };
+  $("qcard").hidden=true; r.hidden=false; renderMap(); r.scrollIntoView({block:"start"});
 }
-
-function drawMap() {
-  const m = document.getElementById("map"); m.innerHTML = "";
-  if (st.phase === "start") return;
-  Q.forEach((q, i) => {
-    const b = document.createElement("button");
-    b.textContent = i + 1;
-    const done = st.phase === "result";
-    b.setAttribute("aria-label", `Вопрос ${i + 1}` + (st.ans[i] === null ? ", без ответа" : st.ans[i] === q.a ? ", верно" : ", неверно"));
-    if (st.ans[i] !== null) b.className = st.ans[i] === q.a ? "ok" : "bad";
-    if (i === st.i && !done) b.classList.add("cur");
-    b.onclick = () => {
-      if (done) { const el = document.getElementById("m" + i); if (el) el.scrollIntoView({ block: "center" }); return; }
-      st.i = i; save(); render();
-    };
-    m.appendChild(b);
-  });
-}
-
-function render() {
-  drawBar(); drawMap(); fan();
-  if (st.phase === "start") return renderStart();
-  if (st.phase === "result") return renderResult();
-  if (left() <= 0) return finish(true);
-  const i = st.i, q = Q[i], given = st.ans[i];
-  const s = document.getElementById("stage");
-  s.innerHTML = `
-    <section class="card" aria-live="polite">
-      <div class="qhead"><span>Вопрос ${i + 1} из ${Q.length}</span><span class="topic">${q.t}</span></div>
-      <p class="qtext">${q.q}</p>
-      <ul class="opts">${st.ord[i].map((oi, k) => `
-        <li><button class="opt" data-o="${oi}" ${given !== null ? "disabled" : ""}>
-          <span class="k">${LET[k]}</span><span>${q.o[oi]}</span></button></li>`).join("")}
-      </ul>
-      <div id="fb"></div>
-      <div class="nav">
-        <button class="btn" id="prev" ${i === 0 ? "disabled" : ""}>Назад</button>
-        <button class="btn" id="stop">Завершить тест</button>
-        ${answered() === Q.length ? `<button class="btn primary" id="fin">Показать результат</button>` :
-          `<button class="btn primary" id="next">${i === Q.length - 1 ? "К первому без ответа" : "Далее"}</button>`}
-      </div>
-    </section>`;
-  s.querySelectorAll(".opt").forEach(b => b.onclick = () => choose(+b.dataset.o));
-  document.getElementById("prev").onclick = () => { st.i--; save(); render(); };
-  document.getElementById("stop").onclick = (ev) => {
-    const n = Q.length - answered(), b = ev.currentTarget;
-    if (!n || b.dataset.sure) return finish(false);
-    b.dataset.sure = "1"; b.textContent = "Да, завершить"; b.classList.add("primary");
-    document.getElementById("fb").insertAdjacentHTML("beforeend", `<div class="err">Без ответа осталось вопросов: ${n}. Они будут засчитаны как неверные. Нажмите «Да, завершить» ещё раз.</div>`);
-  };
-  const nx = document.getElementById("next");
-  if (nx) nx.onclick = () => {
-    if (i < Q.length - 1) st.i++; else st.i = st.ans.findIndex(x => x === null);
-    save(); render();
-  };
-  const fn = document.getElementById("fin"); if (fn) fn.onclick = () => finish(false);
-  if (given !== null) showFb();
-}
-
-function renderStart() {
-  const s = document.getElementById("stage");
-  s.innerHTML = `
-    <section class="card start">
-      <h2 style="font-family:'PT Serif',Georgia,serif;color:var(--navy);margin:0 0 4px">Перед началом</h2>
-      <ul class="rules">
-        <li>30 вопросов, в каждом один правильный ответ.</li>
-        <li>На весь тест — 20 минут. Таймер запускается кнопкой «Начать тест» и не останавливается.</li>
-        <li>Ответ нельзя изменить. Пояснение появляется сразу после выбора.</li>
-        <li>Когда время истечёт, тест завершится сам; вопросы без ответа засчитываются как неверные.</li>
-        <li>В конце отправьте результат преподавателю кнопкой на экране результата.</li>
-      </ul>
-      <label for="nm">Фамилия, имя, отчество</label>
-      <input id="nm" autocomplete="name" value="${esc(st.name)}">
-      <label for="gr">Группа или цикл (необязательно)</label>
-      <input id="gr" value="${esc(st.group)}">
-      <div class="err" id="er"></div>
-      <div class="nav"><span></span><button class="btn primary" id="go">Начать тест</button></div>
-    </section>`;
-  document.getElementById("go").onclick = () => {
-    const nm = document.getElementById("nm").value.trim();
-    if (nm.split(/\s+/).length < 2) { document.getElementById("er").textContent = "Введите фамилию и имя — они попадут в отчёт для преподавателя."; return; }
-    st.name = nm; st.group = document.getElementById("gr").value.trim();
-    st.phase = "test"; st.startedAt = Date.now(); st.i = 0; save(); render(); startTick();
-  };
-}
-
-function choose(o) {
-  if (st.ans[st.i] !== null || st.phase !== "test") return;
-  if (left() <= 0) return finish(true);
-  st.ans[st.i] = o; save();
-  document.querySelectorAll(".opt").forEach(b => b.disabled = true);
-  showFb(); drawMap(); fan();
-  if (answered() === Q.length) render();
-}
-
-function showFb() {
-  const q = Q[st.i], g = st.ans[st.i];
-  document.querySelectorAll(".opt").forEach(b => {
-    const o = +b.dataset.o;
-    if (o === q.a) b.classList.add("right"); else if (o === g) b.classList.add("wrong");
-  });
-  document.getElementById("fb").innerHTML = `<div class="feedback">${g === q.a ? '<b class="ok">Верно.</b>' : '<b class="bad">Неверно.</b> Правильный ответ: ' + q.o[q.a] + '.'} ${q.e}</div>`;
-}
-
-function finish(timeout) {
-  if (st.phase !== "test") return;
-  st.phase = "result"; st.timeout = timeout;
-  st.finishedAt = Math.min(Date.now(), st.startedAt + LIMIT);
-  clearInterval(tick); save(); render(); window.scrollTo(0, 0);
-}
-
-// control code: short checksum of name, answers and times — detects accidental edits of the report text
-function code() {
-  const src = [st.name, st.group, st.attempt, st.startedAt, st.finishedAt, st.ans.join(",")].join("|");
-  let h1 = 0x811c9dc5, h2 = 0x1b873593;
-  for (let i = 0; i < src.length; i++) { const c = src.charCodeAt(i); h1 = Math.imul(h1 ^ c, 16777619); h2 = Math.imul(h2 ^ c, 2246822519); }
-  const b = ((h1 >>> 0).toString(36) + (h2 >>> 0).toString(36)).toUpperCase().replace(/[^A-Z0-9]/g, "").padEnd(8, "0");
-  return b.slice(0, 4) + "-" + b.slice(4, 8);
-}
-
-const SCALE = [[90, "Отлично", "5"], [75, "Хорошо", "4"], [60, "Удовлетворительно", "3"], [0, "Неудовлетворительно", "2"]];
-function renderResult() {
-  const c = correct(), pct = Math.round(c / Q.length * 100);
-  const g = SCALE.find(x => pct >= x[0]);
-  const spent = st.finishedAt - st.startedAt;
-  const topics = [...new Set(Q.map(q => q.t))].map(t => {
-    const idx = Q.map((q, i) => q.t === t ? i : -1).filter(i => i >= 0);
-    return { t, ok: idx.filter(i => st.ans[i] === Q[i].a).length, n: idx.length };
-  });
-  const miss = Q.map((q, i) => ({ q, i })).filter(({ q, i }) => st.ans[i] !== q.a);
-  const d = new Date(st.finishedAt);
-  const dateStr = d.toLocaleDateString("ru-RU") + " " + d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
-  const report = [
-    `Тест: ${TEST_NAME}`,
-    `ФИО: ${st.name}`,
-    st.group ? `Группа: ${st.group}` : null,
-    `Результат: ${c} из ${Q.length} (${pct}%) — ${g[1]} (${g[2]})`,
-    `Время: ${mmss(spent)} из 20:00${st.timeout ? " (время истекло)" : ""}`,
-    `Без ответа: ${Q.length - answered()}`,
-    `Ошибки в вопросах: ${miss.length ? miss.map(m => m.i + 1).join(", ") : "нет"}`,
-    `По разделам: ${topics.map(x => `${x.t} ${x.ok}/${x.n}`).join("; ")}`,
-    `Попытка: ${st.attempt}`,
-    `Дата: ${dateStr}`,
-    `Код: ${code()}`
-  ].filter(Boolean).join("\n");
-  const enc = encodeURIComponent(report);
-  const mailSubj = encodeURIComponent(`Результат теста — ${st.name}`);
-  document.getElementById("stage").innerHTML = `
-    <section class="card result">
-      <h2>Результат${st.timeout ? " — время истекло" : ""}</h2>
-      <div class="score">${c} из ${Q.length}</div>
-      <div class="grade">${pct}% — ${g[1]} (${g[2]})</div>
-      <p class="note" style="margin-top:6px">${esc(st.name)} · время ${mmss(spent)} · попытка ${st.attempt}</p>
-
-      <div class="send">
-        <h3>Отправьте результат преподавателю</h3>
-        <pre id="rep">${esc(report)}</pre>
-        <div class="row">
-          <a class="btn primary" target="_blank" rel="noopener" href="https://t.me/share/url?url=%20&text=${enc}">Отправить в Telegram</a>
-          <a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=${enc}">Отправить в WhatsApp</a>
-          <a class="btn" href="mailto:?subject=${mailSubj}&body=${enc}">По почте</a>
-          <button class="btn" id="copy">Скопировать</button>
-        </div>
-        <div class="note" id="cpn">Выберите преподавателя в мессенджере и отправьте сообщение без изменений: код в конце связан с ответами и временем.</div>
-      </div>
-
-      <table class="scale">${SCALE.map((x, k) => `<tr class="${x === g ? "me" : ""}"><td>${["90–100%", "75–89%", "60–74%", "менее 60%"][k]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join("")}</table>
-      <h3>По разделам</h3>
-      <div class="bars">${topics.map(x => `<div class="bar"><span>${x.t}</span><span class="track"><i style="width:${x.ok / x.n * 100}%"></i></span><span>${x.ok}/${x.n}</span></div>`).join("")}</div>
-      ${miss.length ? `<h3>Разбор ошибок</h3><ul class="mist">${miss.map(({ q, i }) => `
-        <li id="m${i}"><div class="q">${i + 1}. ${q.q}</div>
-        <div class="y">${st.ans[i] === null ? "Нет ответа" : "Ваш ответ: " + q.o[st.ans[i]]}</div>
-        <div class="a">Правильно: ${q.o[q.a]}</div>
-        <div>${q.e}</div></li>`).join("")}</ul>` : `<p>Ошибок нет.</p>`}
-      <div class="nav"><span></span><button class="btn" id="again">Новая попытка</button></div>
-    </section>`;
-  document.getElementById("copy").onclick = async () => {
-    let ok = false;
-    try { await navigator.clipboard.writeText(report); ok = true; } catch (e) {
-      const r = document.createRange(); r.selectNodeContents(document.getElementById("rep"));
-      const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
-      try { ok = document.execCommand("copy"); } catch (e2) {}
-    }
-    document.getElementById("cpn").textContent = ok ? "Скопировано. Вставьте текст в сообщение преподавателю." : "Выделите текст отчёта и скопируйте вручную.";
-  };
-  document.getElementById("again").onclick = (ev) => {
-    const b = ev.currentTarget;
-    if (!b.dataset.sure) { b.dataset.sure = "1"; b.textContent = "Да, начать попытку " + (st.attempt + 1); b.classList.add("primary"); return; }
-    const nm = st.name, gr = st.group; st = fresh(st.attempt); st.name = nm; st.group = gr; save(); render();
-  };
-}
-
-render();
-if (st.phase === "test") startTick();
+$("finish").onclick=showResult;
+$("restart").onclick=()=>{ ans.fill(null); stopTimer(); startAt=null; endAt=null; finished=false; timedOut=false; reportText=null; sendState=null; $("fio").readOnly=false; const h=$("fiohint"); h.classList.remove("err"); h.textContent="Введите фамилию, имя и отчество. Без ФИО ответы не принимаются; после первого ответа ФИО изменить нельзя."; updateClock(); go(0); window.scrollTo(0,0); };
+$("vbtn").onclick=()=>{ const t=$("vin").value, o=$("vout"); const m=t.match(/Код проверки:\s*([0-9A-Z]{4}-[0-9A-Z]{4})/);
+  if(!m){ o.className="bad-msg"; o.textContent="В тексте нет строки «Код проверки»."; return; }
+  const good = hash(body(t))===m[1]; o.className=good?"ok-msg":"bad-msg"; o.textContent= good ? "Код верный: отчёт не изменён." : "Код не совпадает: текст отчёта изменён."; };
+document.addEventListener("keydown",e=>{
+  if(e.target.closest && e.target.closest("input,textarea")) return;
+  if($("qcard").hidden) return;
+  const kn=+e.key; if(kn>=1 && kn<=Q[cur].o.length) choose(kn-1);
+  else if(e.key==="ArrowRight") go(cur+1); else if(e.key==="ArrowLeft") go(cur-1);
+});
+renderQ();
 </script>
 </body>
 </html>
-
-<script>window.TG_CFG={title:'Диффузные и очаговые заболевания печени',needFio:false,getReport:function(){function v(e){return e&&e.getClientRects().length>0} var e=document.getElementById('rep');return v(e)?e.textContent:null;}};</script><script src="tg.js"></script>
-</body></html>

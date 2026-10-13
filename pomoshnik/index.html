@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>[hidden]{display:none!important}img{max-width:100%}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+<title>Помощник УЗИ-врача</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@600&display=swap">
+<style>
+/* Layout: one column workbench; sticky tab strip like a scanner preset bar; form left / report right on wide screens */
+:root{
+  --bg:#eef2f3; --surface:#ffffff; --sunk:#e3e9eb; --line:#cfd8db;
+  --fg:#13212a; --muted:#566872; --accent:#0b6f78; --accent-fg:#ffffff; --accent-soft:#d5ecee;
+  --ok:#1d7a46; --ok-soft:#dcf1e4; --warn:#9a5b00; --warn-soft:#fbecd2; --bad:#b4232f; --bad-soft:#f8dcdf;
+  --screen:#0f1a20; --screen-fg:#cfe9ec;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-head:"IBM Plex Sans Condensed","IBM Plex Sans",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0c1418; --surface:#142027; --sunk:#0f191e; --line:#25363f;
+  --fg:#dfe9ec; --muted:#8fa4ad; --accent:#4fc3cc; --accent-fg:#06262a; --accent-soft:#163a3f;
+  --ok:#5fcf8c; --ok-soft:#163626; --warn:#f0b257; --warn-soft:#3a2c14; --bad:#ff7d86; --bad-soft:#3d1a1e;
+  --screen:#070d10; --screen-fg:#cfe9ec; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c1418; --surface:#142027; --sunk:#0f191e; --line:#25363f;
+  --fg:#dfe9ec; --muted:#8fa4ad; --accent:#4fc3cc; --accent-fg:#06262a; --accent-soft:#163a3f;
+  --ok:#5fcf8c; --ok-soft:#163626; --warn:#f0b257; --warn-soft:#3a2c14; --bad:#ff7d86; --bad-soft:#3d1a1e;
+  --screen:#070d10; --screen-fg:#cfe9ec; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--f-body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:16px;padding-block:0 40px}
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:18px 10px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{flex:none}
+h1{font:600 22px/1.15 var(--f-head);margin:0;letter-spacing:.01em}
+.brand p{margin:2px 0 0;color:var(--muted);font-size:13px}
+.disc{font-size:12.5px;color:var(--warn);background:var(--warn-soft);border-radius:8px;padding:6px 10px;max-width:520px}
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:8px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.tabrow{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.tabrow::-webkit-scrollbar{display:none}
+.tab{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:500 14px var(--f-body);padding:8px 14px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.tab:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h2{font:600 19px/1.2 var(--f-head);margin:0 0 4px;text-wrap:balance}
+h3{font:600 15px/1.3 var(--f-body);margin:0;color:var(--fg)}
+.lead{color:var(--muted);margin:0 0 16px;max-width:70ch}
+.split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.split{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;min-width:0}
+.stack{display:flex;flex-direction:column;gap:16px}
+.sec{display:flex;flex-direction:column;gap:10px}
+.sec+.sec{border-top:1px solid var(--line);padding-top:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 12px}
+.grid .wide{grid-column:1/-1}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);min-width:0}
+label.f .nm{display:flex;justify-content:space-between;gap:6px}
+label.f .nr{font-family:var(--f-mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+input,select,textarea{font:15px var(--f-body);color:var(--fg);background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+input[type=number]{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+textarea{resize:vertical;line-height:1.45}
+.hi input{border-color:var(--bad);background:var(--bad-soft)}
+.hi .nr{color:var(--bad)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button.b{font:500 14px var(--f-body);border-radius:8px;padding:8px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+button.b.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+button.b:disabled{opacity:.55;cursor:default}
+.report{background:var(--screen);color:var(--screen-fg);font:13.5px/1.55 var(--f-mono);border:0;min-height:340px;border-radius:10px;padding:14px}
+.sticky{position:sticky;top:calc(env(safe-area-inset-top,0px) + 70px)}
+@media (max-width:860px){.sticky{position:static}}
+.note{font-size:12.5px;color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;font:600 13px var(--f-mono);padding:3px 10px;border-radius:999px;background:var(--sunk);color:var(--fg)}
+.risk{display:flex;flex-direction:column;gap:6px;border-radius:12px;padding:14px;border:1px solid var(--line)}
+.risk .big{font:600 30px/1 var(--f-head)}
+.r0{background:var(--sunk)} .r1{background:var(--ok-soft);border-color:transparent} .r1 .big{color:var(--ok)}
+.r2{background:var(--warn-soft);border-color:transparent} .r2 .big{color:var(--warn)}
+.r3{background:var(--bad-soft);border-color:transparent} .r3 .big{color:var(--bad)}
+fieldset{border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:6px;min-width:0}
+legend{font:600 14px var(--f-body);padding:0;margin-bottom:6px}
+.opts{display:flex;flex-wrap:wrap;gap:6px}
+.opt{position:relative}
+.opt input{position:absolute;opacity:0;width:1px;height:1px}
+.opt span{display:inline-flex;gap:6px;align-items:baseline;border:1px solid var(--line);background:var(--sunk);border-radius:8px;padding:6px 10px;font-size:13.5px;cursor:pointer}
+.opt span b{font:500 11.5px var(--f-mono);color:var(--muted)}
+.opt input:checked+span{border-color:var(--accent);background:var(--accent-soft)}
+.opt input:checked+span b{color:var(--accent)}
+.opt input:focus-visible+span{outline:2px solid var(--accent);outline-offset:2px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;color:var(--muted);font-size:12.5px}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+details{border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+details+details{margin-top:8px}
+summary{cursor:pointer;padding:12px 14px;font-weight:600}
+details .body{padding:0 14px 14px;max-width:80ch}
+details .body p,details .body ul{margin:6px 0}
+.src{font-size:12px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.out{white-space:pre-wrap;background:var(--sunk);border-radius:10px;padding:12px;font-size:14px;min-height:60px}
+footer{margin-top:28px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;display:flex;flex-direction:column;gap:6px}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:8px 14px;border-radius:8px;font-size:14px}
+@media (prefers-reduced-motion:no-preference){.tab,button.b,.opt span{transition:background .12s,border-color .12s}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" rx="9" fill="var(--accent)"/><path d="M20 9 L8 31 Q20 36 32 31 Z" fill="var(--accent-fg)" opacity=".18"/><path d="M11 26 Q20 30 29 26 M13 21 Q20 24.5 27 21 M15.5 16 Q20 18.5 24.5 16" stroke="var(--accent-fg)" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+    <div><h1>Помощник УЗИ-врача</h1><p>Протоколы, классификации, калькуляторы и справочник</p></div>
+  </div>
+  <div class="disc">Инструмент поддержки решений. Не заменяет клиническое мышление и ответственность врача; нормы и пороги сверяйте с принятыми в вашем учреждении.</div>
+</header>
+
+<nav class="tabs" aria-label="Разделы"><div class="tabrow" role="tablist" id="tabs"></div></nav>
+
+<main>
+<!-- ПРОТОКОЛЫ -->
+<section id="p-protocol" data-tab="protocol" data-name="Протоколы">
+  <h2>Шаблон протокола</h2>
+  <p class="lead">Выберите область и введите замеры. Значения вне нормы подсвечиваются, текст протокола и заключение собираются справа. Поля заполнены примером, нажмите «Очистить», чтобы начать с чистого листа.</p>
+  <div class="split">
+    <div class="panel stack">
+      <div class="toolbar">
+        <select id="tplSel" aria-label="Шаблон" style="max-width:320px"></select>
+        <button class="b" id="tplClear">Очистить</button>
+        <button class="b" id="tplExample">Пример</button>
+      </div>
+      <div id="tplForm" class="stack"></div>
+    </div>
+    <div class="panel stack sticky">
+      <div class="toolbar" style="justify-content:space-between"><h3>Текст протокола</h3>
+        <div class="toolbar"><button class="b" id="repRefresh" hidden>Обновить из полей</button><button class="b pri" id="repCopy">Копировать</button></div></div>
+      <textarea id="report" class="report" spellcheck="false" aria-label="Текст протокола"></textarea>
+      <p class="note" id="repNote">Текст можно править перед копированием. После правки он больше не перезаписывается автоматически.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TI-RADS -->
+<section id="p-tirads" data-tab="tirads" data-name="TI-RADS" hidden>
+  <h2>ACR TI-RADS: узел щитовидной железы</h2>
+  <p class="lead">Отметьте по одному признаку в каждой группе (эхогенные включения можно несколько). Баллы суммируются, категория и тактика рассчитываются по размеру узла.</p>
+  <div class="split">
+    <div class="panel stack" id="trForm"></div>
+    <div class="stack sticky">
+      <div class="risk r0" id="trRisk"></div>
+      <div class="panel stack">
+        <div class="toolbar" style="justify-content:space-between"><h3>Описание узла</h3>
+          <div class="toolbar"><button class="b" id="trToProto">В протокол ЩЖ</button><button class="b pri" id="trCopy">Копировать</button></div></div>
+        <div class="out" id="trText"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BI-RADS -->
+<section id="p-birads" data-tab="birads" data-name="BI-RADS" hidden>
+  <h2>BI-RADS (УЗИ молочных желёз)</h2>
+  <p class="lead">Опишите образование терминами лексикона ACR BI-RADS 5-го издания. Помощник подсказывает ориентировочную категорию. Окончательную категорию выставляет врач с учётом маммографии, анамнеза и динамики.</p>
+  <div class="split">
+    <div class="panel stack" id="brForm"></div>
+    <div class="stack sticky">
+      <div class="risk r0" id="brRisk"></div>
+      <div class="panel stack">
+        <div class="toolbar" style="justify-content:space-between"><h3>Описание</h3><button class="b pri" id="brCopy">Копировать</button></div>
+        <div class="out" id="brText"></div>
+      </div>
+      <div class="panel"><h3 style="margin-bottom:8px">Категории BI-RADS</h3><div class="tbl"><table id="brTable"></table></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- O-RADS -->
+<section id="p-orads" data-tab="orads" data-name="O-RADS" hidden>
+  <h2>O-RADS US v2022 (образования яичников и придатков)</h2>
+  <p class="lead">Выберите тип образования и его характеристики. Категория определяется по наиболее подозрительному образованию. Цветовая шкала (CS): 1 нет кровотока, 2 минимальный, 3 умеренный, 4 выраженный.</p>
+  <div class="split">
+    <div class="panel stack" id="orForm"></div>
+    <div class="stack sticky">
+      <div class="risk r0" id="orRisk"></div>
+      <div class="panel stack">
+        <div class="toolbar" style="justify-content:space-between"><h3>Описание</h3><button class="b pri" id="orCopy">Копировать</button></div>
+        <div class="out" id="orText"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- КАЛЬКУЛЯТОРЫ -->
+<section id="p-calc" data-tab="calc" data-name="Калькуляторы" hidden>
+  <h2>Калькуляторы</h2>
+  <p class="lead">Поля заполнены примером. Размеры вводите в миллиметрах, десятичная часть через точку или запятую.</p>
+  <div class="split">
+    <div class="stack">
+      <div class="panel stack">
+        <h3>Фетометрия (Hadlock)</h3>
+        <div class="grid">
+          <label class="f"><span class="nm">БПР <span class="nr">мм</span></span><input id="fBPD" type="text" inputmode="decimal" value="78"></label>
+          <label class="f"><span class="nm">ОГ <span class="nr">мм</span></span><input id="fHC" type="text" inputmode="decimal" value="288"></label>
+          <label class="f"><span class="nm">ОЖ <span class="nr">мм</span></span><input id="fAC" type="text" inputmode="decimal" value="272"></label>
+          <label class="f"><span class="nm">ДБК <span class="nr">мм</span></span><input id="fFL" type="text" inputmode="decimal" value="59"></label>
+          <label class="f"><span class="nm">Срок по датированию <span class="nr">нед</span></span><input id="fGAw" type="text" inputmode="numeric" value="31"></label>
+          <label class="f"><span class="nm">+ дней</span><input id="fGAd" type="text" inputmode="numeric" value="2"></label>
+        </div>
+        <p class="note">Срок по датированию (по раннему УЗИ или ПМ) нужен для перцентиля массы. Без него перцентиль считается по сроку из фетометрии, что менее надёжно.</p>
+        <div class="tbl"><table id="fetTbl"></table></div>
+        <div id="fetEfw"></div>
+      </div>
+      <div class="panel stack">
+        <h3>Срок по КТР (Robinson)</h3>
+        <div class="grid"><label class="f"><span class="nm">КТР <span class="nr">мм</span></span><input id="cCRL" type="text" inputmode="decimal" value="52"></label></div>
+        <div id="crlOut"></div>
+      </div>
+      <div class="panel stack">
+        <h3>Срок и ПДР по последней менструации</h3>
+        <div class="grid"><label class="f"><span class="nm">Первый день ПМ</span><input id="cLMP" type="date"></label></div>
+        <div id="lmpOut"></div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="panel stack">
+        <h3>Объём органа (эллипсоид)</h3>
+        <div class="grid">
+          <label class="f wide"><span class="nm">Орган</span><select id="vOrg">
+            <option value="th">Доля щитовидной железы (×0,479, Brunn)</option>
+            <option value="ov">Яичник (×0,523)</option>
+            <option value="pr">Предстательная железа (×0,523)</option>
+            <option value="bl">Мочевой пузырь, объём / остаточная моча (×0,52)</option>
+            <option value="ot">Другое (×0,523)</option></select></label>
+          <label class="f"><span class="nm">Длина <span class="nr">мм</span></span><input id="vL" type="text" inputmode="decimal" value="48"></label>
+          <label class="f"><span class="nm">Ширина <span class="nr">мм</span></span><input id="vW" type="text" inputmode="decimal" value="17"></label>
+          <label class="f"><span class="nm">Толщина <span class="nr">мм</span></span><input id="vT" type="text" inputmode="decimal" value="15"></label>
+        </div>
+        <div id="volOut"></div>
+      </div>
+      <div class="panel stack">
+        <h3>Нормы взрослых, используемые в приложении</h3>
+        <div class="tbl"><table id="normTbl"></table></div>
+        <p class="note">Ориентиры из отечественных и международных руководств. В разных школах пороги отличаются на несколько миллиметров, сверяйте с принятыми у вас.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ЗАМЕТКИ -->
+<section id="p-notes" data-tab="notes" data-name="Заметки → протокол" hidden>
+  <h2>Протокол из заметок</h2>
+  <p class="lead">Напишите или продиктуйте кратко, как для себя. Claude оформит связный текст протокола с заключением и отметит, чего не хватает. Не вводите ФИО и другие персональные данные пациента.</p>
+  <div class="split">
+    <div class="panel stack">
+      <label class="f"><span class="nm">Область исследования</span>
+        <select id="nArea"><option>Органы брюшной полости</option><option>Почки и мочевой пузырь</option><option>Щитовидная железа</option><option>Органы малого таза (жен.)</option><option>Предстательная железа</option><option>Молочные железы</option><option>Другое</option></select></label>
+      <label class="f"><span class="nm">Заметки</span>
+        <textarea id="nText" rows="9">печень пр 162 лев 68 эхоген повыш, затух эхосигнала дистально, контур ровный. вв 11. холедох 4.
+жп 78х30 стенка 2, в просвете конкремент 12 мм с ак тенью, смещаемый.
+пж головка 29 тело 18 хвост 26 эхоген повыш. селез 108х42. своб жидк нет.</textarea></label>
+      <div class="toolbar">
+        <button class="b pri" id="nGo">Оформить протокол</button>
+        <button class="b" id="nMic" hidden>Диктовать</button>
+        <button class="b" id="nStop" hidden>Остановить</button>
+        <span class="note" id="nState"></span>
+      </div>
+      <p class="note">Пример заметок уже введён. Для оформления нужен вход в Claude: при первом запросе появится запрос разрешения, расход идёт с вашего аккаунта.</p>
+    </div>
+    <div class="panel stack sticky">
+      <div class="toolbar" style="justify-content:space-between"><h3>Готовый протокол</h3><button class="b pri" id="nCopy">Копировать</button></div>
+      <textarea id="nOut" class="report" spellcheck="false" aria-label="Готовый протокол" placeholder="Здесь появится оформленный протокол."></textarea>
+    </div>
+  </div>
+</section>
+
+<!-- СПРАВОЧНИК -->
+<section id="p-ref" data-tab="ref" data-name="Справочник" hidden>
+  <h2>Справочник: дифдиагноз и тактика</h2>
+  <p class="lead">Короткие выдержки из клинических руководств с указанием источника. Внизу можно задать свой вопрос.</p>
+  <div class="split">
+    <div id="refList"></div>
+    <div class="panel stack sticky">
+      <h3>Спросить по клинической ситуации</h3>
+      <textarea id="qText" rows="4">Гиперэхогенное образование печени 14 мм с ровными контурами, без кровотока, случайная находка у женщины 42 лет. Тактика?</textarea>
+      <div class="toolbar"><button class="b pri" id="qGo">Спросить</button><button class="b" id="qStop" hidden>Стоп</button><span class="note" id="qState"></span></div>
+      <div class="out" id="qOut">Ответ появится здесь. Claude опирается на руководства и называет их, но может ошибаться: проверяйте по первоисточнику.</div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div><b>Важно.</b> Приложение помогает оформлять и систематизировать, но не ставит диагноз. Категории классификаций рассчитаны по опубликованным алгоритмам и требуют проверки врачом.</div>
+  <div>Источники: ACR TI-RADS (Tessler и соавт., JACR 2017); ACR BI-RADS Atlas, 5-е изд. (2013); ACR O-RADS US v2022 (Strachowski и соавт., Radiology 2023); Hadlock и соавт. (Radiology 1984; AJOG 1985; Radiology 1991); Robinson, Fleming (BJOG 1975); Brunn и соавт. (1981), нормы объёма ЩЖ ВОЗ; SRU консенсус по полипам ЖП (Kamaya и соавт., Radiology 2022); международное руководство по СПКЯ (2023).</div>
+</footer>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const num=v=>{if(v==null)return NaN;const s=String(v).trim().replace(",",".");return s===""?NaN:Number(s)};
+const fmt=(n,d=1)=>isFinite(n)?(Math.round(n*10**d)/10**d).toFixed(d).replace(".",",").replace(/,0+$/,""):"—";
+const has=n=>isFinite(n);
+const store={get(k,d){try{const v=localStorage.getItem("uzi."+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("uzi."+k,JSON.stringify(v))}catch(e){}}};
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>el.hidden=true,1800)}
+async function copyText(text,srcEl){
+  try{await navigator.clipboard.writeText(text);toast("Скопировано")}
+  catch(e){ if(srcEl&&srcEl.select){srcEl.focus();srcEl.select()}else if(srcEl){const r=document.createRange();r.selectNodeContents(srcEl);const s=getSelection();s.removeAllRanges();s.addRange(r)} toast("Текст выделен, скопируйте вручную")}
+}
+
+/* ---------- Tabs ---------- */
+const sections=[...document.querySelectorAll("main>section")];
+const tabrow=$("#tabs");
+sections.forEach(s=>{const b=document.createElement("button");b.className="tab";b.role="tab";b.textContent=s.dataset.name;b.dataset.t=s.dataset.tab;b.onclick=()=>show(s.dataset.tab,true);tabrow.appendChild(b)});
+function show(t,push){sections.forEach(s=>s.hidden=s.dataset.tab!==t);tabrow.querySelectorAll(".tab").forEach(b=>b.setAttribute("aria-selected",b.dataset.t===t));store.set("tab",t);if(push){try{history.replaceState(null,"","#"+t)}catch(e){}}}
+const initTab=(location.hash||"").slice(1);
+show(sections.some(s=>s.dataset.tab===initTab)?initTab:store.get("tab","protocol"));
+
+/* ---------- Protocol templates ---------- */
+// field: [id,label,type,opts]; type n = number (opts: {u,max,min,nr,ex}); s = select (opts: {o:[...],ex}); t = text (opts:{ex,ph,rows})
+const N=(id,l,o)=>({id,l,k:"n",...o}), S=(id,l,o,ex)=>({id,l,k:"s",o,ex:ex??o[0]}), X=(id,l,o={})=>({id,l,k:"t",...o});
+const ECHO=["обычная","повышена","понижена"], STR=["однородная","неоднородная"], CONT=["ровные, чёткие","неровные","бугристые"];
+const TPL={
+ obp:{name:"Органы брюшной полости",secs:[
+  {t:"Печень",f:[N("lr","Правая доля, КВР",{u:"мм",max:150,ex:142}),N("ll","Левая доля, толщина",{u:"мм",max:70,ex:58}),S("lc","Контуры",CONT),S("le","Эхогенность",ECHO),S("ls","Структура",STR),N("pv","Воротная вена",{u:"мм",max:13,ex:11}),N("cbd","Холедох",{u:"мм",max:6,ex:4}),X("lf","Очаговые образования",{ph:"не выявлены",w:1})]},
+  {t:"Желчный пузырь",f:[S("gs","Состояние",["визуализируется","удалён","не визуализируется"]),N("gl","Длина",{u:"мм",max:100,ex:72}),N("gw","Ширина",{u:"мм",max:35,ex:28}),N("gwall","Стенка",{u:"мм",max:3,ex:2}),S("gc","Содержимое",["однородное, анэхогенное","конкременты","взвесь (сладж)","полиповидное образование"]),X("gd","Уточнение",{ph:"напр. конкремент 12 мм с акустической тенью",w:1})]},
+  {t:"Поджелудочная железа",f:[S("pvis","Визуализация",["полностью","частично (газ)"]),N("ph","Головка",{u:"мм",max:32,ex:27}),N("pb","Тело",{u:"мм",max:21,ex:16}),N("pt","Хвост",{u:"мм",max:30,ex:24}),N("pw","Вирсунгов проток",{u:"мм",max:3,ex:""}),S("pe","Эхогенность",ECHO),S("pst","Структура",STR)]},
+  {t:"Селезёнка",f:[N("sl","Длина",{u:"мм",max:120,ex:104}),N("st","Толщина",{u:"мм",max:50,ex:41}),N("sv","Селезёночная вена",{u:"мм",max:8,ex:6}),S("ss","Структура",STR),X("sf","Образования",{ph:"не выявлены"})]},
+  {t:"Прочее",f:[S("ff","Свободная жидкость",["не выявлена","выявлена"]),X("oth","Дополнительно",{w:1})]}],
+  build(v){const L=[],C=[];
+   L.push(`ПЕЧЕНЬ: размеры: правая доля КВР ${val(v.lr)} мм, левая доля толщина ${val(v.ll)} мм. Контуры ${v.lc}. Эхогенность ${v.le}, структура ${v.ls}. Очаговые образования: ${v.lf||"не выявлены"}. Воротная вена ${val(v.pv)} мм. Холедох ${val(v.cbd)} мм.`);
+   if(gt(v.lr,150)||gt(v.ll,70))C.push("Гепатомегалия.");
+   if(v.le==="повышена")C.push("Эхопризнаки диффузных изменений печени по типу жировой инфильтрации.");
+   else if(v.ls==="неоднородная"||v.le==="понижена")C.push("Эхопризнаки диффузных изменений паренхимы печени.");
+   if(v.lf)C.push("Очаговые изменения печени (см. описание).");
+   if(gt(v.pv,13))C.push(`Расширение воротной вены до ${val(v.pv)} мм.`);
+   if(gt(v.cbd,6))C.push(`Расширение холедоха до ${val(v.cbd)} мм.`);
+   if(v.gs==="удалён"){L.push("ЖЕЛЧНЫЙ ПУЗЫРЬ: удалён.");C.push("Состояние после холецистэктомии.")}
+   else if(v.gs==="не визуализируется"){L.push("ЖЕЛЧНЫЙ ПУЗЫРЬ: не визуализируется.")}
+   else{L.push(`ЖЕЛЧНЫЙ ПУЗЫРЬ: ${val(v.gl)}×${val(v.gw)} мм, стенка ${val(v.gwall)} мм. Содержимое: ${v.gc}${v.gd?"; "+v.gd:""}.`);
+    if(gt(v.gwall,3))C.push(`Утолщение стенки желчного пузыря до ${val(v.gwall)} мм.`);
+    if(gt(v.gl,100)||gt(v.gw,35))C.push("Увеличение желчного пузыря.");
+    if(v.gc==="конкременты")C.push("Эхопризнаки желчнокаменной болезни.");
+    if(v.gc==="взвесь (сладж)")C.push("Билиарный сладж.");
+    if(v.gc==="полиповидное образование")C.push("Полиповидное образование желчного пузыря (тактика по размеру и форме, см. справочник).");}
+   L.push(`ПОДЖЕЛУДОЧНАЯ ЖЕЛЕЗА: визуализируется ${v.pvis}. Размеры: головка ${val(v.ph)} мм, тело ${val(v.pb)} мм, хвост ${val(v.pt)} мм. Эхогенность ${v.pe}, структура ${v.pst}. Вирсунгов проток ${has(num(v.pw))?val(v.pw)+" мм":"не расширен"}.`);
+   if(gt(v.ph,32)||gt(v.pb,21)||gt(v.pt,30))C.push("Увеличение размеров поджелудочной железы.");
+   if(v.pe!=="обычная"||v.pst==="неоднородная")C.push("Эхопризнаки диффузных изменений поджелудочной железы.");
+   if(gt(v.pw,3))C.push(`Расширение вирсунгова протока до ${val(v.pw)} мм.`);
+   L.push(`СЕЛЕЗЁНКА: ${val(v.sl)}×${val(v.st)} мм, структура ${v.ss}. Образования: ${v.sf||"не выявлены"}. Селезёночная вена ${val(v.sv)} мм.`);
+   if(gt(v.sl,120)||gt(v.st,50))C.push("Спленомегалия.");
+   if(gt(v.sv,8))C.push(`Расширение селезёночной вены до ${val(v.sv)} мм.`);
+   if(v.sf)C.push("Очаговые изменения селезёнки (см. описание).");
+   L.push(`Свободная жидкость в брюшной полости ${v.ff}.`);if(v.ff==="выявлена")C.push("Свободная жидкость в брюшной полости.");
+   if(v.oth)L.push(v.oth);
+   return {L,C,none:"Эхопризнаков патологии органов брюшной полости не выявлено."}}},
+ kid:{name:"Почки и мочевой пузырь",secs:[
+  {t:"Правая почка",f:[N("rl","Длина",{u:"мм",min:100,max:125,ex:112}),N("rw","Ширина",{u:"мм",max:65,ex:52}),N("rp","Паренхима",{u:"мм",min:15,max:25,ex:17}),N("rpel","Лоханка (ПЗР)",{u:"мм",max:10,ex:""}),S("rpos","Положение, подвижность",["обычные","нефроптоз","ротация"]),X("rc","Конкременты",{ph:"не выявлены"}),X("rf","Образования",{ph:"не выявлены"})]},
+  {t:"Левая почка",f:[N("Ll","Длина",{u:"мм",min:100,max:125,ex:115}),N("Lw","Ширина",{u:"мм",max:65,ex:54}),N("Lp","Паренхима",{u:"мм",min:15,max:25,ex:18}),N("Lpel","Лоханка (ПЗР)",{u:"мм",max:10,ex:""}),S("Lpos","Положение, подвижность",["обычные","нефроптоз","ротация"]),X("Lc","Конкременты",{ph:"не выявлены",ex:"в нижней группе чашечек гиперэхогенная структура 4 мм с акустической тенью"}),X("Lf","Образования",{ph:"не выявлены"})]},
+  {t:"Мочевой пузырь",f:[N("bv","Объём",{u:"мл",ex:280}),N("bw","Стенка",{u:"мм",max:4,ex:3}),S("bc","Содержимое",["однородное","взвесь","конкременты","пристеночное образование"]),N("br","Остаточная моча",{u:"мл",max:50,ex:20})]}],
+  build(v){const L=[],C=[];
+   [["ПРАВАЯ ПОЧКА","r","rl","rw","rp","rpel","rpos","rc","rf","правой"],["ЛЕВАЯ ПОЧКА","L","Ll","Lw","Lp","Lpel","Lpos","Lc","Lf","левой"]].forEach(([T,_,l,w,p,pel,pos,c,f,g])=>{
+    L.push(`${T}: положение и подвижность ${v[pos]}. Размеры ${val(v[l])}×${val(v[w])} мм, паренхима ${val(v[p])} мм. Чашечно-лоханочная система ${has(num(v[pel]))?(gt(v[pel],10)?"расширена, лоханка "+val(v[pel])+" мм":"не расширена, лоханка "+val(v[pel])+" мм"):"не расширена"}. Конкременты: ${v[c]||"не выявлены"}. Образования: ${v[f]||"не выявлены"}.`);
+    if(gt(v[l],125))C.push(`Увеличение размеров ${g} почки.`); if(lt(v[l],100))C.push(`Уменьшение размеров ${g} почки.`);
+    if(lt(v[p],15))C.push(`Истончение паренхимы ${g} почки.`);
+    if(gt(v[pel],10))C.push(`Расширение чашечно-лоханочной системы ${g} почки.`);
+    if(v[pos]!=="обычные")C.push(`${v[pos][0].toUpperCase()+v[pos].slice(1)} ${g} почки.`);
+    if(v[c])C.push(`Эхопризнаки конкремента ${g} почки.`);
+    if(v[f])C.push(`Образование ${g} почки (см. описание).`)});
+   L.push(`МОЧЕВОЙ ПУЗЫРЬ: объём ${val(v.bv)} мл, стенка ${val(v.bw)} мм, содержимое ${v.bc}. Остаточная моча ${val(v.br)} мл.`);
+   if(gt(v.bw,4))C.push("Утолщение стенки мочевого пузыря.");
+   if(v.bc!=="однородное")C.push(`Мочевой пузырь: ${v.bc}.`);
+   if(gt(v.br,50))C.push(`Увеличение объёма остаточной мочи (${val(v.br)} мл).`);
+   return {L,C,none:"Эхопризнаков патологии почек и мочевого пузыря не выявлено."}}},
+ thy:{name:"Щитовидная железа",secs:[
+  {t:"Общее",f:[S("sex","Пол",["женский","мужской"]),S("loc","Расположение",["обычное","загрудинное распространение"]),S("cnt","Контуры",CONT),S("ech","Эхогенность",ECHO),S("st","Структура",STR),S("vasc","Кровоток (ЦДК)",["не изменён","усилен","ослаблен"])]},
+  {t:"Правая доля",f:[N("rl","Длина",{u:"мм",ex:46}),N("rw","Ширина",{u:"мм",ex:16}),N("rt","Толщина",{u:"мм",ex:15})]},
+  {t:"Левая доля",f:[N("ll","Длина",{u:"мм",ex:44}),N("lw","Ширина",{u:"мм",ex:15}),N("lt","Толщина",{u:"мм",ex:14})]},
+  {t:"Перешеек и узлы",f:[N("is","Перешеек, толщина",{u:"мм",max:5,ex:3}),X("nod","Узловые образования",{ph:"не выявлены; или вставьте из вкладки TI-RADS",rows:3,w:1}),X("ln","Регионарные лимфоузлы",{ph:"не изменены",w:1})]}],
+  build(v){const L=[],C=[];const r=vol(v.rl,v.rw,v.rt,.479),l=vol(v.ll,v.lw,v.lt,.479),tot=(has(r)?r:0)+(has(l)?l:0),lim=v.sex==="мужской"?25:18;
+   L.push(`ЩИТОВИДНАЯ ЖЕЛЕЗА: расположение ${v.loc}. Контуры ${v.cnt}. Эхогенность ${v.ech}, структура ${v.st}. Кровоток при ЦДК ${v.vasc}.`);
+   L.push(`Правая доля ${val(v.rl)}×${val(v.rw)}×${val(v.rt)} мм, объём ${fmt(r)} мл. Левая доля ${val(v.ll)}×${val(v.lw)}×${val(v.lt)} мм, объём ${fmt(l)} мл. Перешеек ${val(v.is)} мм.`);
+   if(has(r)||has(l))L.push(`Общий объём ${fmt(tot)} мл (норма для ${v.sex==="мужской"?"мужчин":"женщин"} до ${lim} мл).`);
+   L.push(`Узловые образования: ${v.nod||"не выявлены"}.`);L.push(`Регионарные лимфатические узлы: ${v.ln||"не изменены"}.`);
+   if(tot>lim)C.push(`Увеличение объёма щитовидной железы (${fmt(tot)} мл).`);
+   if(v.ech!=="обычная"||v.st==="неоднородная")C.push("Эхопризнаки диффузных изменений щитовидной железы.");
+   if(v.vasc==="усилен")C.push("Усиление кровотока паренхимы.");
+   if(v.nod)C.push("Узловые образования щитовидной железы (категории ACR TI-RADS см. описание).");
+   if(v.ln)C.push("Изменения регионарных лимфатических узлов (см. описание).");
+   if(v.loc!=="обычное")C.push("Загрудинное распространение щитовидной железы.");
+   return {L,C,none:"Эхопризнаков патологии щитовидной железы не выявлено."}}},
+ pel:{name:"Органы малого таза (жен.)",secs:[
+  {t:"Общее",f:[S("st","Статус",["репродуктивный возраст","постменопауза"]),N("day","День цикла",{u:"д",ex:9}),S("acc","Доступ",["трансвагинальный","трансабдоминальный"])]},
+  {t:"Матка",f:[S("pos","Положение",["anteflexio","retroflexio","срединное"]),N("ul","Длина тела",{u:"мм",max:70,ex:52}),N("uap","Переднезадний размер",{u:"мм",max:50,ex:40}),N("uw","Ширина",{u:"мм",max:60,ex:50}),S("myo","Миометрий",["однородный","неоднородный","миоматозные узлы"]),X("myod","Уточнение по миометрию",{w:1}),N("me","М-эхо",{u:"мм",ex:7}),S("end","Эндометрий",["соответствует фазе цикла","неоднородный","полиповидное образование"]),N("cx","Длина шейки",{u:"мм",ex:31}),X("cxd","Шейка, уточнение",{ph:"без особенностей"})]},
+  {t:"Правый яичник",f:[N("rol","Длина",{u:"мм",ex:32}),N("row","Ширина",{u:"мм",ex:22}),N("rot","Толщина",{u:"мм",ex:20}),N("rof","Фолликулов",{u:"шт",ex:9}),X("rod","Образования",{ph:"не выявлены"})]},
+  {t:"Левый яичник",f:[N("lol","Длина",{u:"мм",ex:30}),N("low","Ширина",{u:"мм",ex:20}),N("lot","Толщина",{u:"мм",ex:18}),N("lof","Фолликулов",{u:"шт",ex:8}),X("lod","Образования",{ph:"не выявлены"})]},
+  {t:"Прочее",f:[S("ff","Свободная жидкость в позадиматочном пространстве",["не выявлена","незначительное количество","выявлена"]),X("oth","Дополнительно",{w:1})]}],
+  build(v){const L=[],C=[];const pm=v.st==="постменопауза";
+   L.push(`Исследование ${v.acc}. ${pm?"Постменопауза.":`День менструального цикла: ${val(v.day)}.`}`);
+   L.push(`МАТКА: положение ${v.pos}. Размеры тела: длина ${val(v.ul)} мм, ПЗР ${val(v.uap)} мм, ширина ${val(v.uw)} мм. Миометрий ${v.myo}${v.myod?"; "+v.myod:""}. М-эхо ${val(v.me)} мм, эндометрий ${v.end}. Шейка матки длиной ${val(v.cx)} мм, ${v.cxd||"без особенностей"}.`);
+   if(gt(v.ul,70)||gt(v.uap,50)||gt(v.uw,60))C.push("Увеличение размеров матки.");
+   if(v.myo==="миоматозные узлы")C.push("Эхопризнаки миомы матки (см. описание; классификация FIGO при необходимости).");
+   else if(v.myo==="неоднородный")C.push("Диффузные изменения миометрия (дифференцировать с аденомиозом).");
+   if(pm&&gt(v.me,4))C.push(`Утолщение эндометрия в постменопаузе (М-эхо ${val(v.me)} мм; при кровотечении порог 4 мм).`);
+   if(v.end==="полиповидное образование")C.push("Полиповидное образование полости матки.");
+   [["ПРАВЫЙ ЯИЧНИК","ro","правого"],["ЛЕВЫЙ ЯИЧНИК","lo","левого"]].forEach(([T,p,g])=>{const V=vol(v[p+"l"],v[p+"w"],v[p+"t"],.523);
+    L.push(`${T}: ${val(v[p+"l"])}×${val(v[p+"w"])}×${val(v[p+"t"])} мм, объём ${fmt(V)} мл${has(num(v[p+"f"]))?`, фолликулов ${val(v[p+"f"])}`:""}. Образования: ${v[p+"d"]||"не выявлены"}.`);
+    if(!pm&&V>=10)C.push(`Увеличение объёма ${g} яичника (${fmt(V)} мл).`);
+    if(!pm&&num(v[p+"f"])>=20)C.push(`Мультифолликулярная структура ${g} яичника (≥20 фолликулов; критерий PCOM оценивается в комплексе).`);
+    if(v[p+"d"])C.push(`Образование ${g} яичника (оценка по O-RADS, см. описание).`)});
+   L.push(`Свободная жидкость в позадиматочном пространстве: ${v.ff}.`);if(v.ff==="выявлена")C.push("Свободная жидкость в малом тазу.");
+   if(v.oth)L.push(v.oth);
+   return {L,C,none:"Эхопризнаков патологии органов малого таза не выявлено."}}},
+ pro:{name:"Предстательная железа",secs:[
+  {t:"Железа",f:[S("acc","Доступ",["трансабдоминальный","трансректальный"]),N("pl","Длина (краниокаудально)",{u:"мм",ex:42}),N("pw","Ширина",{u:"мм",ex:48}),N("pt","Толщина (ПЗР)",{u:"мм",ex:36}),S("cnt","Контуры",CONT),S("ech","Эхоструктура",["однородная","неоднородная","с кальцинатами"]),X("ml","Средняя доля / протрузия в пузырь",{ph:"не определяется"}),X("nod","Очаговые образования",{ph:"не выявлены",w:1})]},
+  {t:"Мочевой пузырь",f:[N("bv","Объём",{u:"мл",ex:310}),N("bw","Стенка",{u:"мм",max:4,ex:4}),N("br","Остаточная моча",{u:"мл",max:50,ex:65})]}],
+  build(v){const L=[],C=[];const V=vol(v.pl,v.pw,v.pt,.523);
+   L.push(`ПРЕДСТАТЕЛЬНАЯ ЖЕЛЕЗА (${v.acc} доступ): ${val(v.pl)}×${val(v.pw)}×${val(v.pt)} мм, объём ${fmt(V)} мл (норма до 25 мл). Контуры ${v.cnt}. Эхоструктура ${v.ech}. Средняя доля: ${v.ml||"не определяется"}. Очаговые образования: ${v.nod||"не выявлены"}.`);
+   L.push(`МОЧЕВОЙ ПУЗЫРЬ: объём ${val(v.bv)} мл, стенка ${val(v.bw)} мм. Остаточная моча ${val(v.br)} мл.`);
+   if(V>25)C.push(`Увеличение объёма предстательной железы до ${fmt(V)} мл (эхопризнаки ДГПЖ).`);
+   if(v.ech!=="однородная")C.push(`Диффузные изменения предстательной железы${v.ech==="с кальцинатами"?" с кальцинатами":""}.`);
+   if(v.nod)C.push("Очаговые изменения предстательной железы (см. описание).");
+   if(gt(v.bw,4))C.push("Утолщение стенки мочевого пузыря.");
+   if(gt(v.br,50))C.push(`Остаточная моча ${val(v.br)} мл.`);
+   return {L,C,none:"Эхопризнаков патологии предстательной железы не выявлено."}}}
+};
+function val(x){const n=num(x);return has(n)?fmt(n):"__"}
+function gt(x,m){const n=num(x);return has(n)&&n>m}
+function lt(x,m){const n=num(x);return has(n)&&n<m}
+function vol(a,b,c,k){a=num(a);b=num(b);c=num(c);return has(a)&&has(b)&&has(c)?a*b*c*k/1000:NaN}
+
+let curTpl=store.get("tpl","obp");if(!TPL[curTpl])curTpl="obp";
+const vals={};let dirty=false;
+const sel=$("#tplSel");Object.entries(TPL).forEach(([k,t])=>sel.add(new Option(t.name,k)));sel.value=curTpl;
+function exampleVals(k){const o={};TPL[k].secs.forEach(s=>s.f.forEach(f=>o[f.id]=f.k==="s"?f.ex:(f.ex??"")));return o}
+function blankVals(k){const o={};TPL[k].secs.forEach(s=>s.f.forEach(f=>o[f.id]=f.k==="s"?f.o[0]:""));return o}
+function renderForm(){
+  const t=TPL[curTpl];if(!vals[curTpl])vals[curTpl]=exampleVals(curTpl);const v=vals[curTpl];
+  $("#tplForm").innerHTML=t.secs.map(s=>`<div class="sec"><h3>${esc(s.t)}</h3><div class="grid">${s.f.map(f=>{
+    const id=`f_${curTpl}_${f.id}`;
+    if(f.k==="n"){const nr=f.max!=null&&f.min!=null?`${f.min}–${f.max}`:f.max!=null?`≤${f.max}`:f.min!=null?`≥${f.min}`:"";
+      return `<label class="f" data-f="${f.id}"><span class="nm">${esc(f.l)} <span class="nr">${nr} ${esc(f.u||"")}</span></span><input id="${id}" type="text" inputmode="decimal" value="${esc(v[f.id])}"></label>`}
+    if(f.k==="s")return `<label class="f"><span class="nm">${esc(f.l)}</span><select id="${id}">${f.o.map(o=>`<option${o===v[f.id]?" selected":""}>${esc(o)}</option>`).join("")}</select></label>`;
+    return `<label class="f${f.w?" wide":""}"><span class="nm">${esc(f.l)}</span>${f.rows?`<textarea id="${id}" rows="${f.rows}" placeholder="${esc(f.ph||"")}">${esc(v[f.id])}</textarea>`:`<input id="${id}" type="text" placeholder="${esc(f.ph||"")}" value="${esc(v[f.id])}">`}</label>`}).join("")}</div></div>`).join("");
+  t.secs.forEach(s=>s.f.forEach(f=>{const el=document.getElementById(`f_${curTpl}_${f.id}`);el.addEventListener("input",()=>{v[f.id]=el.value;flag();if(!dirty)build();else $("#repRefresh").hidden=false})}));
+  flag();
+}
+function flag(){const t=TPL[curTpl],v=vals[curTpl];t.secs.forEach(s=>s.f.forEach(f=>{if(f.k!=="n")return;const n=num(v[f.id]);const bad=has(n)&&((f.max!=null&&n>f.max)||(f.min!=null&&n<f.min));const el=document.querySelector(`#tplForm [data-f="${f.id}"]`);el&&el.classList.toggle("hi",bad)}))}
+function build(){const t=TPL[curTpl],r=t.build(vals[curTpl]);
+  const txt=`УЛЬТРАЗВУКОВОЕ ИССЛЕДОВАНИЕ: ${t.name.toUpperCase()}\n\n${r.L.join("\n\n")}\n\nЗАКЛЮЧЕНИЕ:\n${r.C.length?r.C.map(c=>"• "+c).join("\n"):r.none}\n\nЗаключение не является диагнозом и требует клинической интерпретации.`;
+  $("#report").value=txt;dirty=false;$("#repRefresh").hidden=true}
+$("#report").addEventListener("input",()=>dirty=true);
+$("#repRefresh").onclick=build;
+$("#repCopy").onclick=()=>copyText($("#report").value,$("#report"));
+sel.onchange=()=>{curTpl=sel.value;store.set("tpl",curTpl);renderForm();build()};
+$("#tplClear").onclick=()=>{vals[curTpl]=blankVals(curTpl);renderForm();build()};
+$("#tplExample").onclick=()=>{vals[curTpl]=exampleVals(curTpl);renderForm();build()};
+renderForm();build();
+
+/* ---------- TI-RADS ---------- */
+const TR={
+ comp:{t:"Состав",m:false,o:[["Кистозный или почти полностью кистозный",0],["Губчатый (спонгиоформный)",0],["Смешанный кистозно-солидный",1],["Солидный или почти полностью солидный",2]]},
+ echo:{t:"Эхогенность",m:false,o:[["Анэхогенный",0],["Гипер- или изоэхогенный",1],["Гипоэхогенный",2],["Выраженно гипоэхогенный",3]]},
+ shape:{t:"Форма",m:false,o:[["Ширина больше высоты",0],["Высота больше ширины (taller-than-wide)",3]]},
+ margin:{t:"Контур",m:false,o:[["Ровный",0],["Нечёткий (ill-defined)",0],["Дольчатый или неровный",2],["Экстратиреоидное распространение",3]]},
+ foci:{t:"Эхогенные включения",m:true,o:[["Нет или крупные артефакты «хвост кометы»",0],["Макрокальцинаты",1],["Периферические (ободковые) кальцинаты",2],["Точечные эхогенные фокусы",3]]}
+};
+const trState={comp:3,echo:2,shape:0,margin:0,foci:[0],side:"правой доли",d1:"14",d2:"11",d3:"10"};
+function radio(name,i,label,pts,checked,multi){return `<label class="opt"><input type="${multi?"checkbox":"radio"}" name="${name}" value="${i}"${checked?" checked":""}><span>${esc(label)} <b>${pts>0?"+"+pts:pts}</b></span></label>`}
+$("#trForm").innerHTML=`<div class="grid"><label class="f"><span class="nm">Локализация</span><select id="trSide"><option>правой доли</option><option>левой доли</option><option>перешейка</option></select></label>
+<label class="f"><span class="nm">Размер 1 <span class="nr">мм</span></span><input id="trD1" type="text" inputmode="decimal" value="14"></label>
+<label class="f"><span class="nm">Размер 2 <span class="nr">мм</span></span><input id="trD2" type="text" inputmode="decimal" value="11"></label>
+<label class="f"><span class="nm">Размер 3 <span class="nr">мм</span></span><input id="trD3" type="text" inputmode="decimal" value="10"></label></div>`+
+Object.entries(TR).map(([k,g])=>`<fieldset><legend>${g.t}${g.m?" (можно несколько)":""}</legend><div class="opts">${g.o.map((o,i)=>radio("tr_"+k,i,o[0],o[1],g.m?trState[k].includes(i):trState[k]===i,g.m)).join("")}</div></fieldset>`).join("")+
+`<p class="note">Сумма 1 балл в таблице ACR отдельно не выделена и здесь отнесена к TR1. Губчатый узел: баллы других групп не добавляются. Анэхогенность относится к кистозным узлам. Если эхогенность нельзя оценить, выберите «Гипер- или изоэхогенный» (1 балл), как рекомендует ACR.</p>`;
+$("#trForm").addEventListener("change",e=>{const n=e.target.name;if(n&&n.startsWith("tr_")){const k=n.slice(3);if(TR[k].m){let a=[...document.querySelectorAll(`[name=${n}]:checked`)].map(x=>+x.value);if(e.target.checked&&+e.target.value===0)a=[0];else if(e.target.checked)a=a.filter(x=>x!==0);if(!a.length)a=[0];document.querySelectorAll(`[name=${n}]`).forEach(x=>x.checked=a.includes(+x.value));trState[k]=a}else trState[k]=+e.target.value}trCalc()});
+$("#trForm").addEventListener("input",e=>{if(e.target.matches("input[type=text],select"))trCalc()});
+let trLast="";
+function trCalc(){
+  const s=trState;s.side=$("#trSide").value;const d=[num($("#trD1").value),num($("#trD2").value),num($("#trD3").value)].filter(has);const mx=d.length?Math.max(...d):NaN;
+  const spong=s.comp===1;
+  let pts=TR.comp.o[s.comp][1];
+  const parts={comp:TR.comp.o[s.comp][1],echo:TR.echo.o[s.echo][1],shape:TR.shape.o[s.shape][1],margin:TR.margin.o[s.margin][1],foci:s.foci.reduce((a,i)=>a+TR.foci.o[i][1],0)};
+  if(!spong)pts=parts.comp+parts.echo+parts.shape+parts.margin+parts.foci;
+  const tr=pts<=1?1:pts===2?2:pts===3?3:pts<=6?4:5;
+  const info={1:["Доброкачественный","ТАБ не показана","r1",null,null],2:["Не подозрительный","ТАБ не показана","r1",null,null],3:["Слабо подозрительный","",'r2',25,15],4:["Умеренно подозрительный","","r2",15,10],5:["Высоко подозрительный","","r3",10,5]}[tr];
+  let rec=info[1];
+  if(tr>=3){const [fna,fu]=[info[3],info[4]];
+    if(!has(mx))rec=`ТАБ при размере ≥${fna/10} см, наблюдение при ≥${fu/10} см. Укажите размер узла.`;
+    else if(mx>=fna)rec=`Показана ТАБ (узел ${fmt(mx/10)} см, порог ${fmt(fna/10)} см).`;
+    else if(mx>=fu)rec=`Динамическое наблюдение (узел ${fmt(mx/10)} см, порог наблюдения ${fmt(fu/10)} см). ${({3:"Контроль через 1, 3 и 5 лет.",4:"Контроль через 1, 2, 3 и 5 лет.",5:"Контроль ежегодно в течение 5 лет."})[tr]}`;
+    else rec=`Ни ТАБ, ни наблюдение по размеру не требуются (узел ${fmt(mx/10)} см меньше ${fmt(fu/10)} см).`;}
+  const R=$("#trRisk");R.className="risk "+info[2];
+  R.innerHTML=`<span class="note">ACR TI-RADS</span><span class="big">TR${tr}</span><b>${info[0]} · ${pts} ${plural(pts,"балл","балла","баллов")}</b><span>${esc(rec)}</span>${spong?'<span class="note">Губчатый узел: остальные признаки не суммируются.</span>':""}<span class="note">Баллы: состав ${parts.comp}, эхогенность ${spong?"—":parts.echo}, форма ${spong?"—":parts.shape}, контур ${spong?"—":parts.margin}, включения ${spong?"—":parts.foci}</span>`;
+  const low=x=>x[0].toLowerCase()+x.slice(1);
+  const desc=`Узел ${s.side}${d.length?" "+d.map(x=>fmt(x)).join("×")+" мм":""}: ${low(TR.comp.o[s.comp][0])}${spong?"":`, ${low(TR.echo.o[s.echo][0])}, ${low(TR.shape.o[s.shape][0])}, контур ${low(TR.margin.o[s.margin][0])}, эхогенные включения: ${s.foci.map(i=>low(TR.foci.o[i][0])).join(", ")}`}. ACR TI-RADS ${tr} (${pts} ${plural(pts,"балл","балла","баллов")}). ${rec}`;
+  trLast=desc;$("#trText").textContent=desc;
+}
+function plural(n,a,b,c){n=Math.abs(n)%100;const n1=n%10;if(n>10&&n<20)return c;if(n1>1&&n1<5)return b;if(n1===1)return a;return c}
+$("#trCopy").onclick=()=>copyText(trLast,$("#trText"));
+$("#trToProto").onclick=()=>{if(!vals.thy)vals.thy=exampleVals("thy");vals.thy.nod=(vals.thy.nod?vals.thy.nod+"\n":"")+trLast;curTpl="thy";sel.value="thy";store.set("tpl","thy");renderForm();build();show("protocol",true);toast("Узел добавлен в протокол ЩЖ")};
+trCalc();
+
+/* ---------- BI-RADS ---------- */
+const BR={
+ type:{t:"Тип находки",o:["Солидное образование","Простая киста","Осложнённая киста (однородное внутреннее эхо)","Сгруппированные микрокисты","Сложное кистозно-солидное образование"]},
+ shape:{t:"Форма",o:["Овальная","Круглая","Неправильная"],sus:[0,0,1]},
+ orient:{t:"Ориентация",o:["Параллельная коже","Непараллельная (вертикальная)"],sus:[0,1]},
+ margin:{t:"Контур",o:["Чёткий (circumscribed)","Нечёткий","Угловатый","Микродольчатый","Спикулообразный"],sus:[0,1,1,1,2]},
+ echo:{t:"Эхоструктура",o:["Гипоэхогенная","Изоэхогенная","Гиперэхогенная","Гетерогенная","Анэхогенная"]},
+ post:{t:"Дорсальные эффекты",o:["Нет","Усиление","Тень","Смешанные"],sus:[0,0,1,0]},
+ assoc:{t:"Сопутствующие признаки (можно несколько)",m:true,o:["Кальцинаты в образовании","Нарушение архитектоники","Изменения протоков","Утолщение или втяжение кожи","Внутренний кровоток","Высокая жёсткость (эластография)","Подозрительные подмышечные лимфоузлы"],sus:[1,1,1,1,0,1,1]}
+};
+const brS={type:0,shape:0,orient:0,margin:0,echo:0,post:0,assoc:[],side:"правой",clock:"10",dist:"4",d1:"9",d2:"6",d3:"5"};
+$("#brForm").innerHTML=`<div class="grid"><label class="f"><span class="nm">Железа</span><select id="brSide"><option>правой</option><option>левой</option></select></label>
+<label class="f"><span class="nm">Условный час</span><input id="brClock" type="text" inputmode="numeric" value="10"></label>
+<label class="f"><span class="nm">От соска <span class="nr">см</span></span><input id="brDist" type="text" inputmode="decimal" value="4"></label>
+<label class="f"><span class="nm">Размеры <span class="nr">мм</span></span><input id="brSize" type="text" value="9×6×5"></label></div>`+
+Object.entries(BR).map(([k,g])=>`<fieldset data-g="${k}"><legend>${g.t}</legend><div class="opts">${g.o.map((o,i)=>`<label class="opt"><input type="${g.m?"checkbox":"radio"}" name="br_${k}" value="${i}"${(!g.m&&brS[k]===i)?" checked":""}><span>${esc(o)}</span></label>`).join("")}</div></fieldset>`).join("");
+$("#brForm").addEventListener("change",e=>{const n=e.target.name;if(n&&n.startsWith("br_")){const k=n.slice(3);brS[k]=BR[k].m?[...document.querySelectorAll(`[name=${n}]:checked`)].map(x=>+x.value):+e.target.value}brCalc()});
+$("#brForm").addEventListener("input",brCalc);
+const BRCAT=[["2","Доброкачественные изменения","0%","Обычный скрининг","r1"],["3","Вероятно доброкачественное","≤2%","Контроль через 6 мес., затем 6–12 мес. (всего 2–3 года)","r2"],["4A","Низкое подозрение",">2–10%","Биопсия","r2"],["4B","Умеренное подозрение",">10–50%","Биопсия","r3"],["4C","Высокое подозрение",">50–<95%","Биопсия","r3"],["5","Высоко вероятная злокачественность","≥95%","Биопсия","r3"]];
+$("#brTable").innerHTML=`<tr><th>Кат.</th><th>Смысл</th><th>Риск РМЖ</th><th>Тактика</th></tr>`+[["0","Неполная оценка","—","Дообследование"],["1","Норма","0%","Обычный скрининг"],...BRCAT.map(r=>r.slice(0,4)),["6","Верифицированный рак","—","Лечение"]].map(r=>`<tr><td class="n"><b>${r[0]}</b></td><td>${r[1]}</td><td class="n">${r[2]}</td><td>${r[3]}</td></tr>`).join("");
+let brLast="";
+function brCalc(){
+  const s=brS;const solid=s.type===0||s.type===4;
+  document.querySelectorAll("#brForm fieldset").forEach(f=>{const g=f.dataset.g;if(g!=="type"&&g!=="assoc")f.hidden=!solid});
+  let cat,why;
+  const sus=[];
+  if(solid){
+    if(BR.shape.sus[s.shape])sus.push("неправильная форма");
+    if(BR.orient.sus[s.orient])sus.push("непараллельная ориентация");
+    if(BR.margin.sus[s.margin])sus.push(BR.margin.o[s.margin].toLowerCase()+" контур");
+    if(BR.post.sus[s.post])sus.push("дорсальная тень");}
+  s.assoc.forEach(i=>{if(BR.assoc.sus[i])sus.push(BR.assoc.o[i].toLowerCase())});
+  const spic=solid&&s.margin===4;
+  if(s.type===1&&!sus.length){cat=0;why="Простая киста: анэхогенная, с тонкой стенкой и дорсальным усилением."}
+  else if((s.type===2||s.type===3)&&!sus.length){cat=1;why="Осложнённая киста или сгруппированные микрокисты без подозрительных признаков. При множественных двусторонних осложнённых кистах допустима категория 2."}
+  else if(s.type===4&&!sus.length){cat=2;why="Сложное кистозно-солидное образование содержит солидный компонент: минимум 4A, нужна биопсия."}
+  else if(!sus.length&&s.shape===0&&s.orient===0&&s.margin===0){cat=1;why="Овальное, параллельное, с чётким контуром, без подозрительных признаков (типичная фиброаденома). Категория 3 применима, если находка выявлена впервые и нет данных о стабильности."}
+  else if(!sus.length){cat=1;why="Подозрительных признаков нет, но форма или эхоструктура нетипичны для фиброаденомы. Обычно категория 3; при сомнении 4A."}
+  else{const n=sus.length+(spic?1:0);cat=n>=4||(spic&&s.shape===2&&s.orient===1)?5:n===3?4:n===2?3:2;
+    why="Подозрительные признаки: "+sus.join(", ")+"."}
+  if(s.type===4&&cat<2)cat=2;
+  const c=BRCAT[cat];const R=$("#brRisk");R.className="risk "+c[4];
+  R.innerHTML=`<span class="note">Ориентировочная категория</span><span class="big">BI-RADS ${c[0]}</span><b>${c[1]} · риск ${c[2]}</b><span>${esc(why)}</span><span>Тактика: ${c[3]}.</span><span class="note">Подсказка по числу подозрительных признаков, а не официальный алгоритм ACR. Решение принимает врач.</span>`;
+  const side=$("#brSide").value,clock=$("#brClock").value.trim(),dist=$("#brDist").value.trim(),size=$("#brSize").value.trim();
+  let d=`В ${side} молочной железе${clock?` на ${clock} ч условного циферблата`:""}${dist?`, в ${dist} см от соска`:""} определяется ${BR.type.o[s.type].toLowerCase()}${size?` размерами ${size} мм`:""}`;
+  if(solid)d+=`: форма ${BR.shape.o[s.shape].toLowerCase()}, ориентация ${BR.orient.o[s.orient].toLowerCase()}, контур ${BR.margin.o[s.margin].toLowerCase()}, эхоструктура ${BR.echo.o[s.echo].toLowerCase()}, дорсальные эффекты: ${BR.post.o[s.post].toLowerCase()}`;
+  if(s.assoc.length)d+=`; ${s.assoc.map(i=>BR.assoc.o[i].toLowerCase()).join(", ")}`;
+  d+=`.\nЗаключение: BI-RADS ${c[0]}. Рекомендация: ${c[3].toLowerCase()}.`;
+  brLast=d;$("#brText").textContent=d;
+}
+$("#brCopy").onclick=()=>copyText(brLast,$("#brText"));
+brCalc();
+
+/* ---------- O-RADS ---------- */
+const OR_TYPES=["Нормальный яичник / фолликул / жёлтое тело ≤3 см","Простая киста","Однокамерная киста, гладкая, не простая","Двухкамерная киста без солидного компонента","Многокамерная киста без солидного компонента","Однокамерная или двухкамерная киста с солидным компонентом","Многокамерная киста с солидным компонентом","Солидное образование","Типичное доброкачественное: геморрагическая киста","Типичное доброкачественное: дермоид","Типичное доброкачественное: эндометриома","Параовариальная киста / перитонеальная псевдокиста / гидросальпинкс"];
+const orS={type:6,meno:0,size:"62",wall:0,pp:1,cs:2,contour:0,shadow:0,asc:0};
+$("#orForm").innerHTML=`<label class="f"><span class="nm">Тип образования</span><select id="orType">${OR_TYPES.map((t,i)=>`<option value="${i}"${i===orS.type?" selected":""}>${t}</option>`).join("")}</select></label>
+<div class="grid"><label class="f"><span class="nm">Статус</span><select id="orMeno"><option value="0">Пременопауза</option><option value="1">Постменопауза</option></select></label>
+<label class="f"><span class="nm">Макс. размер <span class="nr">мм</span></span><input id="orSize" type="text" inputmode="decimal" value="62"></label>
+<label class="f" id="orWallF"><span class="nm">Внутренняя стенка / перегородки</span><select id="orWall"><option value="0">Гладкая</option><option value="1">Неровная (выступы &lt;3 мм)</option></select></label>
+<label class="f" id="orPpF"><span class="nm">Солидный компонент</span><select id="orPp"><option value="1">1–3 папиллярные разрастания</option><option value="4">≥4 папиллярных разрастаний</option><option value="0">Непапиллярный солидный компонент</option></select></label>
+<label class="f" id="orContF"><span class="nm">Контур солидного образования</span><select id="orCont"><option value="0">Гладкий</option><option value="1">Неровный</option></select></label>
+<label class="f" id="orShF"><span class="nm">Акустическая тень</span><select id="orSh"><option value="0">Нет</option><option value="1">Есть</option></select></label>
+<label class="f" id="orCsF"><span class="nm">Цветовая шкала (CS)</span><select id="orCs"><option value="1">1 нет кровотока</option><option value="2" selected>2 минимальный</option><option value="3">3 умеренный</option><option value="4">4 выраженный</option></select></label>
+<label class="f"><span class="nm">Асцит / узлы брюшины</span><select id="orAsc"><option value="0">Нет</option><option value="1">Есть</option></select></label></div>
+<p class="note">Солидный компонент: структура высотой ≥3 мм. Неровная стенка: выступы &lt;3 мм. Асцит здесь означает жидкость вне малого таза или в количестве, не соответствующем физиологическому.</p>`;
+["#orType","#orMeno","#orSize","#orWall","#orPp","#orCont","#orSh","#orCs","#orAsc"].forEach(id=>{$(id).addEventListener("input",orCalc);$(id).addEventListener("change",orCalc)});
+const ORI={0:["Неполная оценка","—","Повторное УЗИ или МРТ","r0"],1:["Норма","0%","Не требуется","r1"],2:["Почти наверняка доброкачественное","<1%","По размеру и менопаузальному статусу (таблица ACR)","r1"],3:["Низкий риск","1–<10%","Направление к гинекологу; при необходимости экспертное УЗИ или МРТ","r2"],4:["Промежуточный риск","10–<50%","Экспертное УЗИ или МРТ (O-RADS MRI); ведение гинекологом с участием онкогинеколога","r3"],5:["Высокий риск","≥50%","Направление к онкогинекологу","r3"]};
+let orLast="";
+function orCalc(){
+  const t=+$("#orType").value,pm=$("#orMeno").value==="1",sz=num($("#orSize").value),wall=+$("#orWall").value,pp=+$("#orPp").value,cont=+$("#orCont").value,sh=+$("#orSh").value,cs=+$("#orCs").value,asc=$("#orAsc").value==="1";
+  const showWall=[2,3,4].includes(t),showPp=t===5,showCont=t===7,showSh=t===7,showCs=[4,6,7].includes(t);
+  $("#orWallF").hidden=!showWall;$("#orPpF").hidden=!showPp;$("#orContF").hidden=!showCont;$("#orShF").hidden=!showSh;$("#orCsF").hidden=!showCs;
+  let c,why,mgmt="";const big=has(sz)&&sz>=100;
+  if(asc){c=5;why="Асцит и/или узлы по брюшине."}
+  else switch(t){
+    case 0:c=pm?2:1;why=pm?"В постменопаузе фолликулы и жёлтое тело не ожидаются; киста ≤3 см оценивается как простая.":"Физиологические структуры пременопаузы ≤3 см.";break;
+    case 1:if(!pm&&has(sz)&&sz<=30){c=1;why="Простая киста ≤3 см в пременопаузе соответствует фолликулу."}
+      else if(big){c=3;why="Простая киста ≥10 см."}
+      else{c=2;why="Простая киста <10 см.";mgmt=pm?(has(sz)&&sz<=30?"Ведение не требуется.":"Контрольное УЗИ через 12 месяцев."):(has(sz)&&sz>50?"Контрольное УЗИ через 12 месяцев.":"Ведение не требуется.")}break;
+    case 2:if(wall){c=3;why="Однокамерная киста с неровной внутренней стенкой (<3 мм)."}else if(big){c=3;why="Гладкая однокамерная киста ≥10 см."}else{c=2;why="Гладкая однокамерная непростая киста <10 см.";mgmt=has(sz)&&sz<=30?(pm?"Контрольное УЗИ через 12 месяцев.":"Ведение не требуется."):"Контрольное УЗИ через 6 месяцев."}break;
+    case 3:if(wall){c=4;why="Двухкамерная киста с неровной внутренней стенкой."}else if(big){c=3;why="Гладкая двухкамерная киста ≥10 см."}else{c=2;why="Гладкая двухкамерная киста <10 см.";mgmt=has(sz)&&sz<=30?(pm?"Контрольное УЗИ через 12 месяцев.":"Ведение не требуется."):"Контрольное УЗИ через 6 месяцев."}break;
+    case 4:if(wall){c=4;why="Многокамерная киста с неровной стенкой или перегородками."}else if(cs===4){c=4;why="Многокамерная киста, CS 4."}else if(big){c=4;why="Многокамерная гладкая киста ≥10 см."}else{c=3;why="Многокамерная гладкая киста <10 см, CS 1–3."}break;
+    case 5:if(pp===4){c=5;why="Однокамерная киста с ≥4 папиллярными разрастаниями."}else{c=4;why="Одно- или двухкамерная киста с солидным компонентом (<4 папиллярных разрастаний)."}break;
+    case 6:c=cs>=3?5:4;why=`Многокамерная киста с солидным компонентом, CS ${cs}.`;break;
+    case 7:if(cont){c=5;why="Солидное образование с неровным контуром."}else if(cs===4){c=5;why="Солидное образование с гладким контуром, CS 4."}else if(cs===1){c=3;why="Солидное образование с гладким контуром, CS 1."}else if(sh){c=3;why=`Солидное гладкое образование с акустической тенью, CS ${cs}.`}else{c=4;why=`Солидное гладкое образование без тени, CS ${cs}.`}break;
+    case 8:case 9:case 10:{const nm=["геморрагическая киста","дермоид","эндометриома"][t-8];if(big){c=3;why=`Типичная ${nm}, ≥10 см.`}else{c=2;why=`Типичная ${nm}, <10 см.`;
+      mgmt=t===8?(pm?"В ранней постменопаузе контроль через 2–3 месяца; в поздней постменопаузе геморрагическая киста не ожидается, нужна консультация гинеколога.":"При ≤5 см ведение не требуется; при >5 см контроль через 2–3 месяца."):t===9?"Если не удаляется, контроль через 12 месяцев.":"Если не удаляется, контроль через 12 месяцев."}}break;
+    case 11:c=2;why="Типичная доброкачественная внеяичниковая находка, любой размер.";mgmt="Ведение по клинической ситуации.";break;
+  }
+  const i=ORI[c];const R=$("#orRisk");R.className="risk "+i[3];
+  R.innerHTML=`<span class="note">O-RADS US v2022</span><span class="big">O-RADS ${c}</span><b>${i[0]} · риск ${i[1]}</b><span>${esc(why)}</span><span>Тактика: ${esc(mgmt||i[2])}</span><span class="note">Сроки контроля для O-RADS 2 приведены по таблице ACR v2022; сверяйте с актуальной версией. При ведении, требующем контроля, ACR рекомендует рассмотреть направление к гинекологу.</span>`;
+  const d=`${pm?"Постменопауза. ":""}${OR_TYPES[t]}${has(sz)?`, максимальный размер ${fmt(sz)} мм`:""}${showWall?`, внутренняя стенка ${wall?"неровная":"гладкая"}`:""}${showPp?`, ${$("#orPp").selectedOptions[0].text.toLowerCase()}`:""}${showCont?`, контур ${cont?"неровный":"гладкий"}`:""}${showSh?`, акустическая тень ${sh?"есть":"нет"}`:""}${showCs?`, CS ${cs}`:""}${asc?". Асцит / узлы брюшины":""}.\nЗаключение: O-RADS US ${c} (${i[0].toLowerCase()}, риск злокачественности ${i[1]}). Рекомендация: ${mgmt||i[2]}.`;
+  orLast=d;$("#orText").textContent=d;
+}
+$("#orCopy").onclick=()=>copyText(orLast,$("#orText"));
+orCalc();
+
+/* ---------- Calculators ---------- */
+const wd=w=>{if(!has(w))return"—";const t=Math.round(w*7);return `${Math.floor(t/7)} нед ${t%7} д`};
+const Phi=z=>{const t=1/(1+.2316419*Math.abs(z)),d=.3989423*Math.exp(-z*z/2);let p=d*t*(.3193815+t*(-.3565638+t*(1.781478+t*(-1.821256+t*1.330274))));return z>0?1-p:p};
+function fet(){
+  const B=num($("#fBPD").value)/10,H=num($("#fHC").value)/10,A=num($("#fAC").value)/10,F=num($("#fFL").value)/10;
+  const rows=[["БПР",B,has(B)?9.54+1.482*B+.1676*B*B:NaN],["ОГ",H,has(H)?8.96+.540*H+.0003*H**3:NaN],["ОЖ",A,has(A)?8.14+.753*A+.0036*A*A:NaN],["ДБК",F,has(F)?10.35+2.460*F+.170*F*F:NaN]];
+  const comp=has(B)&&has(H)&&has(A)&&has(F)?10.85+.060*H*F+.6700*B+.1680*A:NaN;
+  const gaw=num($("#fGAw").value),gad=num($("#fGAd").value);const ref=has(gaw)?gaw+(has(gad)?gad:0)/7:NaN;
+  $("#fetTbl").innerHTML=`<tr><th>Параметр</th><th>мм</th><th>Срок по параметру</th>${has(ref)?"<th>Разница</th>":""}</tr>`+rows.map(r=>`<tr><td>${r[0]}</td><td class="n">${fmt(r[1]*10)}</td><td class="n">${wd(r[2])}</td>${has(ref)?`<td class="n">${has(r[2])?(r[2]-ref>=0?"+":"−")+Math.abs(Math.round((r[2]-ref)*7))+" д":"—"}</td>`:""}</tr>`).join("")+`<tr><td><b>Сводный (Hadlock)</b></td><td></td><td class="n"><b>${wd(comp)}</b></td>${has(ref)?`<td class="n">${has(comp)?(comp-ref>=0?"+":"−")+Math.abs(Math.round((comp-ref)*7))+" д":"—"}</td>`:""}</tr>`;
+  let efw=NaN;if(has(B)&&has(H)&&has(A)&&has(F))efw=10**(1.3596-.00386*A*F+.0064*H+.00061*B*A+.0424*A+.174*F);else if(has(H)&&has(A)&&has(F))efw=10**(1.326-.00326*A*F+.0107*H+.0438*A+.158*F);
+  const ga=has(ref)?ref:comp;let pc="";
+  if(has(efw)&&has(ga)&&ga>=10&&ga<=42){const m=Math.exp(.578+.332*ga-.00354*ga*ga),z=(efw-m)/(.127*m),p=Phi(z)*100;
+    const cl=p<3?"r3":p<10?"r2":p>90?"r2":"r1";const lab=p<3?"Ниже 3-го перцентиля":p<10?"Ниже 10-го перцентиля (МГВ)":p>90?"Выше 90-го перцентиля (КГВ)":"В пределах нормы";
+    pc=`<div class="risk ${cl}" style="margin-top:6px"><span class="note">Предполагаемая масса плода (Hadlock)</span><span class="big">${Math.round(efw)} г</span><b>${fmt(p,0)}-й перцентиль · ${lab}</b><span class="note">Перцентиль по Hadlock 1991 на сроке ${wd(ga)}${has(ref)?" (по датированию)":" (по фетометрии)"}. Медиана для срока ${Math.round(m)} г.</span></div>`}
+  else if(has(efw))pc=`<p>Предполагаемая масса плода: <b>${Math.round(efw)} г</b></p>`;
+  $("#fetEfw").innerHTML=pc;
+}
+["#fBPD","#fHC","#fAC","#fFL","#fGAw","#fGAd"].forEach(id=>$(id).addEventListener("input",fet));fet();
+function crl(){const c=num($("#cCRL").value);if(!has(c)){$("#crlOut").innerHTML="";return}const d=8.052*Math.sqrt(c)+23.73,dd=Math.round(d);const edd=new Date(Date.now()+(280-d)*864e5);
+  $("#crlOut").innerHTML=`<dl class="kv"><dt>Срок</dt><dd>${Math.floor(dd/7)} нед ${dd%7} д</dd><dt>ПДР от сегодня</dt><dd>${edd.toLocaleDateString("ru-RU")}</dd></dl>${c>84||c<3?'<p class="note" style="color:var(--warn)">Формула применима при КТР примерно 3–84 мм. Позже датируйте по ОГ.</p>':""}`}
+$("#cCRL").addEventListener("input",crl);crl();
+(function(){const d=new Date(Date.now()-140*864e5);$("#cLMP").value=d.toISOString().slice(0,10)})();
+function lmp(){const v=$("#cLMP").value;if(!v){$("#lmpOut").innerHTML="";return}const d0=new Date(v+"T00:00:00"),now=new Date();now.setHours(0,0,0,0);const days=Math.round((now-d0)/864e5),edd=new Date(d0.getTime()+280*864e5);
+  $("#lmpOut").innerHTML=`<dl class="kv"><dt>Срок на сегодня</dt><dd>${days>=0?Math.floor(days/7)+" нед "+days%7+" д":"дата в будущем"}</dd><dt>ПДР (Негеле)</dt><dd>${edd.toLocaleDateString("ru-RU")}</dd></dl><p class="note">При расхождении с КТР в I триместре более 5–7 дней срок обычно переназначают по УЗИ.</p>`}
+$("#cLMP").addEventListener("input",lmp);lmp();
+function volc(){const o=$("#vOrg").value,k=o==="th"?.479:o==="bl"?.52:.523,V=vol($("#vL").value,$("#vW").value,$("#vT").value,k);
+  const hint={th:"Сумма двух долей: норма до 18 мл у женщин, до 25 мл у мужчин (ВОЗ).",ov:"Норма в репродуктивном возрасте менее 10 мл; ≥10 мл входит в критерии PCOM.",pr:"Норма до 25 мл.",bl:"Остаточная моча у взрослых: норма до 50 мл.",ot:""}[o];
+  $("#volOut").innerHTML=has(V)?`<dl class="kv"><dt>Объём</dt><dd><b>${fmt(V)} мл</b></dd></dl><p class="note">${hint}</p>`:""}
+["#vOrg","#vL","#vW","#vT"].forEach(id=>$(id).addEventListener("input",volc));volc();
+$("#normTbl").innerHTML="<tr><th>Показатель</th><th>Норма</th></tr>"+[
+ ["Печень, правая доля КВР","≤150 мм"],["Печень, левая доля толщина","≤70 мм"],["Воротная вена","≤13 мм"],["Холедох","≤6 мм (после ХЭ до 8–10 мм)"],["Желчный пузырь","длина ≤100, ширина ≤35, стенка ≤3 мм"],["Поджелудочная: головка / тело / хвост","≤32 / ≤21 / ≤30 мм"],["Вирсунгов проток","≤3 мм"],["Селезёнка","длина ≤120, толщина ≤50 мм"],["Селезёночная вена","≤8 мм"],["Почка: длина / паренхима","100–125 / 15–25 мм"],["Лоханка (ПЗР)","≤10 мм"],["Стенка мочевого пузыря (наполненного)","≤4 мм"],["Остаточная моча","≤50 мл"],["Щитовидная железа, объём","жен. ≤18 мл, муж. ≤25 мл"],["Перешеек ЩЖ","≤5 мм"],["Матка (тело): длина / ПЗР / ширина","≤70 / ≤50 / ≤60 мм"],["Эндометрий в постменопаузе","≤4 мм (при кровотечении)"],["Яичник, объём (репродуктивный)","<10 мл"],["Предстательная железа","≤25 мл"]
+].map(r=>`<tr><td>${r[0]}</td><td class="n">${r[1]}</td></tr>`).join("");
+
+/* ---------- Reference ---------- */
+const REF=[
+ ["Очаговые образования печени",`<ul><li><b>Простая киста:</b> анэхогенная, тонкостенная, с дорсальным усилением, без кровотока. Наблюдение не требуется.</li><li><b>Гемангиома:</b> гиперэхогенная, однородная, с чёткими контурами, без кровотока или с периферическим. У лиц без онкоанамнеза и без хронической болезни печени при типичной картине, размер до 3 см, дообследование обычно не нужно; при атипии нужны КТ/МРТ с контрастом или КУУЗИ.</li><li><b>ФНГ:</b> изо- или гипоэхогенная, центральный рубец, «спицевидный» кровоток. Подтверждение КУУЗИ или МРТ с гепатоспецифичным контрастом.</li><li><b>Метастазы:</b> множественные, симптом «мишени» или гипоэхогенный ободок. Требуют КТ/МРТ.</li><li><b>ГЦК:</b> на фоне цирроза или хронического гепатита B любой новый очаг ≥1 см требует КТ/МРТ с контрастом (LI-RADS).</li></ul><p class="src">Источники: EFSUM/WFUMB рекомендации по КУУЗИ печени (2020); ACR LI-RADS; EASL по доброкачественным опухолям печени (2016).</p>`],
+ ["Полипы желчного пузыря (SRU, 2022)",`<p>Сначала исключите псевдополипы (сладж, складки, аденомиоматоз). Тактика по размеру и форме:</p><div class="tbl"><table><tr><th>Форма</th><th>≤9 мм</th><th>10–14 мм</th><th>≥15 мм</th></tr><tr><td>Крайне низкий риск: «шар на стенке», тонкая ножка</td><td>без наблюдения</td><td>УЗИ через 6, 12, 24 мес.</td><td>консультация хирурга</td></tr><tr><td>Низкий риск: на широком основании или толстой ножке</td><td>≤6 мм без наблюдения; 7–9 мм УЗИ через 12 мес.</td><td>УЗИ через 6, 12, 24 мес. или хирург</td><td>консультация хирурга</td></tr></table></div><p>Локальное утолщение стенки ≥4 мм рядом с полипом: неопределённый риск, хирург или дообследование. Рост на 4 мм и более за 12 мес. или достижение 10 мм требует пересмотра тактики.</p><p class="src">Kamaya A. и соавт. Radiology 2022;305:277–289.</p>`],
+ ["Стеатоз печени: градация по УЗИ",`<ul><li><b>Лёгкий:</b> диффузное повышение эхогенности, сосуды и диафрагма видны чётко.</li><li><b>Умеренный:</b> стенки воротных вен и диафрагма визуализируются хуже.</li><li><b>Выраженный:</b> выраженное затухание, задние отделы правой доли и диафрагма почти не видны.</li></ul><p>Субъективная оценка недостаточно чувствительна при доле жира менее 20%. Для количественной оценки используют CAP, коэффициент затухания (ATI, UGAP и др.) или МРТ-PDFF; для фиброза эластографию сдвиговой волной.</p><p class="src">EASL–EASD–EASO по MASLD (2024); SRU консенсус по эластографии (2020).</p>`],
+ ["Узлы щитовидной железы: что ещё учесть",`<ul><li>ACR TI-RADS рекомендует описывать до 4 узлов с наибольшим числом баллов, а не самые крупные.</li><li>Рост на ≥20% по двум размерам (минимум на 2 мм) или ≥50% по объёму считается значимым.</li><li>Подозрительные лимфоузлы шеи (микрокальцинаты, кистозный компонент, периферический кровоток, утрата ворот) требуют ТАБ независимо от категории узла.</li><li>В Европе также применяют EU-TIRADS (2017), в Корее K-TIRADS. Пороги ТАБ в них отличаются: укажите систему в заключении.</li></ul><p class="src">Tessler F.N. и соавт. JACR 2017;14:587–595; Russ G. и соавт. Eur Thyroid J 2017.</p>`],
+ ["Эндометрий в постменопаузе",`<ul><li>При кровотечении: М-эхо ≤4 мм соответствует низкому риску рака (около 99% NPV); при >4 мм или невозможности оценить нужна аспирационная биопсия или гистероскопия.</li><li>Без кровотечения единого порога нет; часто используют 11 мм как порог для дальнейшей оценки.</li><li>На тамоксифене утолщение с кистозными изменениями субэндометриально частое и само по себе не требует биопсии при отсутствии кровотечения.</li></ul><p class="src">ACOG Committee Opinion №734 (2018); Smith-Bindman R. и соавт. Ultrasound Obstet Gynecol 2004.</p>`],
+ ["Критерии PCOM (поликистозная морфология яичников)",`<ul><li>При датчике ≥8 МГц: ≥20 фолликулов в одном яичнике и/или объём яичника ≥10 мл (без доминантного фолликула, кист и жёлтого тела).</li><li>При трансабдоминальном исследовании предпочтителен объём ≥10 мл.</li><li>УЗИ не применяют для диагностики СПКЯ в течение 8 лет после менархе.</li><li>PCOM сама по себе не диагноз СПКЯ: нужны критерии Роттердама.</li></ul><p class="src">International Evidence-based Guideline for PCOS (2023).</p>`],
+ ["Расширение чашечно-лоханочной системы",`<ul><li>У взрослых ПЗР лоханки до 10 мм обычно считают вариантом нормы, особенно при наполненном мочевом пузыре: повторите после мочеиспускания.</li><li>Отличайте от парапельвикальных кист: они не сообщаются с чашечками.</li><li>Оцените мочеточник, мочевой пузырь, наличие конкремента и выбросы мочи из устьев при ЦДК.</li><li>У плода и детей используйте классификацию UTD (2014) или SFU.</li></ul><p class="src">Nguyen H.T. и соавт. J Pediatr Urol 2014 (UTD); EAU рекомендации по уролитиазу.</p>`]
+];
+$("#refList").innerHTML=REF.map((r,i)=>`<details${i===0?" open":""}><summary>${r[0]}</summary><div class="body">${r[1]}</div></details>`).join("");
+
+/* ---------- Claude-powered features ---------- */
+const ERR={not_granted:"Доступ к Claude не разрешён. Его можно включить в меню разрешений этой страницы.",rate_limited:"Слишком много запросов подряд. Подождите немного и повторите.",cancelled:"Остановлено."};
+const errText=e=>ERR[e&&e.code]||"Не удалось получить ответ. Повторите попытку позже.";
+let sampleFn=null;
+(async()=>{try{sampleFn=window.claude?await window.claude.use("sample"):null}catch(e){sampleFn=null}
+  if(!sampleFn){["#nGo","#qGo"].forEach(id=>$(id).disabled=true);const L=' <a href="https://claude.ai/artifact/Vao1jwrD4iSjZECKB4NR1Y" target="_blank" rel="noopener">Открыть версию в Claude</a>';$("#nState").innerHTML="Оформление через Claude работает в версии на claude.ai."+L;$("#qState").innerHTML="Вопросы работают в версии на claude.ai."+L}})();
+const NORMS_TXT="Нормы взрослых: печень правая доля КВР ≤150 мм, левая доля толщина ≤70 мм; воротная вена ≤13 мм; холедох ≤6 мм; ЖП длина ≤100, ширина ≤35, стенка ≤3 мм; поджелудочная головка ≤32, тело ≤21, хвост ≤30 мм, вирсунгов проток ≤3 мм; селезёнка ≤120×50 мм; селезёночная вена ≤8 мм; почка длина 100–125 мм, паренхима 15–25 мм, лоханка ≤10 мм; стенка МП ≤4 мм; остаточная моча ≤50 мл; ЩЖ объём жен ≤18, муж ≤25 мл (Brunn ×0,479); матка тело ≤70×50×60 мм; эндометрий в постменопаузе ≤4 мм; яичник <10 мл; простата ≤25 мл.";
+let nCtl=null;
+$("#nGo").onclick=async()=>{if(!sampleFn)return;const notes=$("#nText").value.trim();if(!notes){$("#nState").textContent="Введите заметки.";return}
+  nCtl=new AbortController();$("#nGo").disabled=true;$("#nState").textContent="Claude оформляет протокол…";$("#nOut").value="";
+  const prompt=`Ты помогаешь врачу ультразвуковой диагностики оформить протокол на русском языке.
+Область: ${$("#nArea").value}.
+Заметки врача (сокращения, возможны ошибки распознавания речи):
+"""${notes.slice(0,6000)}"""
+
+${NORMS_TXT}
+
+Требования:
+1. Напиши связный протокол в принятом в России стиле: заголовок, описание по органам (каждый орган с новой строки, заглавными буквами название), затем «ЗАКЛЮЧЕНИЕ:» списком.
+2. Используй только данные из заметок. Ничего не выдумывай. Стандартные пункты, которые врач не упомянул, помечай «[не указано]».
+3. Значения вне указанных норм отражай в заключении эхопризнаками («Эхопризнаки…»), без нозологических диагнозов, кроме очевидных (например, «Эхопризнаки желчнокаменной болезни»).
+4. Если уместно, укажи классификацию (ACR TI-RADS, BI-RADS, O-RADS) только когда в заметках есть все нужные признаки; иначе напиши, каких признаков не хватает.
+5. В конце отдельным блоком «ПРОВЕРЬТЕ:» перечисли неоднозначные сокращения и недостающие данные.
+Ответ: только текст протокола, без вступлений и без markdown-разметки.`;
+  try{const r=await sampleFn(prompt,{signal:nCtl.signal,cache:false,onText:({text})=>{$("#nOut").value=text;$("#nState").textContent="Пишет…"}});$("#nOut").value=r.text;$("#nState").textContent=r.truncated?"Ответ обрезан: сократите заметки.":"Готово. Проверьте текст перед использованием."}
+  catch(e){if(e&&e.text)$("#nOut").value=e.text;$("#nState").textContent=errText(e)}finally{$("#nGo").disabled=false}};
+$("#nCopy").onclick=()=>copyText($("#nOut").value,$("#nOut"));
+let qCtl=null;
+$("#qGo").onclick=async()=>{if(!sampleFn)return;const q=$("#qText").value.trim();if(!q)return;qCtl=new AbortController();$("#qGo").disabled=true;$("#qStop").hidden=false;$("#qOut").textContent="Думает…";$("#qState").textContent="";
+  const prompt=`Ты консультант для врача ультразвуковой диагностики. Ответь на русском языке, кратко и по делу (до 250 слов), простым текстом без markdown.
+Структура: 1) вероятные варианты (дифференциальный ряд) с ключевыми УЗ-признаками; 2) тактика и дообследование; 3) источник: назови конкретные клинические руководства или классификации с годом (ACR, ESR, EFSUMB, WFUMB, SRU, EAU, ACOG, ESHRE, Минздрав РФ). Если доказательства спорны или ты не уверен, скажи об этом прямо. Не ставь окончательный диагноз.
+Вопрос врача: ${q.slice(0,4000)}`;
+  try{const r=await sampleFn(prompt,{signal:qCtl.signal,onText:({text})=>$("#qOut").textContent=text});$("#qOut").textContent=r.text}
+  catch(e){$("#qOut").textContent=(e&&e.text?e.text+"\n\n":"")+errText(e)}finally{$("#qGo").disabled=false;$("#qStop").hidden=true}};
+$("#qStop").onclick=()=>qCtl&&qCtl.abort();
+
+/* dictation */
+(async()=>{let dic=null;try{dic=window.claude?await window.claude.use("dictation"):null}catch(e){}
+  if(!dic)return;const mic=$("#nMic"),stop=$("#nStop"),ta=$("#nText");mic.hidden=false;
+  dic.onFinal(({text})=>{ta.value=(ta.value&&!/\s$/.test(ta.value)?ta.value+" ":ta.value)+text.trim()});
+  dic.onState(({state,reason})=>{const on=state!=="idle";mic.hidden=on;stop.hidden=!on;$("#nState").textContent=state==="listening"?"Слушаю…":state==="starting"?"Включаю микрофон…":"";
+    if(reason==="unavailable"){mic.hidden=true}else if(reason==="not_granted")$("#nState").textContent="Микрофон не разрешён для этой страницы."});
+  mic.onclick=()=>{dic.start({language:"ru-RU"}).catch(e=>{if(e&&e.code==="unavailable")mic.hidden=true;else if(e&&e.code!=="dismissed"&&e.code!=="stopped")$("#nState").textContent="Не удалось включить диктовку."})};
+  stop.onclick=()=>dic.stop().catch(()=>{});
+})();
+})();
+</script>
+
+</body>
+</html>

@@ -215,7 +215,23 @@ function grade(p){return p>=90?"Отлично":p>=75?"Хорошо":p>=60?"Уд
 function stamp(d){const z=n=>String(n).padStart(2,"0");return `${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}`;}
 function hash(s){let h=0x811c9dc5;for(const ch of s+"|uterus-quiz"){h^=ch.codePointAt(0);h=Math.imul(h,0x01000193)>>>0;}return h.toString(36).toUpperCase().padStart(6,"0").slice(-6);}
 function attemptNo(){try{const k="uterus-quiz-attempts";const n=(+localStorage.getItem(k)||0)+1;localStorage.setItem(k,n);return n;}catch(e){return null;}}
-async function sendTG(text){try{await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{method:"POST",mode:"no-cors",body:new URLSearchParams({chat_id:TG_CHAT,text})});return true;}catch(e){return false;}}
+let cspBlocked=false;
+document.addEventListener("securitypolicyviolation",e=>{ if(String(e.blockedURI||"").includes("telegram")) cspBlocked=true; });
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+// Несколько способов доставки: если один заблокирован браузером или сетью, пробуем следующий
+async function sendTG(text){
+  const url=`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`;
+  try{ await fetch(url,{method:"POST",mode:"no-cors",body:new URLSearchParams({chat_id:TG_CHAT,text})}); return true; }catch(e){}
+  cspBlocked=false;
+  try{ const img=new Image(); img.referrerPolicy="no-referrer"; img.src=url+"?"+new URLSearchParams({chat_id:TG_CHAT,text,_:Date.now()}); }catch(e){}
+  await wait(1500); if(!cspBlocked) return true;
+  cspBlocked=false;
+  try{ const fr=document.createElement("iframe"); fr.name="tgsink"; fr.hidden=true; document.body.appendChild(fr);
+    const f=document.createElement("form"); f.method="POST"; f.target="tgsink"; f.action=url; f.hidden=true;
+    for(const [k,v] of [["chat_id",TG_CHAT],["text",text]]){ const i=document.createElement("input"); i.name=k; i.value=v; f.appendChild(i); }
+    document.body.appendChild(f); f.submit(); }catch(e){ return false; }
+  await wait(1500); return !cspBlocked;
+}
 function finish(){
   $("game").hidden=true;
   const n=Q.length, ok=log.filter(r=>r.ok).length, p=Math.round(ok/n*100);

@@ -534,18 +534,18 @@ const Q=[
 ];
 const TITLE=CFG.title;
 // Автоотправка результата преподавателю в Telegram
-const TG_TOKEN="8469771865:AAFRhxAfYsggVYE3UEPd82PXrPBmk56xwis", TG_CHAT="188183172";
-const tgOn = !TG_TOKEN.startsWith("__") && !TG_CHAT.startsWith("__");
+const TG_PROXY="__PROXY_URL__", TG_CHAT="188183172";
+const tgOn = !TG_PROXY.startsWith("__") && !TG_CHAT.startsWith("__");
 function attemptNo(){ try{ const k=CFG.salt+"-attempts"; const n=(+localStorage.getItem(k)||0)+1; localStorage.setItem(k,n); return n; }catch(e){ return null; } }
 // Несколько способов доставки: страница по ссылке может блокировать часть запросов
 let cspBlocked=false;
-document.addEventListener("securitypolicyviolation",e=>{ if(String(e.blockedURI||"").includes("telegram")) cspBlocked=true; });
-const tgURL=text=>`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?`+new URLSearchParams({chat_id:TG_CHAT, text, _:Date.now()+"-"+Math.random().toString(36).slice(2)});
+document.addEventListener("securitypolicyviolation",e=>{ if(String(e.blockedURI||"").includes("script.google")) cspBlocked=true; });
+const tgURL=text=>`${TG_PROXY}?`+new URLSearchParams({chat_id:TG_CHAT, text, _:Date.now()+"-"+Math.random().toString(36).slice(2)});
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 async function sendToTeacher(text){
   if(!tgOn) return "off";
   try{
-    await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {method:"POST", mode:"no-cors", body:new URLSearchParams({chat_id:TG_CHAT, text})});
+    await fetch(`${TG_PROXY}`, {method:"POST", mode:"no-cors", body:new URLSearchParams({chat_id:TG_CHAT, text})});
     sendWay=1; return "sent";
   }catch(e){}
   return "fail";

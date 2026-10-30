@@ -191,7 +191,7 @@ footer{font-size:13px;color:var(--muted)}
 
 <script>
 const TOPICS=["Физика ультразвука и аппаратура","Печень","Желчный пузырь и протоки","Поджелудочная железа","Селезёнка","Почки","Мочеточники и мочевой пузырь","Матка и придатки","Протоколы и заключения"];
-const TG_TOKEN="8469771865:AAFRhxAfYsggVYE3UEPd82PXrPBmk56xwis", TG_CHAT="188183172";
+const TG_PROXY="__PROXY_URL__", TG_CHAT="188183172";
 const SENT_KEY="anketa-kursant-sent";
 const $=id=>document.getElementById(id);
 let uid=0;
@@ -255,7 +255,7 @@ function chunks(text,max=3800){
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 async function sendOne(text){
   for(let i=0;i<2;i++){
-    try{ await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`,{method:"POST",mode:"no-cors",body:new URLSearchParams({chat_id:TG_CHAT,text})}); return true; }
+    try{ await fetch(`${TG_PROXY}`,{method:"POST",mode:"no-cors",body:new URLSearchParams({chat_id:TG_CHAT,text})}); return true; }
     catch(e){ await wait(800); }
   }
   return false;

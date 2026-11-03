@@ -1,0 +1,263 @@
+// Тесты по УЗ-диагностике — офлайн-режим. Файл sw.js собирается из sw.template.js командой: python3 build-sw.py
+// Страницы: сначала сеть (обновления приходят сразу), без сети — из кэша.
+// Результаты в Telegram: без сети ставятся в очередь и отправляются при появлении связи.
+const VERSION = '20261104-020514';
+const CACHE = 'tests-' + VERSION;
+const FONTS = 'tests-fonts';
+const PRECACHE = [
+ "./",
+ "./anketa.html",
+ "./brain-guess.html",
+ "./consensus.html",
+ "./early-pregnancy.html",
+ "./early-quiz.html",
+ "./entry.html",
+ "./first-trimester.html",
+ "./gallbladder.html",
+ "./index.html",
+ "./kidney-quiz.html",
+ "./kidney-ums.html",
+ "./kidney.html",
+ "./liver-anatomy.html",
+ "./liver.html",
+ "./pancreas.html",
+ "./physics-20.html",
+ "./physics-30.html",
+ "./screening-11-14-quiz.html",
+ "./screening-2-guess.html",
+ "./screening-2-trimester.html",
+ "./spleen.html",
+ "./ureter-bladder.html",
+ "./ureter-quiz.html",
+ "./uterus-adnexa.html",
+ "./uterus-quiz.html",
+ "./pc/",
+ "./pomoshnik/",
+ "./offline.js",
+ "./manifest.webmanifest",
+ "./icons/icon-192.png",
+ "./icons/icon-512.png",
+ "./icons/icon-maskable-512.png",
+ "./icons/apple-touch-icon.png"
+];
+const IMG = {
+ "brain-guess": [
+  "./img/brain-guess/b01.jpg",
+  "./img/brain-guess/b02.jpg",
+  "./img/brain-guess/b03.jpg",
+  "./img/brain-guess/b04.jpg",
+  "./img/brain-guess/b05.jpg",
+  "./img/brain-guess/b06.jpg",
+  "./img/brain-guess/b07.jpg",
+  "./img/brain-guess/b08.jpg",
+  "./img/brain-guess/b09.jpg",
+  "./img/brain-guess/b10.jpg",
+  "./img/brain-guess/b11.jpg",
+  "./img/brain-guess/b12.jpg",
+  "./img/brain-guess/b13.jpg",
+  "./img/brain-guess/b14.jpg",
+  "./img/brain-guess/b15.jpg",
+  "./img/brain-guess/b16.jpg",
+  "./img/brain-guess/b17.jpg",
+  "./img/brain-guess/b18.jpg",
+  "./img/brain-guess/b19.jpg",
+  "./img/brain-guess/b20.jpg",
+  "./img/brain-guess/b21.jpg",
+  "./img/brain-guess/b22.jpg",
+  "./img/brain-guess/b23.jpg",
+  "./img/brain-guess/b24.jpg",
+  "./img/brain-guess/b25.jpg",
+  "./img/brain-guess/b26.jpg",
+  "./img/brain-guess/b27.jpg",
+  "./img/brain-guess/b28.jpg",
+  "./img/brain-guess/b29.jpg",
+  "./img/brain-guess/b30.jpg"
+ ],
+ "kidney-ums": [
+  "./img/kidney-ums/a10.jpg",
+  "./img/kidney-ums/a18.jpg",
+  "./img/kidney-ums/a19.jpg",
+  "./img/kidney-ums/a20.jpg",
+  "./img/kidney-ums/a25.jpg",
+  "./img/kidney-ums/a33.jpg",
+  "./img/kidney-ums/a44.jpg",
+  "./img/kidney-ums/a51.jpg",
+  "./img/kidney-ums/a57.jpg",
+  "./img/kidney-ums/a65.jpg",
+  "./img/kidney-ums/a66.jpg",
+  "./img/kidney-ums/a72.jpg",
+  "./img/kidney-ums/a74.jpg",
+  "./img/kidney-ums/q13.jpg",
+  "./img/kidney-ums/q36.jpg",
+  "./img/kidney-ums/q58.jpg"
+ ],
+ "screening-2-guess": [
+  "./img/screening-2-guess/g01.jpg",
+  "./img/screening-2-guess/g02.jpg",
+  "./img/screening-2-guess/g03.jpg",
+  "./img/screening-2-guess/g04.jpg",
+  "./img/screening-2-guess/g05.jpg",
+  "./img/screening-2-guess/g06.jpg",
+  "./img/screening-2-guess/g07.jpg",
+  "./img/screening-2-guess/g08.jpg",
+  "./img/screening-2-guess/g09.jpg",
+  "./img/screening-2-guess/g10.jpg",
+  "./img/screening-2-guess/g11.jpg",
+  "./img/screening-2-guess/g12.jpg",
+  "./img/screening-2-guess/g13.jpg",
+  "./img/screening-2-guess/g14.jpg",
+  "./img/screening-2-guess/g15.jpg",
+  "./img/screening-2-guess/g16.jpg",
+  "./img/screening-2-guess/g17.jpg",
+  "./img/screening-2-guess/g18.jpg",
+  "./img/screening-2-guess/g19.jpg",
+  "./img/screening-2-guess/g20.jpg",
+  "./img/screening-2-guess/g21.jpg",
+  "./img/screening-2-guess/g22.jpg",
+  "./img/screening-2-guess/g23.jpg",
+  "./img/screening-2-guess/g24.jpg",
+  "./img/screening-2-guess/g25.jpg",
+  "./img/screening-2-guess/g26.jpg",
+  "./img/screening-2-guess/g27.jpg",
+  "./img/screening-2-guess/g28.jpg",
+  "./img/screening-2-guess/g29.jpg",
+  "./img/screening-2-guess/g30.jpg"
+ ],
+ "screening-2-trimester": [
+  "./img/screening-2-trimester/q_ac.jpg",
+  "./img/screening-2-trimester/q_cord_art.jpg",
+  "./img/screening-2-trimester/q_head_tc.jpg",
+  "./img/screening-2-trimester/q_head_tt.jpg",
+  "./img/screening-2-trimester/q_lips.jpg",
+  "./img/screening-2-trimester/q_spine.jpg"
+ ]
+};
+const SEND_HOSTS = ['api.telegram.org', 'script.google.com', 'script.googleusercontent.com'];
+const GIF = Uint8Array.from(atob('R0lGODlhAQABAAAAACw='), c => c.charCodeAt(0));
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all(PRECACHE.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys()
+    .then(k => Promise.all(k.filter(n => n !== CACHE && n !== FONTS && n.startsWith('tests-')).map(n => caches.delete(n))))
+    .then(() => self.clients.claim()).then(flush));
+});
+
+// ---------- очередь отложенных отправок (IndexedDB) ----------
+function db() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open('tests-outbox', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('q', { keyPath: 'id', autoIncrement: true });
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  });
+}
+async function qOp(mode, fn) {
+  const d = await db();
+  return new Promise((res, rej) => { const tx = d.transaction('q', mode); const out = fn(tx.objectStore('q')); tx.oncomplete = () => res(out && out.result); tx.onerror = () => rej(tx.error); });
+}
+const qAdd = item => qOp('readwrite', s => s.add(item));
+const qAll = () => qOp('readonly', s => s.getAll());
+const qDel = id => qOp('readwrite', s => s.delete(id));
+
+async function notify(msg) { (await self.clients.matchAll({ includeUncontrolled: true })).forEach(c => c.postMessage(msg)); }
+
+function markDelayed(item) {
+  const when = new Date(item.t).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+  const note = '\n\n⏳ Отправлено с задержкой (не было интернета). Завершено: ' + when;
+  if (item.body != null) {
+    const p = new URLSearchParams(item.body);
+    if (p.has('text')) { p.set('text', p.get('text') + note); return { url: item.url, body: p.toString() }; }
+    return { url: item.url, body: item.body };
+  }
+  const u = new URL(item.url);
+  if (u.searchParams.has('text')) u.searchParams.set('text', u.searchParams.get('text') + note);
+  return { url: u.toString(), body: null };
+}
+
+let flushing = null;
+function flush() {
+  if (flushing) return flushing;
+  flushing = (async () => {
+    let n = 0;
+    try {
+      for (const item of await qAll()) {
+        if (Date.now() - item.t > 30 * 864e5) { await qDel(item.id); continue; }
+        const m = markDelayed(item);
+        try {
+          await fetch(m.url, m.body != null
+            ? { method: 'POST', mode: 'no-cors', body: new URLSearchParams(m.body) }
+            : { mode: 'no-cors' });
+          await qDel(item.id); n++;
+        } catch (e) { break; }
+      }
+    } catch (e) {}
+    if (n) notify({ type: 'flushed', n });
+    flushing = null;
+  })();
+  return flushing;
+}
+self.addEventListener('message', e => { if (e.data === 'flush') e.waitUntil(flush()); });
+self.addEventListener('sync', e => { if (e.tag === 'flush') e.waitUntil(flush()); });
+
+async function handleSend(req) {
+  const body = req.method === 'POST' ? await req.clone().text() : null;
+  try {
+    return await fetch(req);
+  } catch (err) {
+    // В сети, но запрос не прошёл — пусть страница попробует свои запасные способы.
+    if (self.navigator && self.navigator.onLine) return Response.error();
+    await qAdd({ url: req.url, body, t: Date.now() });
+    notify({ type: 'queued' });
+    try { await self.registration.sync.register('flush'); } catch (e) {}
+    return req.method === 'POST' || req.destination !== 'image'
+      ? new Response('{"ok":true,"queued":true}', { status: 200, headers: { 'Content-Type': 'application/json' } })
+      : new Response(GIF, { status: 200, headers: { 'Content-Type': 'image/gif' } });
+  }
+}
+
+// ---------- картинки страницы: фоновая докачка ----------
+async function warmImages(pageUrl) {
+  const name = new URL(pageUrl).pathname.split('/').pop().replace(/\.html$/, '');
+  const list = IMG[name];
+  if (!list) return;
+  const c = await caches.open(CACHE);
+  for (const u of list) { if (!(await c.match(u))) { try { await c.add(u); } catch (e) {} } }
+}
+
+self.addEventListener('fetch', e => {
+  const req = e.request, url = new URL(req.url);
+
+  if (SEND_HOSTS.includes(url.hostname)) { e.respondWith(handleSend(req)); return; }
+  if (req.method !== 'GET') return;
+
+  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+    e.respondWith(caches.open(FONTS).then(async c => {
+      const hit = await c.match(req);
+      const net = fetch(req).then(r => { if (r.ok || r.type === 'opaque') c.put(req, r.clone()); return r; }).catch(() => hit);
+      return hit || net;
+    }));
+    return;
+  }
+  if (url.origin !== location.origin) return;
+
+  if (req.mode === 'navigate') {
+    e.respondWith((async () => {
+      const c = await caches.open(CACHE);
+      try {
+        const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 5000);
+        const r = await fetch(req, { signal: ctl.signal, cache: 'no-store' }); clearTimeout(t);
+        if (r.ok) { c.put(req, r.clone()); e.waitUntil(warmImages(req.url)); }
+        return r;
+      } catch (err) {
+        return (await c.match(req, { ignoreSearch: true })) || (await c.match('./')) || Response.error();
+      }
+    })());
+    return;
+  }
+
+  e.respondWith(caches.match(req, { ignoreSearch: true }).then(hit => hit || fetch(req).then(r => {
+    if (r.ok) { const copy = r.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
+    return r;
+  })));
+});

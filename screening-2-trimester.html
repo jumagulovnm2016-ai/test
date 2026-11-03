@@ -104,6 +104,10 @@ details summary{cursor:pointer;color:var(--teal);font-weight:700}
 .qimg{margin:0;display:grid;gap:6px}.qimg a{display:flex;justify-content:center;background:#0d1418;border-radius:8px;overflow:hidden}.qimg img{display:block;max-width:100%;max-height:min(55vh,440px);object-fit:contain}.qimg figcaption{font-size:13px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.fill{transition:none}}
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a7b83">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
 <div class="wrap">
@@ -307,5 +311,6 @@ document.addEventListener("keydown",e=>{
 });
 renderQ();
 </script>
+<script src="offline.js"></script>
 </body>
 </html>

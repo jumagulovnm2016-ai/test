@@ -70,6 +70,10 @@ footer{font-size:13px;color:var(--muted)}
 .qimg{margin:0}.qimg a{display:flex;justify-content:center;align-items:center;background:#0d1418;border-radius:10px;overflow:hidden;min-height:200px}.qimg img{display:block;max-width:100%;max-height:min(50vh,430px);object-fit:contain}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a7b83">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
 <div class="wrap">
@@ -234,5 +238,6 @@ function finish(){
     s.textContent= okS? "Результат отправлен преподавателю." : "Автоматически отправить не удалось — нажмите «Отправить через Telegram» и выберите чат преподавателя.";});
 }
 </script>
+<script src="offline.js"></script>
 </body>
 </html>

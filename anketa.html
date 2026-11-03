@@ -83,6 +83,10 @@ textarea:focus-visible,input[type=text]:focus-visible{outline:3px solid var(--te
 footer{font-size:13px;color:var(--muted)}
 @media (prefers-reduced-motion:reduce){.fill{transition:none}}
 </style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a7b83">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 </head>
 <body>
 <div class="wrap">
@@ -284,5 +288,6 @@ $("form").addEventListener("submit",async ev=>{
   }
 });
 </script>
+<script src="offline.js"></script>
 </body>
 </html>

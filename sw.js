@@ -1,7 +1,7 @@
 // Тесты по УЗ-диагностике — офлайн-режим. Файл sw.js собирается из sw.template.js командой: python3 build-sw.py
 // Страницы: сначала сеть (обновления приходят сразу), без сети — из кэша.
 // Результаты в Telegram: без сети ставятся в очередь и отправляются при появлении связи.
-const VERSION = '20261106-161305';
+const VERSION = '20261106-162208';
 const CACHE = 'tests-' + VERSION;
 const FONTS = 'tests-fonts';
 const PRECACHE = [
@@ -19,6 +19,7 @@ const PRECACHE = [
  "./first-trimester.html",
  "./gallbladder.html",
  "./guides.html",
+ "./gyn-guess.html",
  "./index.html",
  "./kidney-quiz.html",
  "./kidney-ums.html",
@@ -35,6 +36,7 @@ const PRECACHE = [
  "./spleen.html",
  "./ureter-bladder.html",
  "./ureter-quiz.html",
+ "./uro-guess.html",
  "./uterus-adnexa.html",
  "./uterus-quiz.html",
  "./pc/",
@@ -123,6 +125,40 @@ const IMG = {
   "./img/fetal-spine/q_sb_axial.jpg",
   "./img/fetal-spine/q_sct.jpg"
  ],
+ "gyn-guess": [
+  "./img/gyn-guess/g01.jpg",
+  "./img/gyn-guess/g02.jpg",
+  "./img/gyn-guess/g03.jpg",
+  "./img/gyn-guess/g04.jpg",
+  "./img/gyn-guess/g05.jpg",
+  "./img/gyn-guess/g06.jpg",
+  "./img/gyn-guess/g07.jpg",
+  "./img/gyn-guess/g08.jpg",
+  "./img/gyn-guess/g09.jpg",
+  "./img/gyn-guess/g10.jpg",
+  "./img/gyn-guess/g11.jpg",
+  "./img/gyn-guess/g12.jpg",
+  "./img/gyn-guess/g13.jpg",
+  "./img/gyn-guess/g14.jpg",
+  "./img/gyn-guess/g15.jpg",
+  "./img/gyn-guess/g16.jpg",
+  "./img/gyn-guess/g17.jpg",
+  "./img/gyn-guess/g18.jpg",
+  "./img/gyn-guess/g19.jpg",
+  "./img/gyn-guess/g20.jpg",
+  "./img/gyn-guess/g21.jpg",
+  "./img/gyn-guess/g22.jpg",
+  "./img/gyn-guess/g23.jpg",
+  "./img/gyn-guess/g24.jpg",
+  "./img/gyn-guess/g25.jpg",
+  "./img/gyn-guess/g26.jpg",
+  "./img/gyn-guess/g27.jpg",
+  "./img/gyn-guess/g28.jpg",
+  "./img/gyn-guess/g29.jpg",
+  "./img/gyn-guess/g30.jpg",
+  "./img/gyn-guess/g31.jpg",
+  "./img/gyn-guess/g32.jpg"
+ ],
  "kidney-ums": [
   "./img/kidney-ums/a10.jpg",
   "./img/kidney-ums/a18.jpg",
@@ -180,6 +216,49 @@ const IMG = {
   "./img/screening-2-trimester/q_head_tt.jpg",
   "./img/screening-2-trimester/q_lips.jpg",
   "./img/screening-2-trimester/q_spine.jpg"
+ ],
+ "uro-guess": [
+  "./img/uro-guess/b01.jpg",
+  "./img/uro-guess/b02.jpg",
+  "./img/uro-guess/b03.jpg",
+  "./img/uro-guess/b04.jpg",
+  "./img/uro-guess/b05.jpg",
+  "./img/uro-guess/b06.jpg",
+  "./img/uro-guess/b07.jpg",
+  "./img/uro-guess/b08.jpg",
+  "./img/uro-guess/b09.jpg",
+  "./img/uro-guess/b10.jpg",
+  "./img/uro-guess/b11.jpg",
+  "./img/uro-guess/k01.jpg",
+  "./img/uro-guess/k02.jpg",
+  "./img/uro-guess/k03.jpg",
+  "./img/uro-guess/k04.jpg",
+  "./img/uro-guess/k05.jpg",
+  "./img/uro-guess/k06.jpg",
+  "./img/uro-guess/k07.jpg",
+  "./img/uro-guess/k08.jpg",
+  "./img/uro-guess/k09.jpg",
+  "./img/uro-guess/k10.jpg",
+  "./img/uro-guess/k11.jpg",
+  "./img/uro-guess/k12.jpg",
+  "./img/uro-guess/k13.jpg",
+  "./img/uro-guess/k14.jpg",
+  "./img/uro-guess/k15.jpg",
+  "./img/uro-guess/k16.jpg",
+  "./img/uro-guess/k17.jpg",
+  "./img/uro-guess/k18.jpg",
+  "./img/uro-guess/k19.jpg",
+  "./img/uro-guess/k20.jpg",
+  "./img/uro-guess/k21.jpg",
+  "./img/uro-guess/k22.jpg",
+  "./img/uro-guess/k23.jpg",
+  "./img/uro-guess/k24.jpg",
+  "./img/uro-guess/k25.jpg",
+  "./img/uro-guess/k26.jpg",
+  "./img/uro-guess/k27.jpg",
+  "./img/uro-guess/k28.jpg",
+  "./img/uro-guess/k29.jpg",
+  "./img/uro-guess/k30.jpg"
  ]
 };
 const SEND_HOSTS = ['api.telegram.org', 'script.google.com', 'script.googleusercontent.com'];

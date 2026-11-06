@@ -1,13 +1,14 @@
 // Тесты по УЗ-диагностике — офлайн-режим. Файл sw.js собирается из sw.template.js командой: python3 build-sw.py
 // Страницы: сначала сеть (обновления приходят сразу), без сети — из кэша.
 // Результаты в Telegram: без сети ставятся в очередь и отправляются при появлении связи.
-const VERSION = '20261106-125401';
+const VERSION = '20261106-151043';
 const CACHE = 'tests-' + VERSION;
 const FONTS = 'tests-fonts';
 const PRECACHE = [
  "./",
  "./anketa.html",
  "./brain-guess.html",
+ "./cns-face-spine.html",
  "./consensus.html",
  "./early-pregnancy.html",
  "./early-quiz.html",

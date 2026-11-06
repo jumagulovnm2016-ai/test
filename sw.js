@@ -1,7 +1,7 @@
 // Тесты по УЗ-диагностике — офлайн-режим. Файл sw.js собирается из sw.template.js командой: python3 build-sw.py
 // Страницы: сначала сеть (обновления приходят сразу), без сети — из кэша.
 // Результаты в Telegram: без сети ставятся в очередь и отправляются при появлении связи.
-const VERSION = '20261106-162208';
+const VERSION = '20261106-164155';
 const CACHE = 'tests-' + VERSION;
 const FONTS = 'tests-fonts';
 const PRECACHE = [
@@ -21,6 +21,7 @@ const PRECACHE = [
  "./guides.html",
  "./gyn-guess.html",
  "./index.html",
+ "./kidney-guess.html",
  "./kidney-quiz.html",
  "./kidney-ums.html",
  "./kidney.html",
@@ -159,6 +160,48 @@ const IMG = {
   "./img/gyn-guess/g31.jpg",
   "./img/gyn-guess/g32.jpg"
  ],
+ "kidney-guess": [
+  "./img/kidney-guess/k01.jpg",
+  "./img/kidney-guess/k02.jpg",
+  "./img/kidney-guess/k03.jpg",
+  "./img/kidney-guess/k04.jpg",
+  "./img/kidney-guess/k05.jpg",
+  "./img/kidney-guess/k06.jpg",
+  "./img/kidney-guess/k07.jpg",
+  "./img/kidney-guess/k08.jpg",
+  "./img/kidney-guess/k09.jpg",
+  "./img/kidney-guess/k10.jpg",
+  "./img/kidney-guess/k11.jpg",
+  "./img/kidney-guess/k12.jpg",
+  "./img/kidney-guess/k13.jpg",
+  "./img/kidney-guess/k14.jpg",
+  "./img/kidney-guess/k15.jpg",
+  "./img/kidney-guess/k16.jpg",
+  "./img/kidney-guess/k17.jpg",
+  "./img/kidney-guess/k18.jpg",
+  "./img/kidney-guess/k19.jpg",
+  "./img/kidney-guess/k20.jpg",
+  "./img/kidney-guess/k21.jpg",
+  "./img/kidney-guess/k22.jpg",
+  "./img/kidney-guess/k23.jpg",
+  "./img/kidney-guess/k24.jpg",
+  "./img/kidney-guess/k25.jpg",
+  "./img/kidney-guess/k26.jpg",
+  "./img/kidney-guess/k27.jpg",
+  "./img/kidney-guess/k28.jpg",
+  "./img/kidney-guess/k29.jpg",
+  "./img/kidney-guess/k30.jpg",
+  "./img/kidney-guess/k31.jpg",
+  "./img/kidney-guess/k32.jpg",
+  "./img/kidney-guess/k33.jpg",
+  "./img/kidney-guess/k34.jpg",
+  "./img/kidney-guess/k35.jpg",
+  "./img/kidney-guess/k36.jpg",
+  "./img/kidney-guess/k37.jpg",
+  "./img/kidney-guess/k38.jpg",
+  "./img/kidney-guess/k39.jpg",
+  "./img/kidney-guess/k40.jpg"
+ ],
  "kidney-ums": [
   "./img/kidney-ums/a10.jpg",
   "./img/kidney-ums/a18.jpg",
@@ -228,37 +271,7 @@ const IMG = {
   "./img/uro-guess/b08.jpg",
   "./img/uro-guess/b09.jpg",
   "./img/uro-guess/b10.jpg",
-  "./img/uro-guess/b11.jpg",
-  "./img/uro-guess/k01.jpg",
-  "./img/uro-guess/k02.jpg",
-  "./img/uro-guess/k03.jpg",
-  "./img/uro-guess/k04.jpg",
-  "./img/uro-guess/k05.jpg",
-  "./img/uro-guess/k06.jpg",
-  "./img/uro-guess/k07.jpg",
-  "./img/uro-guess/k08.jpg",
-  "./img/uro-guess/k09.jpg",
-  "./img/uro-guess/k10.jpg",
-  "./img/uro-guess/k11.jpg",
-  "./img/uro-guess/k12.jpg",
-  "./img/uro-guess/k13.jpg",
-  "./img/uro-guess/k14.jpg",
-  "./img/uro-guess/k15.jpg",
-  "./img/uro-guess/k16.jpg",
-  "./img/uro-guess/k17.jpg",
-  "./img/uro-guess/k18.jpg",
-  "./img/uro-guess/k19.jpg",
-  "./img/uro-guess/k20.jpg",
-  "./img/uro-guess/k21.jpg",
-  "./img/uro-guess/k22.jpg",
-  "./img/uro-guess/k23.jpg",
-  "./img/uro-guess/k24.jpg",
-  "./img/uro-guess/k25.jpg",
-  "./img/uro-guess/k26.jpg",
-  "./img/uro-guess/k27.jpg",
-  "./img/uro-guess/k28.jpg",
-  "./img/uro-guess/k29.jpg",
-  "./img/uro-guess/k30.jpg"
+  "./img/uro-guess/b11.jpg"
  ]
 };
 const SEND_HOSTS = ['api.telegram.org', 'script.google.com', 'script.googleusercontent.com'];

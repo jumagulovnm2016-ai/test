@@ -1,7 +1,7 @@
 // Тесты по УЗ-диагностике — офлайн-режим. Файл sw.js собирается из sw.template.js командой: python3 build-sw.py
 // Страницы: сначала сеть (обновления приходят сразу), без сети — из кэша.
 // Результаты в Telegram: без сети ставятся в очередь и отправляются при появлении связи.
-const VERSION = '20261104-092444';
+const VERSION = '20261106-104019';
 const CACHE = 'tests-' + VERSION;
 const FONTS = 'tests-fonts';
 const PRECACHE = [
@@ -12,6 +12,8 @@ const PRECACHE = [
  "./early-pregnancy.html",
  "./early-quiz.html",
  "./entry.html",
+ "./face-guess.html",
+ "./fetal-spine.html",
  "./first-trimester.html",
  "./gallbladder.html",
  "./index.html",
@@ -72,6 +74,50 @@ const IMG = {
   "./img/brain-guess/b28.jpg",
   "./img/brain-guess/b29.jpg",
   "./img/brain-guess/b30.jpg"
+ ],
+ "face-guess": [
+  "./img/face-guess/f01.jpg",
+  "./img/face-guess/f02.jpg",
+  "./img/face-guess/f03.jpg",
+  "./img/face-guess/f04.jpg",
+  "./img/face-guess/f05.jpg",
+  "./img/face-guess/f06.jpg",
+  "./img/face-guess/f07.jpg",
+  "./img/face-guess/f08.jpg",
+  "./img/face-guess/f09.jpg",
+  "./img/face-guess/f10.jpg",
+  "./img/face-guess/f11.jpg",
+  "./img/face-guess/f12.jpg",
+  "./img/face-guess/f13.jpg",
+  "./img/face-guess/f14.jpg",
+  "./img/face-guess/f15.jpg",
+  "./img/face-guess/f16.jpg",
+  "./img/face-guess/f17.jpg",
+  "./img/face-guess/f18.jpg",
+  "./img/face-guess/f19.jpg",
+  "./img/face-guess/f20.jpg",
+  "./img/face-guess/f21.jpg",
+  "./img/face-guess/f22.jpg",
+  "./img/face-guess/f23.jpg",
+  "./img/face-guess/f24.jpg",
+  "./img/face-guess/f25.jpg",
+  "./img/face-guess/f26.jpg",
+  "./img/face-guess/f27.jpg",
+  "./img/face-guess/f28.jpg",
+  "./img/face-guess/f29.jpg",
+  "./img/face-guess/f30.jpg"
+ ],
+ "fetal-spine": [
+  "./img/fetal-spine/q_banana.jpg",
+  "./img/fetal-spine/q_cereb.jpg",
+  "./img/fetal-spine/q_csd.jpg",
+  "./img/fetal-spine/q_hemivert.jpg",
+  "./img/fetal-spine/q_lemon.jpg",
+  "./img/fetal-spine/q_mmc_sag.jpg",
+  "./img/fetal-spine/q_norm_axial.jpg",
+  "./img/fetal-spine/q_norm_coronal.jpg",
+  "./img/fetal-spine/q_sb_axial.jpg",
+  "./img/fetal-spine/q_sct.jpg"
  ],
  "kidney-ums": [
   "./img/kidney-ums/a10.jpg",

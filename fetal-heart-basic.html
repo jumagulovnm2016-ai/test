@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тест: Сердце плода: анатомия, пороки, ритм</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=PT+Sans:wght@400;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  --bg:#f3f6f7; --paper:#ffffff; --ink:#18232f; --muted:#5b6b78; --line:#d5e0e3;
+  --navy:#1f3864; --teal:#007a7a; --teal-soft:#e2f1f1;
+  --ok:#1e7a46; --ok-soft:#e3f3e9; --bad:#b3261e; --bad-soft:#fbe7e5;
+  --f-display:"Spectral", Georgia, "Times New Roman", serif;
+  --f-body:"PT Sans", "Segoe UI", Arial, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1519; --paper:#172027; --ink:#e5edf0; --muted:#9db0ba; --line:#2b3a43;
+  --navy:#9cb6e6; --teal:#4cc3c3; --teal-soft:#16302f;
+  --ok:#6ad19a; --ok-soft:#163024; --bad:#ff8a80; --bad-soft:#3a1d1b; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1519; --paper:#172027; --ink:#e5edf0; --muted:#9db0ba; --line:#2b3a43;
+  --navy:#9cb6e6; --teal:#4cc3c3; --teal-soft:#16302f;
+  --ok:#6ad19a; --ok-soft:#163024; --bad:#ff8a80; --bad-soft:#3a1d1b; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.wrap{max-width:760px;margin:0 auto;padding-inline:16px;padding-block:24px 48px;display:grid;gap:18px}
+header{display:grid;gap:6px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--teal)}
+h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,5vw,38px);line-height:1.1;margin:0;color:var(--navy);text-wrap:balance}
+.sub{color:var(--muted);margin:0;max-width:62ch}
+.bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.track{flex:1 1 220px;height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.fill{height:100%;width:0;background:var(--teal);transition:width .25s}
+.stat{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:22px clamp(16px,4vw,28px);display:grid;gap:14px}
+.qmeta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.tag{color:var(--teal);text-transform:uppercase;letter-spacing:.06em}
+.qtext{font-family:var(--f-display);font-weight:600;font-size:clamp(19px,3.2vw,23px);line-height:1.3;margin:0;text-wrap:pretty}
+.opts{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.opt{width:100%;display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:start;text-align:left;font:inherit;color:var(--ink);
+  background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:11px 12px;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--teal)}
+.opt:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.opt:disabled{cursor:default}
+.letter{font-family:var(--f-mono);font-weight:700;width:28px;height:28px;display:grid;place-items:center;border-radius:6px;background:var(--teal-soft);color:var(--teal)}
+.opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+.opt.correct .letter{background:var(--ok);color:var(--paper)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .letter{background:var(--bad);color:var(--paper)}
+.fb{border-top:1px solid var(--line);padding-top:12px;display:grid;gap:6px}
+.verdict{font-weight:700}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--bad)}
+.src{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:700;border-radius:8px;padding:10px 16px;cursor:pointer;border:1.5px solid var(--navy);background:var(--paper);color:var(--navy)}
+.btn.primary{background:var(--navy);color:var(--paper)}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.maphead{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+h2{font-family:var(--f-display);font-size:18px;margin:0;color:var(--navy)}
+.legend{font-size:13px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.map{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:6px}
+@media (max-width:480px){.map{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.cell{font-family:var(--f-mono);font-size:13px;font-weight:700;aspect-ratio:1;max-width:100%;border-radius:6px;border:1.5px solid var(--line);background:var(--paper);color:var(--muted);cursor:pointer;font-variant-numeric:tabular-nums}
+.cell.cur{border-color:var(--navy);color:var(--navy)}
+.cell.ok{background:var(--ok);border-color:var(--ok);color:var(--paper)}
+.cell.bad{background:var(--bad);border-color:var(--bad);color:var(--paper)}
+.cell:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.result{display:grid;gap:12px}
+.score{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.big{font-family:var(--f-display);font-size:52px;font-weight:700;line-height:1;color:var(--navy);font-variant-numeric:tabular-nums}
+.grade{font-weight:700;font-size:18px}
+.scale{width:100%;border-collapse:collapse;font-size:14px}
+.scale td{border-top:1px solid var(--line);padding:6px 4px}
+.scale td:last-child{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.scale tr.me td{color:var(--teal);font-weight:700}
+.wrongs{margin:0;padding-left:20px;display:grid;gap:4px}
+.wrongs button{font:inherit;background:none;border:0;padding:0;color:var(--teal);cursor:pointer;text-align:left;text-decoration:underline}
+footer{font-size:13px;color:var(--muted)}
+.timer{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-weight:700;font-size:20px;font-variant-numeric:tabular-nums;color:var(--navy);
+  border:1.5px solid var(--line);border-radius:8px;padding:4px 12px;background:var(--paper)}
+.timer small{font-family:var(--f-body);font-weight:400;font-size:12px;color:var(--muted)}
+.timer.warn{color:var(--bad);border-color:var(--bad);background:var(--bad-soft)}
+.timer.stop{color:var(--muted)}
+.who{display:grid;gap:6px}
+.who label{font-weight:700;color:var(--navy)}
+.who input,.report,.verify textarea{font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;width:100%}
+.who input:focus-visible,.report:focus-visible,.verify textarea:focus-visible{outline:3px solid var(--teal);outline-offset:1px;border-color:var(--teal)}
+.who input[readonly]{background:var(--teal-soft)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.hint.err{color:var(--bad)}
+.report{font-family:var(--f-mono);font-size:13px;line-height:1.5;min-height:200px;resize:vertical}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.ok-msg{color:var(--ok);font-weight:700} .bad-msg{color:var(--bad);font-weight:700}
+.verify{display:grid;gap:8px;margin-top:8px}
+.verify textarea{font-family:var(--f-mono);font-size:13px;min-height:140px}
+details summary{cursor:pointer;color:var(--teal);font-weight:700}
+.notice{margin:0;padding:10px 12px;border-radius:8px;background:var(--bad-soft);color:var(--bad);font-weight:700}
+.qimg{margin:0;display:grid;gap:6px}.qimg a{display:flex;justify-content:center;background:#0d1418;border-radius:8px;overflow:hidden}.qimg img{display:block;max-width:100%;max-height:min(55vh,440px);object-fit:contain}.qimg figcaption{font-size:13px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.fill{transition:none}}
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0a7b83">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Первичная специализация · УЗ-диагностика</span>
+    <h1>Тест: Сердце плода: анатомия, пороки, ритм</h1>
+    <p class="sub">20 вопросов базового уровня по главе 8 атласа Дубиле и Бенсона: нормальная анатомия и срезы (четырёхкамерный срез, овальное окно, артериальный проток, признаки правого желудочка), ВПС (гипоплазия левых и правых отделов, фиброэластоз, аномалия Эбштейна, ДМЖП, АВСД, тетрада Фалло, эктопия сердца), ЧСС и АВ-блокада плода, гиперэхогенный фокус. После ответа сразу показывается правильный вариант и пояснение. На тест отводится 20 минут: отсчёт начинается с первого ответа, по истечении времени тест завершается автоматически. После завершения результат автоматически уходит преподавателю.</p>
+    <div class="bar"><div class="track" aria-hidden="true"><div class="fill" id="fill"></div></div><span class="stat" id="stat">0 / 20 отвечено · верно 0</span><span class="timer" id="timer" role="timer" aria-live="off"><span id="clock">20:00</span><small id="tnote">старт с первым ответом</small></span></div>
+  </header>
+
+  <section class="card who">
+    <label for="fio">ФИО курсанта</label>
+    <input id="fio" type="text" autocomplete="name" placeholder="Например: Иванов Иван Иванович" maxlength="120">
+    <p class="hint" id="fiohint">Введите фамилию, имя и отчество. Без ФИО ответы не принимаются; после первого ответа ФИО изменить нельзя.</p>
+  </section>
+
+  <section class="card" id="qcard" aria-live="polite"></section>
+  <section class="card result" id="result" hidden></section>
+
+  <section class="card">
+    <div class="maphead"><h2>Карта вопросов</h2>
+      <div class="legend"><span><i style="background:var(--ok)"></i>верно</span><span><i style="background:var(--bad)"></i>неверно</span><span><i style="border:1.5px solid var(--line)"></i>без ответа</span></div></div>
+    <div class="map" id="map"></div>
+    <div class="nav"><button class="btn" id="restart" type="button">Начать заново</button><button class="btn primary" id="finish" type="button">Показать результат</button></div>
+  </section>
+
+  <footer>Ответы сверены с источниками: Дубиле П.М., Бенсон К.Б. Атлас по УЗД в акушерстве и гинекологии, гл. 8 и 14; ISUOG Practice Guidelines (updated) — кардиоскрининг плода (2023); SMFM — мягкие маркеры (2021). Клавиши: 1–4 — выбор ответа, ← → — переход.
+    <details><summary>Проверка отчёта (для преподавателя)</summary>
+      <div class="verify"><label for="vin">Вставьте текст отчёта, полученный от курсанта:</label>
+        <textarea id="vin" spellcheck="false"></textarea>
+        <div class="actions"><button class="btn" id="vbtn" type="button">Проверить код</button><span id="vout" role="status"></span></div>
+        <p class="hint">Код показывает, что текст отчёта не редактировали после теста. Защита простая: курсант, разбирающийся в коде страницы, может её обойти.</p>
+      </div></details>
+  </footer>
+</div>
+<script>
+const Q = [
+ {"t": "Нормальная анатомия", "q": "Из какого желудочка сердца плода в норме отходит аорта?", "o": ["Из правого желудочка", "Из левого предсердия", "Из обоих желудочков", "Из левого желудочка"], "a": 3, "e": "Аорта отходит от левого желудочка, лёгочный ствол — от правого. Отхождение обеих артерий от ПЖ (двойное отхождение) или «перестановка» артерий (транспозиция) — пороки.", "s": "Дубиле, гл. 8"},
+ {"t": "Нормальная анатомия", "q": "В какой плоскости получают четырёхкамерный срез сердца плода?", "o": ["В косой плоскости через голову", "В поперечной (аксиальной) плоскости грудной клетки", "Во фронтальной плоскости туловища", "В сагиттальной плоскости туловища"], "a": 1, "e": "Четырёхкамерный срез — поперечный срез грудной клетки чуть выше диафрагмы, на уровне сердца. В этом же срезе оценивают положение и ось сердца и лёгкие.", "s": "Дубиле, гл. 8; ISUOG 2023"},
+ {"t": "Нормальная анатомия", "q": "Как в норме расположено сердце плода в грудной клетке?", "o": ["Верхушка направлена влево, ближе всего к грудине лежит правый желудочек", "Верхушка направлена кзади к позвоночнику", "Сердце расположено строго по средней линии", "Верхушка направлена вправо"], "a": 0, "e": "Верхушка сердца направлена влево, ось сердца около 45° ± 20°. Правый желудочек — самая передняя камера, он прилежит к грудине; левое предсердие — самая задняя, ближе к аорте и позвоночнику.", "s": "Дубиле, гл. 8; ISUOG 2023"},
+ {"t": "Нормальная анатомия", "q": "Что такое овальное окно?", "o": ["Клапан лёгочной артерии", "Отверстие в межжелудочковой перегородке", "Соустье между аортой и лёгочной артерией", "Отверстие в межпредсердной перегородке, через которое кровь у плода идёт из правого предсердия в левое"], "a": 3, "e": "Через овальное окно оксигенированная кровь из нижней полой вены попадает из ПП в ЛП. Клапан овального окна у плода открывается в сторону левого предсердия; после рождения окно функционально закрывается.", "s": "Дубиле, гл. 8"},
+ {"t": "Нормальная анатомия", "q": "Какова функция артериального протока у плода?", "o": ["Соединяет пупочную вену с воротной веной", "Соединяет правое и левое предсердия", "Проводит кровь из левого желудочка в аорту", "Проводит кровь из лёгочного ствола в нисходящую аорту в обход лёгких"], "a": 3, "e": "Артериальный проток сбрасывает большую часть выброса правого желудочка в нисходящую аорту, минуя нефункционирующие лёгкие. После рождения он закрывается в первые дни жизни.", "s": "Дубиле, гл. 8"},
+ {"t": "Нормальная анатомия", "q": "Каково в норме соотношение размеров желудочков плода во II триместре?", "o": ["Размеры желудочков при УЗИ не оцениваются", "Левый желудочек значительно больше правого", "Желудочки примерно одинаковы по размеру и толщине стенок", "Правый желудочек всегда вдвое больше левого"], "a": 2, "e": "Во II триместре желудочки и предсердия примерно симметричны. В III триместре правые отделы могут быть несколько больше левых — это вариант нормы. Выраженная асимметрия — повод исключить коарктацию, гипоплазию желудочка и другие пороки.", "s": "Дубиле, гл. 8; ISUOG 2023"},
+ {"t": "Нормальная анатомия", "q": "По какому признаку правый желудочек плода отличают от левого?", "o": ["Стенка правого желудочка всегда гиперэхогенна", "Правый желудочек всегда меньше", "В правом желудочке у верхушки видна модераторная (септомаргинальная) трабекула, а трёхстворчатый клапан прикрепляется к перегородке ближе к верхушке, чем митральный", "Правый желудочек лежит ближе к позвоночнику"], "a": 2, "e": "Морфологически правый желудочек узнают по модераторному пучку и по более апикальному прикреплению септальной створки трёхстворчатого клапана (смещение клапанов в норме небольшое). Левый желудочек более гладкий, его верхушка образует верхушку сердца.", "s": "ISUOG 2023 (кардиоскрининг)"},
+ {"t": "Врождённые пороки сердца", "q": "Какова частота врождённых пороков сердца среди живорождённых?", "o": ["Около 1–8 на 1000", "Менее 1 на 10 000", "Около 1–8 на 100", "Около 30 на 1000"], "a": 0, "e": "ВПС встречаются примерно у 8 из 1000 живорождённых (по разным данным 4–10‰) и заметно чаще среди мертворождённых. Это самые частые врождённые пороки развития.", "s": "Дубиле, гл. 8"},
+ {"t": "Врождённые пороки сердца", "q": "Какой признак в четырёхкамерном срезе характерен для гипоплазии левых отделов сердца?", "o": ["Резко расширенное правое предсердие при нормальных желудочках", "Маленький, плохо сокращающийся левый желудочек, иногда почти не видимый", "Смещение трёхстворчатого клапана к верхушке", "Расширенный левый желудочек с тонкими стенками"], "a": 1, "e": "При гипоплазии левых отделов левый желудочек мал, часто с гиперэхогенным эндокардом и сниженной сократимостью; иногда полость не определяется. Верхушку сердца образует правый желудочек.", "s": "Дубиле, гл. 8"},
+ {"t": "Врождённые пороки сердца", "q": "Как выглядит левый желудочек при эндокардиальном фиброэластозе?", "o": ["Эндокард гиперэхогенный, сократимость снижена; полость может быть нормальной или расширенной", "Стенки утолщены при нормальной эхогенности", "Полость полностью анэхогенна без стенок", "Стенки гипоэхогенные и тонкие"], "a": 0, "e": "Фиброэластоз даёт яркую гиперэхогенную выстилку желудочка и снижение его сократимости. Часто сопровождает критический аортальный стеноз; желудочек может быть как расширенным, так и уменьшенным.", "s": "Дубиле, гл. 8"},
+ {"t": "Врождённые пороки сердца", "q": "Что характерно для аномалии Эбштейна?", "o": ["ДМЖП в сочетании со стенозом лёгочной артерии", "Смещение септальной створки трёхстворчатого клапана к верхушке ПЖ, дисплазия клапана, регургитация и резкое расширение правого предсердия", "Отсутствие левого желудочка", "«Сидящая верхом» аорта над дефектом перегородки"], "a": 1, "e": "При аномалии Эбштейна часть ПЖ «предсердизована», клапан несостоятелен, выраженная трикуспидальная регургитация ведёт к кардиомегалии за счёт ПП. Тяжёлая кардиомегалия сдавливает лёгкие (гипоплазия лёгких).", "s": "Дубиле, гл. 8"},
+ {"t": "Врождённые пороки сердца", "q": "Каков прогноз при аномалии Эбштейна, выявленной до рождения?", "o": ["Серьёзный: высокая перинатальная смертность, особенно при выраженной кардиомегалии, водянке и гипоплазии лёгких", "Прогноз зависит только от срока родов", "Порок всегда исчезает к рождению", "Благоприятный в большинстве случаев"], "a": 0, "e": "Пренатально выявляют в основном тяжёлые формы, поэтому перинатальная смертность высока (по данным атласа — до 80%, в современных сериях ниже, около 30–50%). Худший прогноз — при водянке, большом кардиоторакальном отношении и функциональной атрезии лёгочной артерии.", "s": "Дубиле, гл. 8; современные серии"},
+ {"t": "Врождённые пороки сердца", "q": "Как ставится ультразвуковой диагноз дефекта межжелудочковой перегородки?", "o": ["По расширению обоих предсердий", "По видимому перерыву перегородки между желудочками, лучше подтверждённому кровотоком через дефект при ЦДК в срезе, где перегородка перпендикулярна лучу", "По параллельному ходу аорты и лёгочной артерии", "По отсутствию митрального клапана"], "a": 1, "e": "Ложный «дефект» часто возникает, когда луч идёт вдоль перегородки (артефакт выпадения эха). Поэтому перегородку оценивают в срезе, где она перпендикулярна лучу, и подтверждают дефект при ЦДК. Мембранозные дефекты видны в срезе выносящего тракта ЛЖ.", "s": "Дубиле, гл. 8; ISUOG 2023"},
+ {"t": "Врождённые пороки сердца", "q": "Как выглядит четырёхкамерный срез при полном атриовентрикулярном канале?", "o": ["Маленький левый желудочек", "Дефект в центре сердца: нет нижней части межпредсердной и верхней части межжелудочковой перегородки, вместо двух клапанов — один общий", "Нормально", "Трёхстворчатый клапан смещён к верхушке"], "a": 1, "e": "При АВСД отсутствует «крест» сердца, а оба АВ-клапана лежат на одном уровне (общий клапан). Около половины таких плодов имеют трисомию 21, поэтому показано генетическое исследование.", "s": "Дубиле, гл. 8"},
+ {"t": "Врождённые пороки сердца", "q": "Почему тетраду Фалло легко пропустить, если оценивать только четырёхкамерный срез?", "o": ["Потому что порок виден только при 3D-УЗИ", "Потому что сердце при ней всегда увеличено", "Потому что при ней четырёхкамерный срез обычно выглядит нормально, а ключевые признаки видны в выносящих трактах", "Потому что порок появляется только после 30 недель"], "a": 2, "e": "Тетраду Фалло выявляют в срезе выносящего тракта ЛЖ («сидящая верхом» расширенная аорта над ДМЖП) и в срезах 3VV/3VT (узкая лёгочная артерия). Гипертрофия ПЖ у плода обычно ещё не развита.", "s": "Дубиле, гл. 8; ISUOG 2023"},
+ {"t": "Врождённые пороки сердца", "q": "Что видно в четырёхкамерном срезе при гипоплазии правого желудочка (например, при атрезии лёгочной артерии с интактной перегородкой)?", "o": ["Межжелудочковая перегородка отсутствует", "Желудочки равны, стенки истончены", "Правый желудочек больше левого", "Правый желудочек значительно меньше левого, иногда почти не определяется"], "a": 3, "e": "Маленький, часто гипертрофированный правый желудочек — признак гипоплазии правых отделов. Причины — атрезия трёхстворчатого клапана или атрезия лёгочной артерии с интактной перегородкой.", "s": "Дубиле, гл. 8"},
+ {"t": "Врождённые пороки сердца", "q": "Что такое эктопия сердца?", "o": ["Неправильное расположение клапанов", "Зеркальное расположение сердца (декстрокардия)", "Удвоение межжелудочковой перегородки", "Расположение сердца частично или полностью вне грудной клетки"], "a": 3, "e": "При эктопии сердце выходит за пределы грудной клетки через дефект грудины. Часто входит в пентаду Кантрелла (дефект брюшной стенки, грудины, диафрагмы, перикарда и ВПС). Прогноз обычно неблагоприятный.", "s": "Дубиле, гл. 8"},
+ {"t": "Нарушения ритма", "q": "Какова нормальная частота сердечных сокращений плода во II–III триместрах?", "o": ["110–160 уд/мин", "80–100 уд/мин", "200–240 уд/мин", "170–200 уд/мин"], "a": 0, "e": "Нормальная ЧСС плода во второй половине беременности — около 110–160 уд/мин. Стойкая брадикардия ниже 100–110 или тахикардия выше 180 уд/мин требуют прицельной эхокардиографии с оценкой ритма (М-режим или допплер).", "s": "Дубиле, гл. 14; FIGO/NICE"},
+ {"t": "Нарушения ритма", "q": "Стойкая брадикардия плода около 60 уд/мин, предсердия сокращаются чаще желудочков и независимо от них. Что нужно исключить в первую очередь?", "o": ["Экстрасистолию как вариант нормы", "Внутриутробную инфекцию как единственную причину", "Полную атриовентрикулярную блокаду: у матери — анти-Ro/SSA-антитела (СКВ, синдром Шёгрена), у плода — сложный порок (гетеротаксия, АВСД, корригированная ТМА)", "Синусовую тахикардию"], "a": 2, "e": "Полная АВ-блокада у плода бывает либо иммунной (антитела матери, часто при структурно нормальном сердце), либо на фоне сложного ВПС — тогда прогноз хуже. Матери нужно определить анти-Ro/SSA и анти-La/SSB.", "s": "Дубиле, гл. 14; эхокардиография плода"},
+ {"t": "Нормальная анатомия", "q": "В полости левого желудочка плода определяется точечный гиперэхогенный фокус, сердце в остальном нормальное. Что это?", "o": ["Признак эндокардиального фиброэластоза", "Тромб, требующий антикоагулянтов", "Гиперэхогенный внутрисердечный фокус — кальцинат сосочковой мышцы, в изолированном виде вариант нормы", "Опухоль сердца (рабдомиома)"], "a": 2, "e": "Изолированный гиперэхогенный фокус в ЛЖ встречается у части здоровых плодов и как самостоятельная находка риск анеуплоидии значимо не меняет. Его оценивают в контексте результатов скрининга I триместра и других маркеров (SMFM 2021).", "s": "SMFM 2021 (мягкие маркеры); Дубиле, гл. 8"}
+];
+const TITLE="Сердце плода: анатомия, пороки, ритм";
+// Автоотправка результата преподавателю в Telegram
+const TG_TOKEN="proxy", TG_CHAT="188183172"; const TG_PROXY="https://script.google.com/macros/s/AKfycbznrtw3Wd7QBRhQaMlrCIp86oLemxjc_LlaIVomj-9rcXiyMYpmP_OCtc8u4lgQbaXKpg/exec";
+const tgOn = !TG_TOKEN.startsWith("__") && !TG_CHAT.startsWith("__");
+function attemptNo(){ try{ const k="fetal-heart-basic-attempts"; const n=(+localStorage.getItem(k)||0)+1; localStorage.setItem(k,n); return n; }catch(e){ return null; } }
+// Несколько способов доставки: страница по ссылке может блокировать часть запросов
+let cspBlocked=false;
+document.addEventListener("securitypolicyviolation",e=>{ if(String(e.blockedURI||"").includes("script.google")) cspBlocked=true; });
+const tgURL=text=>`${TG_PROXY}?`+new URLSearchParams({chat_id:TG_CHAT, text, _:Date.now()+"-"+Math.random().toString(36).slice(2)});
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+async function sendToTeacher(text){
+  if(!tgOn) return "off";
+  try{
+    await fetch(`${TG_PROXY}`, {method:"POST", mode:"no-cors", body:new URLSearchParams({chat_id:TG_CHAT, text})});
+    sendWay=1; return "sent";
+  }catch(e){}
+  return "fail";
+}
+const L=["А","Б","В","Г"];
+const ans=Array(Q.length).fill(null); let cur=0; let reportText=null;
+const LIMIT=20*60*1000; let startAt=null, endAt=null, finished=false, timedOut=false, tick=null;
+const fmt=ms=>{const t=Math.max(0,Math.ceil(ms/1000)); return String(Math.floor(t/60)).padStart(2,"0")+":"+String(t%60).padStart(2,"0");};
+const $=id=>document.getElementById(id);
+function startTimer(){ startAt=Date.now(); tick=setInterval(updateClock,250); updateClock(); }
+function stopTimer(){ if(tick){clearInterval(tick); tick=null;} endAt=endAt||Date.now(); }
+function updateClock(){
+  const el=$("timer"), left = startAt===null ? LIMIT : LIMIT-((endAt||Date.now())-startAt);
+  $("clock").textContent=fmt(left);
+  $("tnote").textContent = startAt===null ? "старт с первым ответом" : finished ? (timedOut?"время вышло":"тест завершён") : "осталось";
+  el.classList.toggle("warn", !finished && startAt!==null && left<=2*60*1000);
+  el.classList.toggle("stop", finished);
+  if(!finished && startAt!==null && left<=0){ timedOut=true; showResult(); }
+}
+function grade(p){ if(p>=90) return ["Отлично",0]; if(p>=75) return ["Хорошо",1]; if(p>=60) return ["Удовлетворительно",2]; return ["Неудовлетворительно",3]; }
+function stats(){ const done=ans.filter(v=>v!==null).length, ok=ans.filter((v,i)=>v===Q[i].a).length; return {done,ok}; }
+function renderQ(){
+  const x=Q[cur], v=ans[cur], answered=v!==null;
+  const c=$("qcard"); c.innerHTML="";
+  const meta=document.createElement("div"); meta.className="qmeta";
+  meta.innerHTML=`<span class="tag">${x.t}</span><span>Вопрос ${cur+1} из ${Q.length}</span>`;
+  const h=document.createElement("p"); h.className="qtext"; h.textContent=x.q;
+  const ul=document.createElement("ul"); ul.className="opts";
+  x.o.forEach((o,i)=>{ const li=document.createElement("li"); const b=document.createElement("button"); b.type="button"; b.className="opt"; b.id=`opt-${cur}-${i}`;
+    b.innerHTML=`<span class="letter">${L[i]}</span><span></span>`; b.lastChild.textContent=o;
+    if(answered || finished){ b.disabled=true; if(i===x.a) b.classList.add("correct"); else if(i===v) b.classList.add("wrong"); }
+    b.addEventListener("click",()=>choose(i)); li.appendChild(b); ul.appendChild(li); });
+  c.append(meta,h);
+  if(x.img){ const f=document.createElement("figure"); f.className="qimg"; const a=document.createElement("a"); a.href="img/fetal-heart-basic/"+x.img; a.target="_blank"; a.rel="noopener"; a.title="Открыть крупно";
+    const im=document.createElement("img"); im.src="img/fetal-heart-basic/"+x.img; im.alt=x.alt||""; im.decoding="async"; a.appendChild(im); f.appendChild(a);
+    const cap=document.createElement("figcaption"); cap.textContent="Нажмите на изображение, чтобы открыть его крупно. "+(x.cr||""); f.appendChild(cap); c.appendChild(f); }
+  c.appendChild(ul);
+  if(answered){ const fb=document.createElement("div"); fb.className="fb"; const ok=v===x.a;
+    fb.innerHTML=`<span class="verdict ${ok?"ok":"bad"}">${ok?"Верно.":"Неверно. Правильный ответ — "+L[x.a]+"."}</span><span></span><span class="src"></span>`;
+    fb.children[1].textContent=x.e; fb.children[2].textContent="Источник: "+x.s; c.appendChild(fb); }
+  const nav=document.createElement("div"); nav.className="nav";
+  nav.innerHTML=`<button class="btn" type="button" id="prev">← Назад</button><button class="btn primary" type="button" id="next">${cur===Q.length-1?"К результату":"Далее →"}</button>`;
+  c.appendChild(nav);
+  $("prev").disabled=cur===0; $("prev").onclick=()=>go(cur-1);
+  $("next").onclick=()=> cur===Q.length-1? showResult(): go(cur+1);
+  renderMap();
+}
+function fioOk(){ const v=$("fio").value.trim().replace(/\s+/g," "); return v.split(" ").length>=2 && /^[A-Za-zА-Яа-яЁёӨөҮүҢң'\- ]+$/.test(v) ? v : null; }
+function choose(i){ if(finished || ans[cur]!==null) return;
+  if(!fioOk()){ const h=$("fiohint"); h.textContent="Сначала введите ФИО полностью — хотя бы фамилию и имя, буквами."; h.classList.add("err"); $("fio").focus(); return; }
+  if(startAt===null){ startTimer(); $("fio").value=fioOk(); $("fio").readOnly=true; const h=$("fiohint"); h.classList.remove("err"); h.textContent="ФИО зафиксировано до конца попытки."; }
+  ans[cur]=i; renderQ(); }
+$("fio").addEventListener("input",()=>{ const h=$("fiohint"); if(h.classList.contains("err") && fioOk()){ h.classList.remove("err"); h.textContent="ФИО принято. Можно отвечать."; } });
+const SALT="sono-fetal-heart-basic-20";
+function hash(str){ let h=0x811c9dc5; for(const ch of str){ h^=ch.codePointAt(0); h=Math.imul(h,0x01000193)>>>0; } let h2=0x9e3779b9; for(const ch of (str+SALT)){ h2^=ch.codePointAt(0); h2=Math.imul(h2,0x85ebca6b)>>>0; }
+  const a=h.toString(36).toUpperCase().padStart(7,"0").slice(-4), b=h2.toString(36).toUpperCase().padStart(7,"0").slice(-4); return a+"-"+b; }
+const body=t=>t.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).filter(x=>!x.startsWith("Код проверки:")).join("\n");
+function stamp(d){ const z=n=>String(n).padStart(2,"0"); return `${z(d.getDate())}.${z(d.getMonth()+1)}.${d.getFullYear()} ${z(d.getHours())}:${z(d.getMinutes())}`; }
+let sendState=null, sendWay=0;
+function showSend(){ const el=document.getElementById("autosend"); if(!el) return;
+  if(sendState==="pending"){ el.className="hint"; el.textContent="Отправляем результат преподавателю…"; }
+  else if(sendState==="sent"){ el.className="ok-msg"; el.textContent="Результат отправлен преподавателю. Если преподаватель его не получил, нажмите «Отправить через Telegram»."; }
+  else if(sendState==="fail"){ el.className="bad-msg"; el.textContent="На этой странице автоматическая отправка недоступна. Нажмите «Отправить через Telegram» и выберите чат преподавателя (или скопируйте отчёт)."; }
+  else el.textContent=""; }
+let downloads=null; (async()=>{ try{ downloads = window.claude && await window.claude.use("downloads"); }catch(e){ downloads=null; } const b=document.getElementById("dl"); if(b) b.hidden=!downloads; })();
+function go(i){ if(i<0||i>=Q.length) return; cur=i; $("result").hidden=true; $("qcard").hidden=false; renderQ(); }
+function renderMap(){
+  const m=$("map"); m.innerHTML="";
+  Q.forEach((x,i)=>{ const b=document.createElement("button"); b.type="button"; b.className="cell"; b.textContent=i+1; b.id=`cell-${i}`;
+    b.setAttribute("aria-label",`Вопрос ${i+1}`);
+    if(ans[i]!==null) b.classList.add(ans[i]===x.a?"ok":"bad"); if(i===cur && !$("qcard").hidden) b.classList.add("cur");
+    b.onclick=()=>go(i); m.appendChild(b); });
+  const {done,ok}=stats(); $("fill").style.width=(done/Q.length*100)+"%";
+  $("stat").textContent=`${done} / ${Q.length} отвечено · верно ${ok}`;
+}
+function showResult(){
+  if(!finished){ finished=true; stopTimer(); } updateClock();
+  const used = startAt===null ? 0 : Math.min(LIMIT,(endAt||Date.now())-startAt);
+  const {done,ok}=stats(), p=Math.round(ok/Q.length*100), [g,gi]=grade(p);
+  const r=$("result"); const wrong=Q.map((x,i)=>i).filter(i=>ans[i]!==Q[i].a);
+  const rows=[["Отлично","90–100%"],["Хорошо","75–89%"],["Удовлетворительно","60–74%"],["Неудовлетворительно","менее 60%"]];
+  r.innerHTML=`<h2>Результат</h2>${timedOut?`<p class="notice">Время вышло — тест завершён автоматически.</p>`:""}<div class="score"><span class="big">${ok}/${Q.length}</span><span class="grade">${p}% · ${g}</span></div><p class="stat">Затрачено времени: ${fmt(used)} из ${fmt(LIMIT)}</p>
+    ${done<Q.length?`<p class="sub">Без ответа осталось вопросов: ${Q.length-done}. Они засчитаны как неверные.</p>`:""}
+    <table class="scale"><tbody>${rows.map((rw,i)=>`<tr class="${i===gi?"me":""}"><td>${rw[0]}</td><td>${rw[1]}</td></tr>`).join("")}</tbody></table>
+    <h2>Отправка результата</h2>
+    <p id="autosend" role="status"></p>
+    <p class="hint">${tgOn?"Копия отчёта — на случай, если преподаватель попросит прислать его вручную.":"Скопируйте отчёт и отправьте его преподавателю в Telegram или WhatsApp."} Не редактируйте текст — иначе код проверки не совпадёт.</p>
+    <textarea class="report" id="report" readonly spellcheck="false"></textarea>
+    <div class="actions"><button class="btn primary" id="copy" type="button">Скопировать отчёт</button>${tgOn?`<button class="btn" id="resend" type="button">Отправить ещё раз</button>`:""}<button class="btn" id="share" type="button">Отправить через Telegram</button><button class="btn" id="dl" type="button" ${downloads?"":"hidden"}>Скачать файл</button><span id="sendmsg" role="status"></span></div>
+    ${wrong.length?`<h2>Повторить</h2><ol class="wrongs">${wrong.map(i=>`<li><button type="button" data-i="${i}">Вопрос ${i+1}: ${Q[i].t.toLowerCase()}</button></li>`).join("")}</ol>`:"<p>Все ответы верны.</p>"}`;
+  r.querySelectorAll("[data-i]").forEach(b=>b.onclick=()=>go(+b.dataset.i));
+  if(!reportText){ const lines=[`Тест «${TITLE}» — результат`, `ФИО: ${fioOk()||"не указано"}`, `Дата: ${stamp(new Date(endAt||Date.now()))}`,
+      `Результат: ${ok} из ${Q.length} (${p}%) — ${g}`, `Время: ${fmt(used)} из ${fmt(LIMIT)}${timedOut?" (время вышло)":""}`,
+      `Без ответа: ${Q.length-done}`, `Ошибки в вопросах: ${wrong.length?wrong.map(i=>i+1).join(", "):"нет"}`];
+    const att=attemptNo(); if(att) lines.splice(3,0,`Попытка на этом устройстве: ${att}`);
+    reportText = lines.join("\n")+"\nКод проверки: "+hash(body(lines.join("\n")));
+    sendState="pending";
+    sendToTeacher(reportText).then(st=>{ sendState=st; showSend(); }); }
+  $("report").value=reportText; showSend();
+  const msg=t=>{ const m=$("sendmsg"); m.textContent=t; m.className="ok-msg"; };
+  $("copy").onclick=()=>{ const ta=$("report"); try{ navigator.clipboard.writeText(reportText).then(()=>msg("Скопировано. Вставьте в чат с преподавателем."),()=>{ ta.focus(); ta.select(); msg("Текст выделен — нажмите Ctrl+C (или «Копировать»)."); }); }catch(e){ ta.focus(); ta.select(); msg("Текст выделен — нажмите Ctrl+C (или «Копировать»)."); } };
+  if($("resend")) $("resend").onclick=()=>{ sendState="pending"; showSend(); sendToTeacher(reportText+"\n(повторная отправка)").then(st=>{ sendState=st; showSend(); }); };
+  $("share").onclick=()=>{ window.open("https://t.me/share/url?url="+encodeURIComponent(" ")+"&text="+encodeURIComponent(reportText),"_blank","noopener"); };
+  $("dl").onclick=async()=>{ if(!downloads) return; const name="Позвоночник_плода_"+(fioOk()||"курсант").replace(/[^A-Za-zА-Яа-яЁёӨөҮүҢң0-9]+/g,"_")+".txt";
+    try{ const res=await downloads.save({filename:name, data:reportText}); msg(res.status==="saved"?"Файл сохранён.":"Файл передан."); }
+    catch(e){ const m=$("sendmsg"); m.className="bad-msg"; m.textContent = e&&e.code==="declined" ? "Сохранение отменено." : "Скачать не удалось — скопируйте отчёт."; } };
+  $("qcard").hidden=true; r.hidden=false; renderMap(); r.scrollIntoView({block:"start"});
+}
+$("finish").onclick=showResult;
+$("restart").onclick=()=>{ ans.fill(null); stopTimer(); startAt=null; endAt=null; finished=false; timedOut=false; reportText=null; sendState=null; $("fio").readOnly=false; const h=$("fiohint"); h.classList.remove("err"); h.textContent="Введите фамилию, имя и отчество. Без ФИО ответы не принимаются; после первого ответа ФИО изменить нельзя."; updateClock(); go(0); window.scrollTo(0,0); };
+$("vbtn").onclick=()=>{ const t=$("vin").value, o=$("vout"); const m=t.match(/Код проверки:\s*([0-9A-Z]{4}-[0-9A-Z]{4})/);
+  if(!m){ o.className="bad-msg"; o.textContent="В тексте нет строки «Код проверки»."; return; }
+  const good = hash(body(t))===m[1]; o.className=good?"ok-msg":"bad-msg"; o.textContent= good ? "Код верный: отчёт не изменён." : "Код не совпадает: текст отчёта изменён."; };
+document.addEventListener("keydown",e=>{
+  if(e.target.closest && e.target.closest("input,textarea")) return;
+  if($("qcard").hidden) return;
+  if(["1","2","3","4"].includes(e.key)) choose(+e.key-1);
+  else if(e.key==="ArrowRight") go(cur+1); else if(e.key==="ArrowLeft") go(cur-1);
+});
+renderQ();
+</script>
+<script src="offline.js"></script>
+</body>
+</html>

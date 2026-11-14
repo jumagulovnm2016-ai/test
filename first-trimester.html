@@ -288,7 +288,7 @@ function showResult(){
   $("copy").onclick=()=>{ const ta=$("report"); try{ navigator.clipboard.writeText(reportText).then(()=>msg("Скопировано. Вставьте в чат с преподавателем."),()=>{ ta.focus(); ta.select(); msg("Текст выделен — нажмите Ctrl+C (или «Копировать»)."); }); }catch(e){ ta.focus(); ta.select(); msg("Текст выделен — нажмите Ctrl+C (или «Копировать»)."); } };
   if($("resend")) $("resend").onclick=()=>{ sendState="pending"; showSend(); sendToTeacher(reportText+"\n(повторная отправка)").then(st=>{ sendState=st; showSend(); }); };
   $("share").onclick=()=>{ window.open("https://t.me/share/url?url="+encodeURIComponent(" ")+"&text="+encodeURIComponent(reportText),"_blank","noopener"); };
-  $("dl").onclick=async()=>{ if(!downloads) return; const name="УЗИ_малый_срок_"+(fioOk()||"курсант").replace(/[^A-Za-zА-Яа-яЁёӨөҮүҢң0-9]+/g,"_")+".txt";
+  $("dl").onclick=async()=>{ if(!downloads) return; const name="Скрининг_11-14_недель_"+(fioOk()||"курсант").replace(/[^A-Za-zА-Яа-яЁёӨөҮүҢң0-9]+/g,"_")+".txt";
     try{ const res=await downloads.save({filename:name, data:reportText}); msg(res.status==="saved"?"Файл сохранён.":"Файл передан."); }
     catch(e){ const m=$("sendmsg"); m.className="bad-msg"; m.textContent = e&&e.code==="declined" ? "Сохранение отменено." : "Скачать не удалось — скопируйте отчёт."; } };
   $("qcard").hidden=true; r.hidden=false; renderMap(); r.scrollIntoView({block:"start"});
